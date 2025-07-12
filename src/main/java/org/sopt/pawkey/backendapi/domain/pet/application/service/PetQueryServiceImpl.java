@@ -17,9 +17,9 @@ public class PetQueryServiceImpl implements PetQueryService {
 
 	@Override
 	public List<PetTraitCategoryResult> getAllPetTraitCategories() {
-		List<PetTraitCategoryEntity> domainList = petRepository.findAllPetTraitCategoriesWithOptions();
+		List<PetTraitCategoryEntity> petTraitCategoryEntityList = petRepository.findAllPetTraitCategoriesWithOptions();
 
-		return domainList.stream()
+		return petTraitCategoryEntityList.stream()
 			.map(PetTraitCategoryResult::fromEntity) // static fromDomain() 메서드 있다고 가정
 			.toList();
 	}
