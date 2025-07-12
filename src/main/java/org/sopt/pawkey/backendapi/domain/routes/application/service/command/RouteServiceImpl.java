@@ -1,5 +1,10 @@
 package org.sopt.pawkey.backendapi.domain.routes.application.service.command;
 
+import java.util.List;
+
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
@@ -21,6 +26,7 @@ public class RouteServiceImpl implements RouteService {
 	@Override
 	public Void saveRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
 		RouteEntity route = RouteEntity.createRoute(user, command, trackingImage);
+		List<List<Double>> coordinates = command.coordinates();
 
 		routeRepository.save(route);
 		return null;

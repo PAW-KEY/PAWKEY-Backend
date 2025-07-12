@@ -1,7 +1,10 @@
 package org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
@@ -68,6 +71,9 @@ public class RouteEntity extends BaseEntity {
 	private LocalDateTime endedAt;
 
 	public static RouteEntity createRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
+
+		LineString lineString = toLineString(command.coordinates());
+
 		return RouteEntity.builder()
 			.user(user)
 			.distance(command.distance())
@@ -76,7 +82,19 @@ public class RouteEntity extends BaseEntity {
 			.region(user.getRegion())
 			.trackingImage(trackingImage)
 			.startedAt(command.startedAt())
+			.coordinates(lineString)
 			.endedAt(command.endedAt())
 			.build();
 	}
+
+	private static LineString toLineString(List<List<Double>> coordinates) {
+		GeometryFactory geometryFactory = new GeometryFactory();
+
+		Coordinate[] coords = coordinates.stream()
+			.map(coord -> new Coordinate(coord.get(0), coord.get(1)))
+			.toArray(Coordinate[]::new);
+
+		return geometryFactory.createLineString(coords);
+	}
+
 }
