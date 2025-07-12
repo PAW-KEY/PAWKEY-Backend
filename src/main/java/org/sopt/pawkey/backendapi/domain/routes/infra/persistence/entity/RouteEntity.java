@@ -3,7 +3,10 @@ package org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity;
 import java.time.LocalDateTime;
 
 import org.locationtech.jts.geom.LineString;
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -37,6 +40,10 @@ public class RouteEntity extends BaseEntity {
 	@Column(name = "coordinates", columnDefinition = "geometry(LineString, 4326)", nullable = false)
 	private LineString coordinates;
 
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
+
 	@Column(name = "distance", nullable = false)
 	private Double distance;
 
@@ -50,9 +57,26 @@ public class RouteEntity extends BaseEntity {
 	@JoinColumn(name = "region_id", nullable = false)
 	private RegionEntity region;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_id", nullable = true)
+	private ImageEntity trackingImage;
+
 	@Column(name = "started_at", nullable = false)
 	private LocalDateTime startedAt;
 
 	@Column(name = "ended_at", nullable = false)
 	private LocalDateTime endedAt;
+
+	public static RouteEntity createRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
+		return RouteEntity.builder()
+			.user(user)
+			.distance(command.distance())
+			.duration(command.duration())
+			.stepCount(command.stepCount())
+			.region(user.getRegion())
+			.trackingImage(trackingImage)
+			.startedAt(command.startedAt())
+			.endedAt(command.endedAt())
+			.build();
+	}
 }

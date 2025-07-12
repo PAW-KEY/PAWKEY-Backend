@@ -1,7 +1,8 @@
 package org.sopt.pawkey.backendapi.domain.image.domain.model;
 
 public enum ImageType {
-	PET_PROFILE,   // Pet
-	REPRESENTATIVE, // 대표이미지(루트)
+	PET_PROFILE,
+	ROUTE,
+	WALK_POST,
 	ETC    // 기타이미지
 }

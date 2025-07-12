@@ -41,22 +41,19 @@ public class ImageEntity extends BaseEntity {
 	@Column(name = "height", nullable = false)
 	private int height;
 
-	@OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PostImageEntity> postImageEntityList = new ArrayList<>();
-
 	@Builder
-	public ImageEntity(Long imageId,
+	public ImageEntity(
+		Long imageId,
 		String imageUrl,
 		String extension,
 		int width,
-		int height,
-		List<PostImageEntity> postImageEntityList) {
+		int height
+	) {
 		this.imageId = imageId;
 		this.imageUrl = imageUrl;
 		this.extension = extension;
 		this.width = width;
 		this.height = height;
-		this.postImageEntityList = postImageEntityList != null ? postImageEntityList : new ArrayList<>();
 	}
 
 }
