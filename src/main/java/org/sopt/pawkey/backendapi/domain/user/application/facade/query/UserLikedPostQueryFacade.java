@@ -12,21 +12,23 @@ import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserLikedPostQueryFacade {
 
 	private final UserQueryRepository userQueryRepository;
 	private final UserLikedPostQueryService userLikedPostQueryService;
 
 	public List<LikedPostResponseDto> getLikedPosts(Long userId) {
+
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		// fetch join 메서드 사용
-		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(user);
+		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(userId);
 
 		return likedPosts.stream()
 			.map(postLike -> {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
-import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,12 +27,7 @@ public class PostLikeRepositoryImpl implements PostLikeRepository {
 	}
 
 	@Override
-	public List<PostLikeEntity> findAllByUser(UserEntity user) {
-		return jpaRepository.findAllByUserWithPostAndImages(user);
-	}
-
-	@Override
-	public List<PostLikeEntity> findAllByUserWithPostAndImages(UserEntity user) {
-		return jpaRepository.findAllByUserWithPostAndImages(user);
+	public List<PostLikeEntity> findAllByUserWithPostAndImages(Long userId) {
+		return jpaRepository.findAllByUserWithPostAndImages(userId);
 	}
 }
