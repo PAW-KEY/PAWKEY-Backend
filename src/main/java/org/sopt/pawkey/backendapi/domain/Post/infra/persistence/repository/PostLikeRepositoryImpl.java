@@ -29,6 +29,11 @@ public class PostLikeRepositoryImpl implements PostLikeRepository {
 
 	@Override
 	public List<PostLikeEntity> findAllByUser(UserEntity user) {
-		return jpaRepository.findAllByUser(user);
+		return jpaRepository.findAllByUserWithPostAndImages(user);
+	}
+
+	@Override
+	public List<PostLikeEntity> findAllByUserWithPostAndImages(UserEntity user) {
+		return jpaRepository.findAllByUserWithPostAndImages(user);
 	}
 }

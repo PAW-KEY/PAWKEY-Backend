@@ -11,4 +11,7 @@ public interface PostLikeRepository {
 	boolean existsByUserIdAndPostId(Long userId, Long postId);
 
 	List<PostLikeEntity> findAllByUser(UserEntity user);
+
+	// fetch join된 결과 조회 메서드 선언
+	List<PostLikeEntity> findAllByUserWithPostAndImages(UserEntity user);
 }

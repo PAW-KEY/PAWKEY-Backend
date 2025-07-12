@@ -5,9 +5,22 @@ import java.util.List;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface SpringDataPostLikeRepository extends JpaRepository<PostLikeEntity, Long> {
 	boolean existsByUser_UserIdAndPost_PostId(Long userId, Long postId);
 
-	List<PostLikeEntity> findAllByUser(UserEntity user);
+	// fetch join으로 연관된 Post, User, Pet, PostImage 한 번에 조회
+	@Query("""
+		    select pl
+		    from PostLikeEntity pl
+		    join fetch pl.post p
+		    join fetch p.user u
+		    join fetch u.petEntityList pet
+		    left join fetch p.postImageEntityList images
+		    where pl.user = :user
+		""")
+	List<PostLikeEntity> findAllByUserWithPostAndImages(@Param("user") UserEntity user);
+
 }

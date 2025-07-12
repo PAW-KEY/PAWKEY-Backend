@@ -19,6 +19,11 @@ public class UserLikedPostQueryServiceImpl implements UserLikedPostQueryService 
 
 	@Override
 	public List<PostLikeEntity> findLikedPostsByUser(UserEntity user) {
-		return postLikeRepository.findAllByUser(user);
+		return postLikeRepository.findAllByUserWithPostAndImages(user);
+	}
+
+	@Override
+	public List<PostLikeEntity> findLikedPostsByUserWithPostAndImages(UserEntity user) {
+		return postLikeRepository.findAllByUserWithPostAndImages(user);
 	}
 }

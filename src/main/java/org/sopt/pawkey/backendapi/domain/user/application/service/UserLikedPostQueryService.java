@@ -7,4 +7,6 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public interface UserLikedPostQueryService {
 	List<PostLikeEntity> findLikedPostsByUser(UserEntity user);
+
+	List<PostLikeEntity> findLikedPostsByUserWithPostAndImages(UserEntity user);
 }

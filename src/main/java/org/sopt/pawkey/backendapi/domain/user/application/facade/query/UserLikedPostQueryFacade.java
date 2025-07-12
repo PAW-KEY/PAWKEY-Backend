@@ -22,36 +22,34 @@ public class UserLikedPostQueryFacade {
 	private final UserLikedPostQueryService userLikedPostQueryService;
 
 	public List<LikedPostResponseDto> getLikedPosts(Long userId) {
-		// 1) Optional 안전 처리
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		// 2) 사용자가 좋아요한 PostLikeEntity 목록
-		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUser(user);
+		// fetch join 메서드 사용
+		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(user);
 
-		// 3) 각 PostLikeEntity → LikedPostResponseDto 변환
 		return likedPosts.stream()
 			.map(postLike -> {
 				var post = postLike.getPost();
 
-				String repImageUrl = String.valueOf(post.getPostImageEntityList()
+				String repImageUrl = post.getPostImageEntityList()
 					.stream()
-					.findFirst()                                         // 첫 번째 이미지
-					.map(PostImageEntity::getImage));
+					.findFirst()
+					.map(PostImageEntity::getImage)      // ImageEntity
+					.map(imageEntity -> imageEntity.getImageUrl())  // String URL
+					.orElse(null);
 
-				/* 작성자(UserEntity) 정보 */
 				var writer = post.getUser();
-				Long writerId              = writer.getUserId();
-				String writerPetName       = writer.getPet().getName();
-				String writerProfileImgUrl = writer.getPet().getProfileImage().getImageUrl();
+				Long writerId = writer.getUserId();
+				String writerPetName = writer.getPet() != null ? writer.getPet().getName() : null;
+				String writerProfileImgUrl = (writer.getPet() != null && writer.getPet().getProfileImage() != null) ?
+					writer.getPet().getProfileImage().getImageUrl() : null;
 
-				/* 설명 태그 → postCategoryOptionTop3EntityList의 getOptionText 문자열로 */
 				List<String> descriptionTags = post.getPostCategoryOptionTop3EntityList()
 					.stream()
 					.map(optionTop3 -> optionTop3.getCategoryOption().getOptionText())
 					.toList();
 
-				/* 일단 true.. */
 				boolean isLiked = true;
 
 				return new LikedPostResponseDto(
