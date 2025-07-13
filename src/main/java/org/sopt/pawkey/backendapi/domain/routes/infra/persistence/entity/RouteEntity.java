@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand.CommandCoordinate;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
@@ -87,11 +88,11 @@ public class RouteEntity extends BaseEntity {
 			.build();
 	}
 
-	private static LineString toLineString(List<List<Double>> coordinates) {
+	private static LineString toLineString(List<CommandCoordinate> coordinates) {
 		GeometryFactory geometryFactory = new GeometryFactory();
 
 		Coordinate[] coords = coordinates.stream()
-			.map(coord -> new Coordinate(coord.get(0), coord.get(1)))
+			.map(coord -> new Coordinate(coord.longitude(), coord.latitude()))
 			.toArray(Coordinate[]::new);
 
 		return geometryFactory.createLineString(coords);

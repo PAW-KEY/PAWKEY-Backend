@@ -7,11 +7,13 @@ import lombok.Builder;
 
 @Builder
 public record RouteRegisterCommand(
-	List<List<Double>> coordinates,
+	List<CommandCoordinate> coordinates,
 	Double distance,
 	int duration,
 	LocalDateTime startedAt,
 	LocalDateTime endedAt,
 	int stepCount
 ) {
+	public record CommandCoordinate(Double longitude, Double latitude) {
+	}
 }
