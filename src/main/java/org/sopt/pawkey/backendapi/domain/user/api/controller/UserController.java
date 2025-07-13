@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,6 +24,11 @@ public class UserController {
 	private final UserPetQueryFacade userPetQueryFacade;
 
 	@Operation(summary = "유저 반려견 프로필 조회", description = "유저가 등록한 반려견 목록을 조회합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
+	})
 	@GetMapping("/me/pets")
 	public ResponseEntity<ApiResponse<List<PetProfileResponseDto>>> getMyPets(
 		@RequestHeader("X-USER-ID") Long userId
