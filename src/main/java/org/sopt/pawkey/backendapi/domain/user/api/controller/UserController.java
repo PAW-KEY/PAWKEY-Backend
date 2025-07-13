@@ -23,23 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(API_PREFIX + "/users")
 public class UserController {
 
-	// private final UserRegisterFacade userRegisterFacade;
-	//
-	// @Operation(summary = "유저 생성", description = "회원가입 또는 유저 등록 API입니다.", tags = {"User"})
-	// @ApiResponses({
-	// 	@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 생성 성공"),
-	// 	@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
-	// 	@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
-	// @PostMapping
-	// public ResponseEntity<ApiResponse<CreateUserResponseDto>> create(
-	// 	@RequestBody @Valid CreateUserRequestDto createUserRequestDto) {
-	//
-	// 	final CreateUserResponseDto response = CreateUserResponseDto.from(
-	// 		userRegisterFacade.execute(createUserRequestDto.toCommand()));
-	//
-	// 	return ResponseEntity.ok(ApiResponse.success(response));
-	// }
-
 	private final UserLikedPostQueryFacade userLikedPostQueryFacade;
 
 	@Operation(summary = "내가 좋아요한 게시물 조회", description = "사용자가 좋아요를 누른 게시물 목록을 반환합니다.", tags = {"Users"})

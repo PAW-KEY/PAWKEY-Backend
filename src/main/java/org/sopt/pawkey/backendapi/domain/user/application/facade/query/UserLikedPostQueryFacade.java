@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
@@ -11,13 +12,13 @@ import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class UserLikedPostQueryFacade {
 
 	private final UserQueryRepository userQueryRepository;
@@ -36,7 +37,7 @@ public class UserLikedPostQueryFacade {
 
 				String repImageUrl = post.getPostImageEntityList()
 					.stream()
-					.findFirst()
+					.min(Comparator.comparing(PostImageEntity::getCreatedAt)) // 또는 다른 명확한 기준
 					.map(PostImageEntity::getImage)      // ImageEntity
 					.map(imageEntity -> imageEntity.getImageUrl())  // String URL
 					.orElse(null);
