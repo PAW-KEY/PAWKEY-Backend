@@ -27,21 +27,10 @@ public class PostFacade {
 	@Transactional
 	public void createPost(Long userId,
 		PostCreateRequestDto requestDto,
-		MultipartFile routeImage,
 		List<MultipartFile> postImages) {
-
 		UserEntity writer = userService.findById(userId);
 		RouteEntity region = routeService.getRouteById(requestDto.getRouteId());
 
-		// final String routeImageUrl = (routeImage != null && !routeImage.isEmpty())
-		// 	? imageStorage.uploadRouteImage(routeImage)
-		// 	: null;
-		//
-		// final List<String> postImageUrlList = (postImages != null && !postImages.isEmpty())
-		// 	? imageStorage.uploadWalkImages(postImages)
-		// 	: Collections.emptyList();
-
-		String routeImageUrl = "routeImageUrl";
 		List<String> postImageUrlList = List.of("postImageUrlList");
 
 		PostCreateCommand command = new PostCreateCommand(
@@ -49,7 +38,6 @@ public class PostFacade {
 			requestDto.getDescription(),
 			requestDto.isPublic(),
 			requestDto.getSelectedOptionsForCategories(),
-			routeImageUrl,
 			postImageUrlList,
 			requestDto.getRouteId()
 

@@ -6,7 +6,6 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public interface PostService {
 	PostEntity findById(Long postId);
-
 	void createPost(UserEntity writer, PostCreateCommand command);
 
 }

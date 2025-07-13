@@ -45,10 +45,10 @@ public class PostController {
 		@Parameter(description = "게시물 생성 요청 데이터 (JSON 형식)")
 		PostCreateRequestDto requestDto,
 
-		@RequestPart("image")
-		@Valid @NotNull
-		@Parameter(description = "게시물에 첨부할 대표 이미지 (이미지 파일)")
-		MultipartFile image,
+		// @RequestPart("image")
+		// @Valid @NotNull
+		// @Parameter(description = "게시물에 첨부할 대표 이미지 (이미지 파일)")
+		// MultipartFile image,
 
 		@RequestPart("images")
 		@Valid @NotNull
@@ -56,7 +56,7 @@ public class PostController {
 		List<MultipartFile> images
 
 	) {
-		postFacade.createPost(userId.longValue(), requestDto, image, images);
+		postFacade.createPost(userId.longValue(), requestDto, images);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
 
