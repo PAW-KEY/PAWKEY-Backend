@@ -1,7 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.routes.application.facade.command;
 
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
-import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.routes.application.service.command.RouteService;

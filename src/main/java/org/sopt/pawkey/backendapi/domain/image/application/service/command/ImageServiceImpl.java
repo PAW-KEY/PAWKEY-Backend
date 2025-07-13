@@ -19,12 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-	private final ImageRepository imageRepository;
-	private final ImageStorage imageStorage;
-
 	private static final String PROFILE_DIR = "profile";
 	private static final String ROUTE_DIR = "route";
 	private static final String WALK_DIR = "walk";
+	private final ImageRepository imageRepository;
+	private final ImageStorage imageStorage;
 
 	@Override
 	public ImageEntity storePetProfileImage(MultipartFile file) {

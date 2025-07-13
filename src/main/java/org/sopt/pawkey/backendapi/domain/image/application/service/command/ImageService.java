@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageService {
 
 	ImageEntity storePetProfileImage(MultipartFile file);
+
 	ImageEntity storeRouteImage(MultipartFile file);
+
 	List<ImageEntity> storeWalkPostImages(List<MultipartFile> files);
 }
