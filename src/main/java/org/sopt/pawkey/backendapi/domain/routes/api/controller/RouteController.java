@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.routes.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.routes.api.dto.RouteRegisterRequest;
+import org.sopt.pawkey.backendapi.domain.routes.api.dto.RouteRegisterResponse;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.RouteRegisterResult;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.RouteRegisterFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
@@ -32,7 +33,8 @@ public class RouteController {
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 루트 정보 등록 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)")})
-	public ResponseEntity<ApiResponse<RouteRegisterResult>> registerRoute(@RequestHeader(USER_ID_HEADER) Long userId,
+	public ResponseEntity<ApiResponse<RouteRegisterResponse>> registerRoute(
+		@RequestHeader(USER_ID_HEADER) Long userId,
 		@RequestPart("trackingImage") MultipartFile trackingImage,
 		@Valid @RequestPart("routeRequest") RouteRegisterRequest routeRegisterRequest) {
 
@@ -42,7 +44,6 @@ public class RouteController {
 			trackingImage);
 
 		return ResponseEntity.ok(
-			ApiResponse.success(result));
+			ApiResponse.success(RouteRegisterResponse.from(result)));
 	}
-
 }
