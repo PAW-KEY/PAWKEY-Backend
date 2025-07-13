@@ -5,5 +5,5 @@ import java.util.List;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 
 public interface RegionQueryRepository {
-	List<RegionEntity> findGusByRegionNameWithChildren(String keyword);
+	List<RegionEntity> findDistrictByRegionNameWithChildren(String keyword);
 }

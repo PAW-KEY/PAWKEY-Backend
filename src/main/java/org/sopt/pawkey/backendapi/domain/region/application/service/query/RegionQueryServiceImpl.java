@@ -18,6 +18,6 @@ public class RegionQueryServiceImpl implements RegionQueryService {
 	@Override
 	public List<RegionEntity> searchGusWithRegion(GetRegionListCommand command) {
 
-		return regionQueryRepository.findGusByRegionNameWithChildren(command.searchKeyword());
+		return regionQueryRepository.findDistrictByRegionNameWithChildren(command.searchKeyword());
 	}
 }

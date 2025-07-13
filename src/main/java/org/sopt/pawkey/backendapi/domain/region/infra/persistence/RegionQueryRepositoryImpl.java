@@ -18,7 +18,7 @@ public class RegionQueryRepositoryImpl implements RegionQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<RegionEntity> findGusByRegionNameWithChildren(String keyword) {
+	public List<RegionEntity> findDistrictByRegionNameWithChildren(String keyword) {
 		QRegionEntity regionEntity = QRegionEntity.regionEntity;
 		QRegionEntity childRegion = new QRegionEntity("childRegion");
 
