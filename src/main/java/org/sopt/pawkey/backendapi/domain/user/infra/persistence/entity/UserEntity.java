@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
-import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewEntity;
@@ -48,8 +47,11 @@ public class UserEntity extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PetEntity> petEntityList = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PostEntity> postEntityList = new ArrayList<>();
+	public PetEntity getPet() {
+		return petEntityList.stream()
+			.findFirst()
+			.orElse(null);
+	} // Optional<PetEntity>을 반환하도록 변경하여 null 처리를 명시적으로 만드는 것을 고려
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ReviewEntity> reviewEntityList = new ArrayList<>();
