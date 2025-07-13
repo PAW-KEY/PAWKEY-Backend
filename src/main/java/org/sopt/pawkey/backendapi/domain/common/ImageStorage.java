@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageStorage {
-	String uploadProfileImage(MultipartFile image);
 
-	String uploadRouteImage(MultipartFile image);
+	String uploadImage(MultipartFile image, String dir);
 
-	List<String> uploadWalkImages(List<MultipartFile> images);
+	List<String> uploadImages(List<MultipartFile> images, String dir);
+
+	void deleteImage(String address);
 }
