@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.SpringDataRegionRepository;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.domain.RouteRepository;
+import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException;
+import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.springframework.stereotype.Repository;
 

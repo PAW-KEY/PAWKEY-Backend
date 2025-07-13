@@ -18,6 +18,7 @@ public class PostLikeFacade {
 	private final PostService postService;
 	private final PostLikeService postLikeService;
 
+
 	@Transactional
 	public void like(Long postId, Long userId) {
 		final UserEntity user = userService.findById(userId);
@@ -26,3 +27,7 @@ public class PostLikeFacade {
 		postLikeService.like(user, post);
 	}
 }
+
+
+
+

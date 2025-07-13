@@ -4,6 +4,9 @@ import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostCreateCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
+import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
+import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -20,6 +23,7 @@ public class PostFacade {
 	private final UserService userService;
 	private final PostService postService;
 	private final ImageStorage imageStorage;
+	private final RouteService routeService;
 
 	@Transactional
 	public void createPost(Long userId,
@@ -29,6 +33,7 @@ public class PostFacade {
 
 
 		UserEntity writer = userService.findById(userId);
+		RouteEntity region = routeService.getRouteById(requestDto.getRouteId());
 
 
 		final String routeImageUrl = (routeImage != null && !routeImage.isEmpty())
@@ -41,7 +46,6 @@ public class PostFacade {
 
 
 		PostCreateCommand command = new PostCreateCommand(
-			userId,
 			requestDto.getTitle(),
 			requestDto.getDescription(),
 			requestDto.isPublic(),

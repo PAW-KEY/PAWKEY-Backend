@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class PostCreateCommand {
-	private final Long userId;
 	private final String title;
 	private final String description;
 	private final boolean isPublic;
