@@ -3,13 +3,13 @@ package org.sopt.pawkey.backendapi.domain.routes.api.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.coordinate.Coordinate;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand.CommandCoordinate;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record RouteRegisterRequest(
-	@Schema(description = "루트 좌표 리스트", example = "[[127.1, 37.5], [127.2, 37.6]]")
+	@Schema(description = "루트 좌표 리스트")
 	List<Coordinate> coordinates,
 	Double distance,
 	int duration,
@@ -19,9 +19,7 @@ public record RouteRegisterRequest(
 ) {
 	public RouteRegisterCommand toCommand() {
 		return RouteRegisterCommand.builder()
-			.coordinates(coordinates().stream()
-				.map(coordinate -> new CommandCoordinate(coordinate.longitude, coordinate.latitude))
-				.toList())
+			.coordinates(coordinates())
 			.distance(distance())
 			.duration(duration())
 			.startedAt(startedAt())
@@ -30,7 +28,4 @@ public record RouteRegisterRequest(
 			.build();
 	}
 
-	public record Coordinate(Double longitude, Double latitude) {
-
-	}
 }

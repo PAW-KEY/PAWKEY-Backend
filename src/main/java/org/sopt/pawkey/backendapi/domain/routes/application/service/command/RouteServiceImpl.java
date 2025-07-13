@@ -1,11 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.routes.application.service.command;
 
-import java.util.List;
-
-import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand.CommandCoordinate;
 import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteRepository;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
@@ -18,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 public class RouteServiceImpl implements RouteService {
 
 	private final RouteRepository routeRepository;
-	private final ImageStorage imageStorage;
 
 	@Override
 	public Void saveRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
