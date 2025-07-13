@@ -33,35 +33,38 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class S3ImageService implements ImageStorage {
-	private static final String PROFILE_DIR = "profile";
-	private static final String ROUTE_DIR = "route";
-	private static final String WALK_DIR = "walk";
+public class S3ImageStorage implements ImageStorage {
+
 	private final AmazonS3 amazonS3;
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
 
 	@Override
-	public String uploadProfileImage(MultipartFile image) {
-		return uploadImageByFolder(image, PROFILE_DIR);
+	public String uploadImage(MultipartFile image, String dir) {
+		return uploadImageByFolder(image, dir);
 	}
 
 	@Override
-	public String uploadRouteImage(MultipartFile image) {
-		return uploadImageByFolder(image, ROUTE_DIR);
-	}
-
-	@Override
-	public List<String> uploadWalkImages(List<MultipartFile> images) {
+	public List<String> uploadImages(List<MultipartFile> images, String dir) {
 		if (images.size() > 3) {
 			throw new S3BusinessException(S3ErrorCode.TOO_MANY_FILES);
 		}
 
 		List<String> uploadedUrls = new ArrayList<>();
 		for (MultipartFile image : images) {
-			uploadedUrls.add(uploadImageByFolder(image, WALK_DIR));
+			uploadedUrls.add(uploadImageByFolder(image, dir));
 		}
 		return uploadedUrls;
+	}
+
+	@Override
+	public void deleteImage(String address) {
+		String key = getKeyFromImageAddress(address);
+		try {
+			amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
+		} catch (Exception e) {
+			throw new S3BusinessException(S3ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
+		}
 	}
 
 	private String uploadImageByFolder(MultipartFile image, String folder) {
@@ -69,7 +72,7 @@ public class S3ImageService implements ImageStorage {
 			throw new S3BusinessException(S3ErrorCode.EMPTY_FILE_EXCEPTION);
 		}
 
-		validateImageFileExtention(image.getOriginalFilename());
+		validateImageFileExtension(image.getOriginalFilename());
 
 		try {
 			return uploadImageToS3(image, folder);
@@ -107,7 +110,7 @@ public class S3ImageService implements ImageStorage {
 		return amazonS3.getUrl(bucketName, s3FileName).toString();
 	}
 
-	private void validateImageFileExtention(String filename) {
+	private void validateImageFileExtension(String filename) {
 		int lastDotIndex = filename.lastIndexOf(".");
 		if (lastDotIndex == -1) {
 			throw new S3BusinessException(S3ErrorCode.NO_FILE_EXTENSION);
@@ -118,15 +121,6 @@ public class S3ImageService implements ImageStorage {
 
 		if (!allowedExtensions.contains(extension)) {
 			throw new S3BusinessException(S3ErrorCode.INVALID_FILE_EXTENSION);
-		}
-	}
-
-	public void deleteImageFromS3(String imageAddress) {
-		String key = getKeyFromImageAddress(imageAddress);
-		try {
-			amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
-		} catch (Exception e) {
-			throw new S3BusinessException(S3ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
 		}
 	}
 
