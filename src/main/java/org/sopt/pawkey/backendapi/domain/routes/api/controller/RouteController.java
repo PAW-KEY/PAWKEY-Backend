@@ -35,8 +35,11 @@ public class RouteController {
 	public ResponseEntity<ApiResponse<Void>> registerRoute(@RequestHeader(AppConstants.USER_ID_HEADER) Long userId,
 		@RequestPart("trackingImage") MultipartFile trackingImage,
 		@Valid @RequestPart("routeRequest") RouteRegisterRequest routeRegisterRequest) {
+
+		routeRegisterFacade.execute(userId, routeRegisterRequest.toCommand(), trackingImage);
+
 		return ResponseEntity.ok(
-			ApiResponse.success(routeRegisterFacade.execute(userId, routeRegisterRequest.toCommand(), trackingImage)));
+			ApiResponse.success());
 	}
 
 }

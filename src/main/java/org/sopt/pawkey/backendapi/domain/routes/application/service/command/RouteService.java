@@ -5,5 +5,5 @@ import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteReg
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 
 public interface RouteService {
-	Void saveRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage);
+	void saveRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage);
 }

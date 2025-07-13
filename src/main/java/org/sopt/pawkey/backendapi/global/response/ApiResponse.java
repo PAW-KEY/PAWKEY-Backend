@@ -28,6 +28,10 @@ public class ApiResponse<T> {
 	 */
 	private T data;
 
+	public static ApiResponse<Void> success() {
+		return success(null);
+	}
+
 	/**
 	 * 성공 응답 생성
 	 *

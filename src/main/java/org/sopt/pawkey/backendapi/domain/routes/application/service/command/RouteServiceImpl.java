@@ -16,10 +16,9 @@ public class RouteServiceImpl implements RouteService {
 	private final RouteRepository routeRepository;
 
 	@Override
-	public Void saveRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
+	public void saveRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
 		RouteEntity route = RouteEntity.createRoute(user, command, trackingImage);
 
 		routeRepository.save(route);
-		return null;
 	}
 }

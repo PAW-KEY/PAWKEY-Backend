@@ -20,12 +20,12 @@ public class RouteRegisterFacade {
 	private final RouteService routeService;
 	private final ImageService imageService;
 
-	public Void execute(Long userId, RouteRegisterCommand command, MultipartFile trackingImage) {
+	public void execute(Long userId, RouteRegisterCommand command, MultipartFile trackingImage) {
 		UserEntity user = userService.getByUserId(userId);
 		ImageEntity imageEntity = imageService.storeRouteImage(trackingImage);
 
 		try {
-			return routeService.saveRoute(user, command, imageEntity);
+			routeService.saveRoute(user, command, imageEntity);
 		} catch (Exception e) {
 			imageService.deleteImage(imageEntity);
 			throw e;
