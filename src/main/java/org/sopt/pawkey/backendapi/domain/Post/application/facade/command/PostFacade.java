@@ -46,6 +46,7 @@ public class PostFacade {
 			userId,
 			requestDto.getTitle(),
 			requestDto.getDescription(),
+			requestDto.isPublic(),
 			requestDto.getSelectedOptionsForCategories(),
 			routeImageUrl,
 			postImageUrlList,
