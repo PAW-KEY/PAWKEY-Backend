@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.region.application.facade.command;
+package org.sopt.pawkey.backendapi.domain.region.application.facade.query;
 
 import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionCoordinatesCommand;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegionCoordinatesResult;

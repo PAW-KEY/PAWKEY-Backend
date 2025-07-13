@@ -17,6 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(userHeaderInterceptor)
-			.addPathPatterns("/api/**"); // 적용하고 싶은 URL 경로
+			.addPathPatterns("/api/**")
+			.excludePathPatterns("/api/v1/regions")
+		; // 적용하고 싶은 URL 경로
 	}
 }
