@@ -2,12 +2,12 @@ package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
-import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
-import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostCreateCommand;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
@@ -20,33 +20,32 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class PostFacade {
+@Transactional
+public class PostRegisterFacade {
 	private final UserService userService;
-	private final PostService postService;
-	private final ImageStorage imageStorage;
 	private final RouteService routeService;
 	private final ImageService imageService;
+	private final PostService postService;
 
-	@Transactional
-	public void createPost(Long userId,
-		PostCreateRequestDto requestDto,
+	public PostRegisterResponseDto execute(Long userId,
+		PostRegisterCommand command,
 		List<MultipartFile> postImages) {
+
 		UserEntity writer = userService.findById(userId);
-		RouteEntity region = routeService.getRouteById(requestDto.getRouteId());
+		RouteEntity route = routeService.getRouteById(command.routeId());
+
+		// ✅ 이미지 저장
 		List<ImageEntity> imageEntities = imageService.storeWalkPostImages(postImages);
 
-
-		PostCreateCommand command = new PostCreateCommand(
-			requestDto.getTitle(),
-			requestDto.getDescription(),
-			requestDto.isPublic(),
-			requestDto.getSelectedOptionsForCategories(),
-			postImageUrlList,
-			requestDto.getRouteId()
-
-		);
-
-		// 4. 게시물 생성
-		postService.createPost(writer, command);
+		try {
+			PostEntity post = postService.savePost(writer, command, route, imageEntities);
+			return PostRegisterResponseDto.from(post);
+		} catch (Exception e) {
+			// 이미지 rollback
+			for (ImageEntity image : imageEntities) {
+				imageService.deleteImage(image);
+			}
+			throw e;
+		}
 	}
 }

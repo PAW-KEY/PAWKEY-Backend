@@ -62,12 +62,12 @@ public class PostEntity extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostSelectedCategoryOptionEntity> postSelectedCategoryOptionEntityList = new ArrayList<>();
 
-	// Hibernate는 fetch join 시 여러 List 컬렉션을 동시에 조회할 수 없으므로, Set으로 바꿔 문제를 회피. Set은 중복을 허용하지 않고 순서가 없으며, Hibernate에서 fetch join 시 안정적
-	// 추후에 @OrderColumn(name = "order_idx") 같은 컬럼을 추가해 DB에 순서 정보를 저장할 수도 있음
+
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<PostImageEntity> postImageEntityList = new HashSet<>();
+	private List<PostImageEntity> postImages = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<PostCategoryOptionTop3Entity> postCategoryOptionTop3EntityList = new ArrayList<>();
+
 
 }

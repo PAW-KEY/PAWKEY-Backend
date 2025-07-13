@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.post.api.dto.request;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.SelectedOptionsForCategory;
 
 import lombok.Getter;
@@ -17,4 +18,6 @@ public class PostCreateRequestDto {
 	private final List<SelectedOptionsForCategory> selectedOptionsForCategories;
 	private final Long routeId;
 
+	public PostRegisterCommand toCommand() {
+	}
 }

@@ -5,7 +5,9 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostFacade;
+import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 
 	private final PostFacade postFacade;
+	private final PostRegisterFacade postRegisterFacade;
 
 	@Operation(summary = "산책 게시물 등록", description = "산책 완료 후, 산책 게시물 등록합니다. ", tags = {"Posts"})
 	@ApiResponses({
@@ -40,22 +43,12 @@ public class PostController {
 	@PostMapping("")
 	public ResponseEntity<ApiResponse<Void>> createPost(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
-		@RequestPart("data")
-		@Valid @NotNull
-		@Parameter(description = "게시물 생성 요청 데이터 (JSON 형식)")
-		PostCreateRequestDto requestDto,
+		@RequestPart("data") @Valid @NotNull PostCreateRequestDto requestDto,
 
-		// @RequestPart("image")
-		// @Valid @NotNull
-		// @Parameter(description = "게시물에 첨부할 대표 이미지 (이미지 파일)")
-		// MultipartFile image,
-
-		@RequestPart("images")
-		@Valid @NotNull
-		@Parameter(description = "게시물에 첨부할 대표 이미지 (이미지 파일)")
-		List<MultipartFile> images
+		@RequestPart("images") @Valid @NotNull List<MultipartFile> images
 
 	) {
+		PostRegisterCommand command = requestDto.toCommand();
 		postFacade.createPost(userId.longValue(), requestDto, images);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
