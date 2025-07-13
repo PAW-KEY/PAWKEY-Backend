@@ -6,7 +6,6 @@ import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
-import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostCreateCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
@@ -27,26 +26,5 @@ public class PostFacade {
 	private final RouteService routeService;
 	private final ImageService imageService;
 
-	@Transactional
-	public void createPost(Long userId,
-		PostCreateRequestDto requestDto,
-		List<MultipartFile> postImages) {
-		UserEntity writer = userService.findById(userId);
-		RouteEntity region = routeService.getRouteById(requestDto.getRouteId());
-		List<ImageEntity> imageEntities = imageService.storeWalkPostImages(postImages);
 
-
-		PostCreateCommand command = new PostCreateCommand(
-			requestDto.getTitle(),
-			requestDto.getDescription(),
-			requestDto.isPublic(),
-			requestDto.getSelectedOptionsForCategories(),
-			postImageUrlList,
-			requestDto.getRouteId()
-
-		);
-
-		// 4. 게시물 생성
-		postService.createPost(writer, command);
-	}
 }

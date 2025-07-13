@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void savePost(UserEntity writer,
+	public PostEntity savePost(UserEntity writer,
 		PostRegisterCommand command,
 		RouteEntity route,
 		List<ImageEntity> images) {
@@ -56,6 +56,7 @@ public class PostServiceImpl implements PostService {
 			post.getPostImages().add(postImage);
 		}
 		postRepository.save(post);
+		return post;
 	}
 
 }

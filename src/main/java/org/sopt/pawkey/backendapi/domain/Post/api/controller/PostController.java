@@ -49,7 +49,7 @@ public class PostController {
 
 	) {
 		PostRegisterCommand command = requestDto.toCommand();
-		postFacade.createPost(userId.longValue(), requestDto, images);
+		postRegisterFacade.execute(userId.longValue(), command, images);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
 
