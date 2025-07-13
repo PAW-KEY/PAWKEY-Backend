@@ -9,6 +9,8 @@ import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException;
+import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
@@ -97,4 +99,9 @@ public class RouteEntity extends BaseEntity {
 		return geometryFactory.createLineString(coords);
 	}
 
+	public void validateOwnership(UserEntity user) {
+		if (!getUser().equals(user)) {
+			throw new RouteBusinessException(RouteErrorCode.ROUTE_SHOW_FORBIDDEN);
+		}
+	}
 }

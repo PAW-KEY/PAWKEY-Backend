@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.routes.application.facade.query;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -29,21 +30,14 @@ public class GetRouteTrackingInfoFacade {
 
 	public GetRouteTrackingInfoResult execute(Long userId, GetRouteTrackingInfoCommand getRouteTrackingInfoCommand) {
 		UserEntity user = userService.getByUserId(userId);
-		RouteEntity route = routeService.getRouteById(getRouteTrackingInfoCommand.routeId());
-		if (!route.getUser().equals(user)) {
-			throw new RouteBusinessException(RouteErrorCode.ROUTE_SHOW_FORBIDDEN);
-		}
 
-		String dateDescription = route.getCreatedAt()
-			.format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
-				.withLocale(Locale.KOREAN));
+		RouteEntity route = routeService.getRouteById(getRouteTrackingInfoCommand.routeId());
+
+		route.validateOwnership(user);
+		String dateDescription = getFormattedDate(route.getCreatedAt());
 		String locationDescription = route.getRegion().getFullRegionName();
 
-		PetEntity pet = user.getPet();
-		if (pet == null) {
-			throw new RouteBusinessException(RouteErrorCode.USER_PET_NOT_REGISTERED);
-		}
-		String petName = pet.getName();
+		PetEntity pet = user.getPetOrThrow();
 
 		return new GetRouteTrackingInfoResult(
 			GetRouteTrackingInfoResult.RouteDto.builder()
@@ -51,7 +45,13 @@ public class GetRouteTrackingInfoFacade {
 				.locationDescription(locationDescription)
 				.dateDescription(dateDescription)
 				.build(),
-			petName
+			pet.getName()
 		);
+	}
+
+	private static String getFormattedDate(LocalDateTime date) {
+		return date
+			.format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
+				.withLocale(Locale.KOREAN));
 	}
 }
