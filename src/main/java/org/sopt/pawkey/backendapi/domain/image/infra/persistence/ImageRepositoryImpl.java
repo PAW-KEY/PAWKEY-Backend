@@ -21,4 +21,9 @@ public class ImageRepositoryImpl implements ImageRepository {
 	public List<ImageEntity> saveAll(List<ImageEntity> entities) {
 		return imageRepository.saveAll(entities);
 	}
+
+	@Override
+	public void delete(ImageEntity imageEntity) {
+		imageRepository.delete(imageEntity);
+	}
 }

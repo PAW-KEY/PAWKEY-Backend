@@ -8,4 +8,6 @@ public interface ImageRepository {
 	ImageEntity save(ImageEntity imageEntity);
 
 	List<ImageEntity> saveAll(List<ImageEntity> entities);
+
+	void delete(ImageEntity imageEntity);
 }

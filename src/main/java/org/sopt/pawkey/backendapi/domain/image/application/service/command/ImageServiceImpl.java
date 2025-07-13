@@ -58,6 +58,12 @@ public class ImageServiceImpl implements ImageService {
 		return imageRepository.saveAll(images);
 	}
 
+	@Override
+	public void deleteImage(ImageEntity imageEntity) {
+		imageStorage.deleteImage(imageEntity.getImageUrl());
+		imageRepository.delete(imageEntity);
+	}
+
 	private ImageEntity createImage(MultipartFile file, String imageUrl) {
 		List<Integer> imageDimensions = List.of();
 		try {

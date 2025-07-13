@@ -12,4 +12,6 @@ public interface ImageService {
 	ImageEntity storeRouteImage(MultipartFile file);
 
 	List<ImageEntity> storeWalkPostImages(List<MultipartFile> files);
+
+	void deleteImage(ImageEntity imageEntity);
 }

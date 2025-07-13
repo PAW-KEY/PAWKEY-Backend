@@ -24,6 +24,11 @@ public class RouteRegisterFacade {
 		UserEntity user = userService.getByUserId(userId);
 		ImageEntity imageEntity = imageService.storeRouteImage(trackingImage);
 
-		return routeService.saveRoute(user, command, imageEntity);
+		try {
+			return routeService.saveRoute(user, command, imageEntity);
+		} catch (Exception e) {
+			imageService.deleteImage(imageEntity);
+			throw e;
+		}
 	}
 }
