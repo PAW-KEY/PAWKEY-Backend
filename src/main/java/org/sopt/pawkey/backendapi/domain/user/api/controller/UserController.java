@@ -5,7 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostResponseDto;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostsResponseWrapperDto;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapper;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLikedPostQueryFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -41,11 +41,10 @@ public class UserController {
 	private final UserLikedPostQueryFacade userLikedPostQueryFacade;
 
 	@GetMapping("/me/likes")
-	public ResponseEntity<ApiResponse<LikedPostsResponseWrapperDto>> getMyLikedPosts(
+	public ResponseEntity<ApiResponse<ListResponseWrapper<LikedPostResponseDto>>> getMyLikedPosts(
 		@RequestHeader("X-USER-ID") Long userId
 	) {
 		List<LikedPostResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
-		LikedPostsResponseWrapperDto responseDto = new LikedPostsResponseWrapperDto(likedPosts);
-		return ResponseEntity.ok(ApiResponse.success(responseDto));
+		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(likedPosts)));
 	}
 }
