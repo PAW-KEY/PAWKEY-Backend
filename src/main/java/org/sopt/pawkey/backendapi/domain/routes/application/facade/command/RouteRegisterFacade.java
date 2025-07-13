@@ -4,7 +4,7 @@ import org.sopt.pawkey.backendapi.domain.image.application.service.command.Image
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.RouteRegisterResult;
-import org.sopt.pawkey.backendapi.domain.routes.application.service.command.RouteService;
+import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.routes.application.service.command;
+package org.sopt.pawkey.backendapi.domain.routes.application.service;
 
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
@@ -7,4 +7,6 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public interface RouteService {
 	RouteEntity saveRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage);
+
+	RouteEntity getRouteById(Long routeId);
 }
