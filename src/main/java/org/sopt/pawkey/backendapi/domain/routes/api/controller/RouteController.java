@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,7 +34,7 @@ public class RouteController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)")})
 	public ResponseEntity<ApiResponse<Void>> registerRoute(@RequestHeader(AppConstants.USER_ID_HEADER) Long userId,
 		@RequestPart("trackingImage") MultipartFile trackingImage,
-		@RequestPart("routeRequest") RouteRegisterRequest routeRegisterRequest) {
+		@Valid @RequestPart("routeRequest") RouteRegisterRequest routeRegisterRequest) {
 		return ResponseEntity.ok(
 			ApiResponse.success(routeRegisterFacade.execute(userId, routeRegisterRequest.toCommand(), trackingImage)));
 	}

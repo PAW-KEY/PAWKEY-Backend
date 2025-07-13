@@ -10,7 +10,7 @@ import lombok.Builder;
 @Builder
 public record RouteRegisterCommand(
 	List<Coordinate> coordinates,
-	Double distance,
+	int distance,
 	int duration,
 	LocalDateTime startedAt,
 	LocalDateTime endedAt,

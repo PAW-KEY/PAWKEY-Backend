@@ -48,7 +48,7 @@ public class RouteEntity extends BaseEntity {
 	private UserEntity user;
 
 	@Column(name = "distance", nullable = false)
-	private Double distance;
+	private int distance;
 
 	@Column(name = "duration", nullable = false)
 	private Integer duration;
