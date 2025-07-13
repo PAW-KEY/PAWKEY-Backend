@@ -8,11 +8,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 @Builder(access = AccessLevel.PROTECTED)
-public record GetRegionListResponse(
+public record GetRegionListResponseDto(
 	List<DistrictDto> districtDtos
 ) {
-	public static GetRegionListResponse from(GetRegionListResult result) {
-		return GetRegionListResponse.builder()
+	public static GetRegionListResponseDto from(GetRegionListResult result) {
+		return GetRegionListResponseDto.builder()
 			.districtDtos(result.districtDtos().stream().map(DistrictDto::from).toList())
 			.build();
 	}

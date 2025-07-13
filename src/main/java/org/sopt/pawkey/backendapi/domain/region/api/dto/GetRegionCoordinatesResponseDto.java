@@ -7,12 +7,12 @@ import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegion
 import lombok.Builder;
 
 @Builder
-public record GetRegionCoordinatesResponse(
+public record GetRegionCoordinatesResponseDto(
 	String regionName,
 	Map<String, Object> geometryDto
 ) {
-	public static GetRegionCoordinatesResponse from(GetRegionCoordinatesResult result) {
-		return GetRegionCoordinatesResponse.builder()
+	public static GetRegionCoordinatesResponseDto from(GetRegionCoordinatesResult result) {
+		return GetRegionCoordinatesResponseDto.builder()
 			.regionName(result.regionName())
 			.geometryDto(result.geometryDto())
 			.build();
