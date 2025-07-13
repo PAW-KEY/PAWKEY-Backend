@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 public class PostCreateRequestDto {
 	private final Long userId;
 	private final String title;
-	private final String content;
+	private final String description;
+	private final boolean isPublic;
 	private final List<SelectedOptionsForCategory> selectedOptionsForCategories;
-
-
+	private final Long routeId;
 
 }

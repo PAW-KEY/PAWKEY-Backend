@@ -8,3 +8,5 @@ public class RegionBusinessException extends BusinessException {
 		super(errorCode);
 	}
 }
+
+

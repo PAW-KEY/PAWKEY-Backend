@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
+import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostCreateCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostImageService;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -19,35 +21,39 @@ import lombok.RequiredArgsConstructor;
 public class PostFacade {
 	private final UserService userService;
 	private final PostService postService;
-	private final PostImageService postImageService;
+	private final ImageStorage imageStorage;
 
 	@Transactional
 	public void createPost(Long userId,
 		PostCreateRequestDto requestDto,
 		MultipartFile routeImage,
-		List<MultipartFile> postImages) throws IOException {
+		List<MultipartFile> postImages) {
+
 
 		UserEntity writer = userService.findById(userId);
 
-		String routeImageUrl = null;
-		if (routeImage != null && !routeImage.isEmpty()) {
-			routeImageUrl = postImageService.saveRouteImage(routeImage);
-		}
 
-		List<String> postImageUrlList = List.of();
-		if (postImages != null && !postImages.isEmpty()) {
-			postImageUrlList = postImageService.savePostImages(postImages);
-		}
+		final String routeImageUrl = (routeImage != null && !routeImage.isEmpty())
+			? imageStorage.uploadRouteImage(routeImage)
+			: null;
+
+		final List<String> postImageUrlList = (postImages != null && !postImages.isEmpty())
+			? imageStorage.uploadWalkImages(postImages)
+			: Collections.emptyList();
+
 
 		PostCreateCommand command = new PostCreateCommand(
 			userId,
 			requestDto.getTitle(),
-			requestDto.getContent(),
+			requestDto.getDescription(),
 			requestDto.getSelectedOptionsForCategories(),
 			routeImageUrl,
-			postImageUrlList
+			postImageUrlList,
+			requestDto.getRouteId()
+
 		);
 
-		postService.createPost(writer, command);
+		// 4. 게시물 생성
+		postService.createPost(writer,command);
 	}
 }

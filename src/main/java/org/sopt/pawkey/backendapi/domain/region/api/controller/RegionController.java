@@ -5,7 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import org.sopt.pawkey.backendapi.domain.region.api.dto.GetRegionCoordinatesResponse;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionCoordinatesCommand;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegionCoordinatesResult;
-import org.sopt.pawkey.backendapi.domain.region.application.facade.command.GetRegionCoordinatesFacade;
+import org.sopt.pawkey.backendapi.domain.region.application.facade.GetRegionCoordinatesFacade;
 import org.sopt.pawkey.backendapi.global.constants.AppConstants;
 import org.sopt.pawkey.backendapi.global.exception.BusinessException;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;

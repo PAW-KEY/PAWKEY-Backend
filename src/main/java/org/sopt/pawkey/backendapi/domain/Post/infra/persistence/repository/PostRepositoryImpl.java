@@ -18,4 +18,9 @@ public class PostRepositoryImpl implements PostRepository {
 	public Optional<PostEntity> findById(Long postId) {
 		return jpaRepository.getByPostId(postId);
 	}
+
+	@Override
+	public void save(PostEntity post) {
+		jpaRepository.save(post);
+	}
 }
