@@ -6,4 +6,6 @@ import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntit
 
 public interface PostRepository {
 	Optional<PostEntity> findById(Long postId);
+
+	void save(PostEntity post);
 }
