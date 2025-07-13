@@ -91,7 +91,7 @@ public class RouteEntity extends BaseEntity {
 		GeometryFactory geometryFactory = new GeometryFactory();
 
 		Coordinate[] coords = coordinates.stream()
-			.map(coord -> new Coordinate(coord.getLongitude(), coord.getLongitude()))
+			.map(coord -> new Coordinate(coord.longitude(), coord.longitude()))
 			.toArray(Coordinate[]::new);
 
 		return geometryFactory.createLineString(coords);
