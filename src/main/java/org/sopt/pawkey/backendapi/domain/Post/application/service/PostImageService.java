@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface PostImageService {
 	String saveRouteImage(MultipartFile image) throws IOException;
 
-	List<String> savePostImages(List<MultipartFile> images) throws IOException;
+	List<String> savePostImages(List<MultipartFile> images);
 }

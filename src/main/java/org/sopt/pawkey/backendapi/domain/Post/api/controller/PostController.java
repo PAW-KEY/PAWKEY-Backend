@@ -2,7 +2,6 @@ package org.sopt.pawkey.backendapi.domain.post.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
@@ -20,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
@@ -35,24 +35,27 @@ public class PostController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 게시물 등록 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "제목/본문 누락 또는 길이 제한 초과", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "선택한 카테고리 또는 옵션이 유효하지 않음", content = @Content(mediaType = "application/json")),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping("")
 	public ResponseEntity<ApiResponse<Void>> createPost(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@RequestPart("data")
+		@Valid @NotNull
 		@Parameter(description = "게시물 생성 요청 데이터 (JSON 형식)")
 		PostCreateRequestDto requestDto,
 
 		@RequestPart("image")
+		@Valid @NotNull
 		@Parameter(description = "게시물에 첨부할 대표 이미지 (이미지 파일)")
 		MultipartFile image,
 
 		@RequestPart("images")
+		@Valid @NotNull
 		@Parameter(description = "게시물에 첨부할 대표 이미지 (이미지 파일)")
 		List<MultipartFile> images
 
-	) throws IOException {
+	) {
 		postFacade.createPost(userId.longValue(), requestDto, image, images);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}

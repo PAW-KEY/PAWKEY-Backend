@@ -3,7 +3,6 @@ package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostCreateCommand;
-import org.sopt.pawkey.backendapi.domain.post.application.service.PostImageService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
