@@ -16,27 +16,34 @@ public class PostLikeServiceImpl implements PostLikeService {
 
 	private final PostLikeRepository postLikeRepository;
 
-	/**
-	 * 본인 게시글이면 예외, 이미 좋아요가 존재하면 예외, 없으면 저장
-	 */
 	@Override
 	public void like(final UserEntity user, final PostEntity post) {
-		// 본인 게시글에 좋아요 금지
-		if (post.getUser().getUserId().equals(user.getUserId())) {
-			throw new PostLikeBusinessException(PostLikeErrorCode.CANNOT_LIKE_OWN_POST);
-		}
+		validateNotSelfLike(user, post);
 
-		// 이미 좋아요한 경우 예외
-		boolean exists = postLikeRepository.existsByUserIdAndPostId(user.getUserId(), post.getPostId());
-		if (exists) {
+		if (postLikeRepository.existsByUserIdAndPostId(user.getUserId(), post.getPostId())) {
 			throw new PostLikeBusinessException(PostLikeErrorCode.DUPLICATE_LIKE);
 		}
 
-		// 좋아요 저장
-		final PostLikeEntity postLike = PostLikeEntity.builder()
+		postLikeRepository.save(PostLikeEntity.builder()
 			.post(post)
 			.user(user)
-			.build();
-		postLikeRepository.save(postLike);
+			.build());
+	}
+
+	@Override
+	public void cancelLike(UserEntity user, PostEntity post) {
+		validateNotSelfLike(user, post);
+
+		PostLikeEntity postLike = postLikeRepository
+			.findByUserIdAndPostId(user.getUserId(), post.getPostId())
+			.orElseThrow(() -> new PostLikeBusinessException(PostLikeErrorCode.LIKE_NOT_FOUND));
+
+		postLikeRepository.delete(postLike);
+	}
+
+	private void validateNotSelfLike(UserEntity user, PostEntity post) {
+		if (post.getUser().getUserId().equals(user.getUserId())) {
+			throw new PostLikeBusinessException(PostLikeErrorCode.CANNOT_LIKE_OWN_POST);
+		}
 	}
 }

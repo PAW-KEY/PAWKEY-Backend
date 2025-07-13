@@ -1,7 +1,7 @@
-// PostLikeRepositoryImpl.java
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
@@ -24,6 +24,16 @@ public class PostLikeRepositoryImpl implements PostLikeRepository {
 	@Override
 	public boolean existsByUserIdAndPostId(Long userId, Long postId) {
 		return jpaRepository.existsByUser_UserIdAndPost_PostId(userId, postId);
+	}
+
+	@Override
+	public Optional<PostLikeEntity> findByUserIdAndPostId(Long userId, Long postId) {
+		return jpaRepository.findByUser_UserIdAndPost_PostId(userId, postId);
+	}
+
+	@Override
+	public void delete(PostLikeEntity postLike) {
+		jpaRepository.delete(postLike);
 	}
 
 	@Override

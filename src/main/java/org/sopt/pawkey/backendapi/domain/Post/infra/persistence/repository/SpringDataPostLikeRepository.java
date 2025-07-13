@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,15 +12,16 @@ public interface SpringDataPostLikeRepository extends JpaRepository<PostLikeEnti
 	boolean existsByUser_UserIdAndPost_PostId(Long userId, Long postId);
 
 	@Query("""
-    select pl
-    from PostLikeEntity pl
-      join fetch pl.post p
-      join fetch p.postImageEntityList pi
-      join fetch pi.image
-      join fetch p.user u
-      left join fetch u.petEntityList
-    where pl.user.userId = :userId
+		  select pl
+		  from PostLikeEntity pl
+		    join fetch pl.post p
+		    join fetch p.postImageEntityList pi
+		    join fetch pi.image
+		    join fetch p.user u
+		    left join fetch u.petEntityList
+		  where pl.user.userId = :userId
 		""")
 	List<PostLikeEntity> findAllByUserWithPostAndImages(@Param("userId") Long userId);
 
+	Optional<PostLikeEntity> findByUser_UserIdAndPost_PostId(Long userId, Long postId);
 }

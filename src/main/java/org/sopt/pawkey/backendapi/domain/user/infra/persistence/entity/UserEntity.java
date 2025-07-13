@@ -46,16 +46,8 @@ public class UserEntity extends BaseEntity {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PetEntity> petEntityList = new ArrayList<>();
-
-	public PetEntity getPet() {
-		return petEntityList.stream()
-			.findFirst()
-			.orElse(null);
-	} // Optional<PetEntity>을 반환하도록 변경하여 null 처리를 명시적으로 만드는 것을 고려
-
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ReviewEntity> reviewEntityList = new ArrayList<>();
-
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostLikeEntity> postLikeEntityList = new ArrayList<>();
 
@@ -71,6 +63,12 @@ public class UserEntity extends BaseEntity {
 		this.age = age;
 		this.region = region;
 	}
+
+	public PetEntity getPet() {
+		return petEntityList.stream()
+			.findFirst()
+			.orElse(null);
+	} // Optional<PetEntity>을 반환하도록 변경하여 null 처리를 명시적으로 만드는 것을 고려
 
 }
 

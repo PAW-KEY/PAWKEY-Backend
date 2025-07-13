@@ -16,5 +16,6 @@ public record LikedPostResponseDto(
 		Long userId,
 		String petName,
 		String petProfileImageUrl
-	) {}
+	) {
+	}
 }

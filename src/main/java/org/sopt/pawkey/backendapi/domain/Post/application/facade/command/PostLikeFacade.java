@@ -20,10 +20,16 @@ public class PostLikeFacade {
 
 	@Transactional
 	public void like(Long postId, Long userId) {
-		final UserEntity user = userService.findById(userId);
-		final PostEntity post = postService.findById(postId);
-
+		UserEntity user = userService.findById(userId);
+		PostEntity post = postService.findById(postId);
 		postLikeService.like(user, post);
+	}
+
+	@Transactional
+	public void cancelLike(Long postId, Long userId) {
+		UserEntity user = userService.findById(userId);
+		PostEntity post = postService.findById(postId);
+		postLikeService.cancelLike(user, post);
 	}
 }
 
