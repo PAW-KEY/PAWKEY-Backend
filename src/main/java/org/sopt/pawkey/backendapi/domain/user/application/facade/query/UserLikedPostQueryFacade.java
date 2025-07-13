@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,12 +36,15 @@ public class UserLikedPostQueryFacade {
 			.map(postLike -> {
 				var post = postLike.getPost();
 
-				String repImageUrl = post.getPostImageEntityList()
-					.stream()
-					.min(Comparator.comparing(PostImageEntity::getCreatedAt)) // 또는 다른 명확한 기준
-					.map(PostImageEntity::getImage)      // ImageEntity
-					.map(imageEntity -> imageEntity.getImageUrl())  // String URL
-					.orElse(null);
+				String imageurldummy = "imageurl";
+
+				// String repImageUrl = post.getPostImageEntityList()
+				// 	.stream()
+				// 	.min(Comparator.comparing(PostImageEntity::getCreatedAt)) // 또는 다른 명확한 기준
+				// 	.map(PostImageEntity::getImage)      // ImageEntity
+				// 	.map(imageEntity -> imageEntity.getImageUrl())  // String URL
+				// 	.map("imageurl")
+				// 	.orElse(null);
 
 				var writer = post.getUser();
 				Long writerId = writer.getUserId();
@@ -59,7 +63,8 @@ public class UserLikedPostQueryFacade {
 					post.getPostId(),
 					post.getCreatedAt(),
 					isLiked,
-					repImageUrl,
+					imageurldummy,
+					//repImageUrl,
 					new LikedPostResponseDto.WriterDto(
 						writerId,
 						writerPetName,
