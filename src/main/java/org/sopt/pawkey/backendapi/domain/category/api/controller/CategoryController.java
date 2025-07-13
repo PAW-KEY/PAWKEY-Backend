@@ -5,12 +5,8 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListResponseDto;
-import org.sopt.pawkey.backendapi.domain.category.application.dto.response.CategoryResult;
+import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryQueryService;
-import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryService;
-import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetTraitCategoryListResponseDto;
-import org.sopt.pawkey.backendapi.domain.pet.application.dto.response.PetTraitCategoryResult;
-import org.sopt.pawkey.backendapi.domain.pet.application.service.PetQueryService;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

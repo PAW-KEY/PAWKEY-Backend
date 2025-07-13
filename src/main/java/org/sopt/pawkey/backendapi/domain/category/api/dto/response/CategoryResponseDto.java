@@ -2,7 +2,7 @@ package org.sopt.pawkey.backendapi.domain.category.api.dto.response;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.category.application.dto.response.CategoryResult;
+import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 
 public record CategoryResponseDto (
 	Long categoryId,

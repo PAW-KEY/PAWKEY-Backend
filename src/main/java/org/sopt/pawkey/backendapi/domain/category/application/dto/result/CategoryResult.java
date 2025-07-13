@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.category.application.dto.response;
+package org.sopt.pawkey.backendapi.domain.category.application.dto.result;
 
 import java.util.List;
 
