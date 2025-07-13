@@ -12,7 +12,6 @@ public class PostCreateCommand {
 	private final String description;
 	private final boolean isPublic;
 	private final List<SelectedOptionsForCategory> selectedOptionsForCategories;
-	private final String routeImageUrl;
 	private final List<String> postImageUrlList;
 	private final Long routeId;
 
