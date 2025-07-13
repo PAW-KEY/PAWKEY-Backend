@@ -58,7 +58,9 @@ public class RouteController {
 	@Operation(summary = "산책 루트 정보 조회", description = "게시물 등록 페이지에서 필요한 산책 루트 정보 조회하는 api입니다.", tags = {"Route"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 루트 정보 조회 성공"),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)")})
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401, U40402 또는 R40401 에러코드 확인)"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "권한 검증 실패 (R40301 에러코드 확인)")
+	})
 	public ResponseEntity<ApiResponse<GetRouteTrackingInfoResponse>> getTrackingInfo(
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@PathVariable("routeId") Long routeId
