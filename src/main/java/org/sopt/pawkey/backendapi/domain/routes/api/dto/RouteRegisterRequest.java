@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public record RouteRegisterRequest(
+	@Schema(description = "루트 좌표 리스트", example = "[[127.1, 37.5], [127.2, 37.6]]")
 	List<List<Double>> coordinates,
 	Double distance,
 	int duration,
