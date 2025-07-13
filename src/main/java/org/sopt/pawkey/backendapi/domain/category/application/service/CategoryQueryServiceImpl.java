@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryQueryServiceImpl implements CategoryQueryService{
+public class CategoryQueryServiceImpl implements CategoryQueryService {
 	private final CategoryRepository categoryRepository;
 
 	@Override

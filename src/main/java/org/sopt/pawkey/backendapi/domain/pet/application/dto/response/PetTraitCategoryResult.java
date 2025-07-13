@@ -11,7 +11,6 @@ public record PetTraitCategoryResult(
 	List<PetTraitOptionResult> options
 ) {
 
-
 	//상위 - 강아지 특성 카테고리(상세 옵션 포함)
 	public static PetTraitCategoryResult fromEntity(PetTraitCategoryEntity petTraitCategory) {
 		return new PetTraitCategoryResult(
@@ -22,6 +21,7 @@ public record PetTraitCategoryResult(
 				.toList()
 		);
 	}
+
 	//하위 - 강아지 카테고리 별 상세 옵션
 	public record PetTraitOptionResult(
 		Long id,

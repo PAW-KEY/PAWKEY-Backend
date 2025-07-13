@@ -1,8 +1,12 @@
 package org.sopt.pawkey.backendapi.global.config;
 
+import java.util.ArrayList;
+
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -10,6 +14,12 @@ import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
 public class SwaggerConfig {
+
+	public SwaggerConfig(MappingJackson2HttpMessageConverter converter) {
+		var supportedMediaTypes = new ArrayList<>(converter.getSupportedMediaTypes());
+		supportedMediaTypes.add(new MediaType("application", "octet-stream"));
+		converter.setSupportedMediaTypes(supportedMediaTypes);
+	}
 
 	@Bean
 	public GroupedOpenApi publicApi() { // GroupedOpenApi 빈을 통해 API를 그룹화

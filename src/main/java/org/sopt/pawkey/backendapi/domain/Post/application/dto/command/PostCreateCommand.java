@@ -16,7 +16,4 @@ public class PostCreateCommand {
 	private final List<String> postImageUrlList;
 	private final Long routeId;
 
-
-
-
 }

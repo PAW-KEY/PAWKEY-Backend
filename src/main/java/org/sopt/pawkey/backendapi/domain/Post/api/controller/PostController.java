@@ -60,5 +60,4 @@ public class PostController {
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
 
-
 }

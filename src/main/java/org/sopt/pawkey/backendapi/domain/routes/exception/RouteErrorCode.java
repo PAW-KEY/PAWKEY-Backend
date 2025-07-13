@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public enum RouteErrorCode  implements ErrorCode {
+public enum RouteErrorCode implements ErrorCode {
 
 	ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "R40401", "해당 경로를 찾을 수 없습니다.");
 

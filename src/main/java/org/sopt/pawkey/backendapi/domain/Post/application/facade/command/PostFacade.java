@@ -1,10 +1,11 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
+import java.util.List;
+
 import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostCreateCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
-import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -31,19 +30,19 @@ public class PostFacade {
 		MultipartFile routeImage,
 		List<MultipartFile> postImages) {
 
-
 		UserEntity writer = userService.findById(userId);
 		RouteEntity region = routeService.getRouteById(requestDto.getRouteId());
 
+		// final String routeImageUrl = (routeImage != null && !routeImage.isEmpty())
+		// 	? imageStorage.uploadRouteImage(routeImage)
+		// 	: null;
+		//
+		// final List<String> postImageUrlList = (postImages != null && !postImages.isEmpty())
+		// 	? imageStorage.uploadWalkImages(postImages)
+		// 	: Collections.emptyList();
 
-		final String routeImageUrl = (routeImage != null && !routeImage.isEmpty())
-			? imageStorage.uploadRouteImage(routeImage)
-			: null;
-
-		final List<String> postImageUrlList = (postImages != null && !postImages.isEmpty())
-			? imageStorage.uploadWalkImages(postImages)
-			: Collections.emptyList();
-
+		String routeImageUrl = "routeImageUrl";
+		List<String> postImageUrlList = List.of("postImageUrlList");
 
 		PostCreateCommand command = new PostCreateCommand(
 			requestDto.getTitle(),
@@ -57,6 +56,6 @@ public class PostFacade {
 		);
 
 		// 4. 게시물 생성
-		postService.createPost(writer,command);
+		postService.createPost(writer, command);
 	}
 }
