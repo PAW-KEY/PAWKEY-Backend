@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,6 +18,11 @@ import java.util.Enumeration;
 import java.util.UUID;
 
 @Component
+@ConditionalOnProperty(
+	name = "logging.request.enabled",
+	havingValue = "true",
+	matchIfMissing = true
+)
 public class RequestLoggingFilter implements Filter {
 
 	private static final Logger log = LoggerFactory.getLogger(RequestLoggingFilter.class);
