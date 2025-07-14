@@ -1,9 +1,8 @@
-package org.sopt.pawkey.backendapi.domain.region.application.facade.query;
+package org.sopt.pawkey.backendapi.domain.user.application.facade.command;
 
-import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionCoordinatesCommand;
-import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegionCoordinatesResult;
 import org.sopt.pawkey.backendapi.domain.region.application.service.RegionService;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UpdateUserRegionCommand;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -13,18 +12,15 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class GetRegionCoordinatesFacade {
+@Transactional
+public class UpdateUserRegionFacade {
 
 	private final RegionService regionService;
 	private final UserService userService;
 
-	public GetRegionCoordinatesResult execute(Long userId,
-		GetRegionCoordinatesCommand getRegionCoordinatesCommand) {
-
+	public void execute(Long userId, UpdateUserRegionCommand command) {
 		UserEntity user = userService.findById(userId);
-		RegionEntity region = regionService.getRegionByIdOrThrow(getRegionCoordinatesCommand.regionId());
-
-		return GetRegionCoordinatesResult.from(region);
+		RegionEntity region = regionService.getRegionByIdOrThrow(command.regionId());
+		userService.updateUserRegion(user, region);
 	}
 }

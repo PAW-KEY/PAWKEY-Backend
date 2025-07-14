@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
 	/**
