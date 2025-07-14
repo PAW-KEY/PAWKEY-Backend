@@ -46,7 +46,7 @@ public class UserController {
 
 		@RequestPart("pet_profile") @Valid @NotNull MultipartFile image) {
 		UserRegisterCommand command = requestDto.toCommand();
-		UserRegisterResponseDto response = userRegisterFacade.excute(command, image);
+		UserRegisterResponseDto response = userRegisterFacade.execute(command, image);
 
 		return ResponseEntity.ok(ApiResponse.success(response));
 

@@ -23,16 +23,24 @@ public class UserRegisterFacade {
 	private final ImageService imageService;
 	private final PetService petService;
 
-	public UserRegisterResponseDto excute(UserRegisterCommand command, MultipartFile petProfileImage){
-
+	public UserRegisterResponseDto execute(UserRegisterCommand command, MultipartFile petProfileImage){
+		ImageEntity imageEntity = null;
+		try{
 		UserEntity user = userService.saveUser(command.userCommand());
-		ImageEntity imageEntity = imageService.storePetProfileImage(petProfileImage);
+		imageEntity = imageService.storePetProfileImage(petProfileImage);
 
 		PetEntity pet = petService.savePet(command.petCommand(),user,imageEntity);
 
 
 
 		return UserRegisterResponseDto.from(user, pet);
+		}catch (Exception e){
+			if (imageEntity != null) {
+				imageService.deleteImage(imageEntity); // 저장소 및 DB 동기화 처리
+			}
+			throw e; // 트랜잭션 롤백 유도
+		}
+
 
 
 }
