@@ -19,7 +19,6 @@ public class PetRepositoryImpl implements PetRepository {
 
 	private final SpringDataPetRepository petRepository;
 
-
 	@Override
 	public List<PetTraitCategoryEntity> findAllPetTraitCategoriesWithOptions() {
 
@@ -31,6 +30,7 @@ public class PetRepositoryImpl implements PetRepository {
 	public PetEntity save(PetEntity pet) {
 		return springDataPetRepository.save(pet);
 	}
+
 	public List<PetEntity> findAllPetsByUserId(Long userId) {
 		return petRepository.findAllByUser_UserId(userId);
 	}

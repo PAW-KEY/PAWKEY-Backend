@@ -102,6 +102,7 @@ public class UserEntity extends BaseEntity {
 	public int hashCode() {
 		return Objects.hashCode(userId);
 	}
+
 	public void updateRegion(RegionEntity region) {
 		this.region = region;
 	}

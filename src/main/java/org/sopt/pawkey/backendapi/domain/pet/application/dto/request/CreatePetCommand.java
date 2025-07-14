@@ -11,7 +11,8 @@ public record CreatePetCommand(String name,
 							   boolean isNeutered,
 							   String breed,
 							   List<SelectedOptionForPetTraitCategory> petTraits) {
-	public static CreatePetCommand of(String name, String gender, int age, boolean isAgeKnown, boolean isNeutered, String breed,List<SelectedOptionForPetTraitCategory> petTraits) {
-		return new CreatePetCommand(name, gender, age, isAgeKnown, isNeutered, breed,petTraits);
+	public static CreatePetCommand of(String name, String gender, int age, boolean isAgeKnown, boolean isNeutered,
+		String breed, List<SelectedOptionForPetTraitCategory> petTraits) {
+		return new CreatePetCommand(name, gender, age, isAgeKnown, isNeutered, breed, petTraits);
 	}
 }

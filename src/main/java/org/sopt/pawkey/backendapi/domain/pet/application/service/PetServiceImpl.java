@@ -13,7 +13,6 @@ import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetTraitOptionEntity;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetTraitSelectedEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
-import org.sopt.pawkey.backendapi.global.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
-
 
 	private final PetRepository petRepository;
 	private final PetTraitOptionRepository petTraitOptionRepository;
@@ -47,8 +45,7 @@ public class PetServiceImpl implements PetService {
 		List<PetTraitSelectedEntity> selectedTraits = command.petTraits().stream()
 			.map(dto -> {
 				PetTraitOptionEntity option = petTraitOptionRepository.findById(dto.traitOptionId())
-					.orElseThrow(()-> new PetBusinessException(PetErrorCode.CATEGORY_OPTION_NOT_FOUND));
-
+					.orElseThrow(() -> new PetBusinessException(PetErrorCode.CATEGORY_OPTION_NOT_FOUND));
 
 				return PetTraitSelectedEntity.builder()
 					.pet(savedPet)

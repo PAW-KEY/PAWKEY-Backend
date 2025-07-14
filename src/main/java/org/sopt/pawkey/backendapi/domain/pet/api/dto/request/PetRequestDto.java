@@ -20,6 +20,6 @@ public record PetRequestDto(
 	@NotNull(message = "반려동물 성향은 필수값입니다.") List<SelectedOptionForPetTraitCategory> petTraits
 ) {
 	public CreatePetCommand toCommand() {
-		return CreatePetCommand.of(name, gender, age, isAgeKnown, isNeutered, breed,petTraits);
+		return CreatePetCommand.of(name, gender, age, isAgeKnown, isNeutered, breed, petTraits);
 	}
 }

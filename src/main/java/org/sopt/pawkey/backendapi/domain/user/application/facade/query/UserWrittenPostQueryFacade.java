@@ -7,7 +7,6 @@ import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.MyPostResponseDto;
-import org.sopt.pawkey.backendapi.domain.user.application.service.UserWrittenPostQueryService;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserQueryRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
@@ -24,6 +23,7 @@ public class UserWrittenPostQueryFacade {
 
 	private final UserQueryRepository userQueryRepository;
 	private final PostRepository postRepository;
+
 	public List<MyPostResponseDto> getMyPosts(Long userId) {
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));

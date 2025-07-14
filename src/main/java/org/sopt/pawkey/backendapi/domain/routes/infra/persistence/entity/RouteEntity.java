@@ -1,15 +1,11 @@
 package org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException;
 import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
