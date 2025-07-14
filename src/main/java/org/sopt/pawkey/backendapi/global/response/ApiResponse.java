@@ -1,7 +1,5 @@
 package org.sopt.pawkey.backendapi.global.response;
 
-import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListResponseDto;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AccessLevel;
