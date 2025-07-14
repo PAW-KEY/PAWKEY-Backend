@@ -26,9 +26,11 @@ public class UserController {
 	private final UpdateUserRegionFacade updateUserRegionFacade;
 
 	@PatchMapping("/me/regions")
-	@Operation(summary = "유저 소속 지역 수정 성공", description = "유저가 소속된 지역(region)을 수정합니다.", tags = {"Posts"})
+	@Operation(summary = "유저 소속 지역 수정 성공", description = "유저가 소속된 지역(region)을 수정합니다.", tags = {"Users"})
 	@ApiResponses({
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 소속 지역 수정 성공")
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 소속 지역 수정 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 요청 (R40001: 지역구분이 동이 아닌 경우)"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "리소스 찾을 수 없음(U40401, R40401)")
 	})
 
 	public ResponseEntity<ApiResponse<Void>> updateRegion(
