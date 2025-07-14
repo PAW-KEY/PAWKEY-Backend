@@ -11,5 +11,5 @@ public interface PostRepository {
 
 	void save(PostEntity post);
 
-	List<PostEntity> findAllByWriter(UserEntity user);
+	List<PostEntity> findAllByUser(UserEntity user);
 }

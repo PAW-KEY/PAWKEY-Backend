@@ -24,13 +24,11 @@ public class UserWrittenPostQueryFacade {
 
 	private final UserQueryRepository userQueryRepository;
 	private final PostRepository postRepository;
-	private final UserWrittenPostQueryService writtenPostQueryService;
-
 	public List<MyPostResponseDto> getMyPosts(Long userId) {
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		List<PostEntity> posts = postRepository.findAllByWriter(user)
+		List<PostEntity> posts = postRepository.findAllByUser(user)
 			.stream()
 			.sorted(Comparator.comparing(PostEntity::getCreatedAt).reversed()) // 최신순 정렬
 			.toList();

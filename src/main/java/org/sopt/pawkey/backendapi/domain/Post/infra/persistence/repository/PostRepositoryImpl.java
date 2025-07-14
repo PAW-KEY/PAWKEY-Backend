@@ -27,7 +27,7 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public List<PostEntity> findAllByWriter(UserEntity user) {
+	public List<PostEntity> findAllByUser(UserEntity user) {
 		return jpaRepository.findAllByUser(user);
 	}
 }

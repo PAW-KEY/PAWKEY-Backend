@@ -17,6 +17,6 @@ public class UserWrittenPostQueryServiceImpl implements UserWrittenPostQueryServ
 
 	@Override
 	public List<PostEntity> findWrittenPostsByUser(UserEntity user) {
-		return postRepository.findAllByWriter(user);
+		return postRepository.findAllByUser(user);
 	}
 }
