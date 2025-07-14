@@ -1,12 +1,16 @@
 package org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.RouteRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
+import org.sopt.pawkey.backendapi.global.util.GeoJsonUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,4 +69,8 @@ public class RouteEntity extends BaseEntity {
 
 	@Column(name = "ended_at", nullable = false)
 	private LocalDateTime endedAt;
+
+	public Map<String, Object> getGeoJson() {
+		return GeoJsonUtil.toGeoJson(coordinates);
+	}
 }
