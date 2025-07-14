@@ -4,13 +4,20 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListResponseDto;
+import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostFacade;
+import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +39,13 @@ public class PostController {
 
 	private final PostFacade postFacade;
 	private final PostRegisterFacade postRegisterFacade;
+	private final PostQueryFacade postQueryFacade;
 
 	@Operation(summary = "산책 게시물 등록", description = "산책 완료 후, 산책 게시물 등록합니다. ", tags = {"Posts"})
 	@ApiResponses({
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 게시물 등록 성공"),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "제목/본문 누락 또는 길이 제한 초과", content = @Content(mediaType = "application/json")),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "선택한 카테고리 또는 옵션이 유효하지 않음", content = @Content(mediaType = "application/json")),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "게시물 조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "게시물 ID가 요청에 포함되어 있지 않습니다.", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "해당 게시물을 찾을 수 없습니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping("")
 	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> createPost(
@@ -52,5 +59,26 @@ public class PostController {
 		PostRegisterResponseDto response = postRegisterFacade.execute(userId.longValue(), command, images);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
+
+
+	@Operation(summary = "게시물 상세 조회", description = "산책 게시물의 상세정보를 조회합니다.", tags = {"Posts"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
+	@GetMapping("/{postId}")
+	public ResponseEntity<ApiResponse<PostResponseDto>> getPosts(
+		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
+		@PathVariable("postId") Long postId
+	) {
+		List<CategoryResult> resultList = categoryQueryService.getAllCategories();
+
+
+		PostResponseDto response = PostResponseDto.from(resultList);
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
+	}
+
+
+
 
 }
