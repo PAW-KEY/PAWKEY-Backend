@@ -21,6 +21,11 @@ public record CreateUserRequestDto(
 
 ) {
 
+	/**
+	 * Converts this user creation request DTO into a {@link UserRegisterCommand}, including both user and pet registration data.
+	 *
+	 * @return a {@link UserRegisterCommand} containing user and pet creation commands based on the request data
+	 */
 	public UserRegisterCommand toCommand() {
 		return new UserRegisterCommand(
 			CreateUserCommand.of(loginId, password, name, gender, age, regionId),

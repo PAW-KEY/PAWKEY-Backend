@@ -34,6 +34,14 @@ public class PostController {
 	private final PostFacade postFacade;
 	private final PostRegisterFacade postRegisterFacade;
 
+	/**
+	 * Registers a new walking post with associated images for the specified user.
+	 *
+	 * @param userId the ID of the user creating the post
+	 * @param requestDto the post creation details
+	 * @param images the list of image files to attach to the post
+	 * @return a response entity containing the result of the post registration
+	 */
 	@Operation(summary = "산책 게시물 등록", description = "산책 완료 후, 산책 게시물 등록합니다. ", tags = {"Posts"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 게시물 등록 성공"),

@@ -15,6 +15,12 @@ public class PetTraitOptionRepositoryImpl implements PetTraitOptionRepository {
 
 	private final SpringDataPetTraitOptionRepository jpaRepository;
 
+	/**
+	 * Retrieves a pet trait option entity by its unique identifier.
+	 *
+	 * @param optionId the unique identifier of the pet trait option
+	 * @return an {@code Optional} containing the found {@code PetTraitOptionEntity}, or empty if not found
+	 */
 	@Override
 	public Optional<PetTraitOptionEntity> findById(Long optionId) {
 		return jpaRepository.findById(optionId);

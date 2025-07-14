@@ -16,6 +16,11 @@ public class PetRepositoryImpl implements PetRepository {
 	private final SpringDataPetTraitCategoryRepository springDataPetTraitCategoryRepository;
 	private final SpringDataPetRepository springDataPetRepository;
 
+	/**
+	 * Retrieves all pet trait categories along with their associated options.
+	 *
+	 * @return a list of PetTraitCategoryEntity objects, each including its options
+	 */
 	@Override
 	public List<PetTraitCategoryEntity> findAllPetTraitCategoriesWithOptions() {
 
@@ -23,6 +28,12 @@ public class PetRepositoryImpl implements PetRepository {
 
 	}
 
+	/**
+	 * Persists the given PetEntity and returns the saved instance.
+	 *
+	 * @param pet the PetEntity to be saved
+	 * @return the persisted PetEntity
+	 */
 	@Override
 	public PetEntity save(PetEntity pet) {
 		return springDataPetRepository.save(pet);

@@ -66,7 +66,11 @@ public class UserEntity extends BaseEntity {
 	// 	this.gender = gender;
 	// 	this.age = age;
 	// 	this.region = region;
-	// }
+	/**
+	 * Retrieves the first pet associated with the user, or returns {@code null} if none exist.
+	 *
+	 * @return the first {@link PetEntity} in the user's pet list, or {@code null} if the list is empty
+	 */
 
 	public PetEntity getPet() {
 		return petEntityList.stream()

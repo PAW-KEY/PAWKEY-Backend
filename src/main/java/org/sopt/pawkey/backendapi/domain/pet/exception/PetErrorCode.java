@@ -11,22 +11,44 @@ public enum PetErrorCode implements ErrorCode {
 	private final String message;
 	private final HttpStatus status;
 
+	/**
+	 * Constructs a PetErrorCode enum constant with the specified error code, message, and HTTP status.
+	 *
+	 * @param code    the unique error code identifier
+	 * @param message the descriptive error message
+	 * @param status  the associated HTTP status for this error
+	 */
 	PetErrorCode(final String code, final String message, final HttpStatus status) {
 		this.code = code;
 		this.message = message;
 		this.status = status;
 	}
 
+	/**
+	 * Returns the unique error code associated with this pet-related error.
+	 *
+	 * @return the error code string
+	 */
 	@Override
 	public String getCode() {
 		return code;
 	}
 
+	/**
+	 * Returns the error message associated with this pet error code.
+	 *
+	 * @return the descriptive error message
+	 */
 	@Override
 	public String getMessage() {
 		return message;
 	}
 
+	/**
+	 * Returns the HTTP status associated with this pet error code.
+	 *
+	 * @return the corresponding {@link HttpStatus}
+	 */
 	@Override
 	public HttpStatus getStatus() {
 		return status;

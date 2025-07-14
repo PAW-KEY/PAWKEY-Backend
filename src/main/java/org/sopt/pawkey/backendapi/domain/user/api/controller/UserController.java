@@ -30,6 +30,16 @@ public class UserController {
 
 	private final UserRegisterFacade userRegisterFacade;
 
+	/**
+	 * Registers a new user along with their profile information and pet profile image.
+	 *
+	 * Accepts user registration details and a pet profile image as multipart form data, creates a new user, and returns the registration result.
+	 *
+	 * @param userId the unique identifier of the user, extracted from the request header
+	 * @param requestDto the user registration details provided in the multipart "data" part
+	 * @param image the pet profile image file provided in the multipart "pet_profile" part
+	 * @return a ResponseEntity containing the API response with user registration details
+	 */
 	@Operation(summary = "유저 정보 등록", description = "회원가입과 동시에, 유저 정보 등록. ", tags = {"Users"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보 등록 성공"),

@@ -27,6 +27,19 @@ public class PetServiceImpl implements PetService {
 	private final PetTraitOptionRepository petTraitOptionRepository;
 	private final PetTraitSelectedRepository petTraitSelectedRepository;
 
+	/**
+	 * Creates and persists a new pet along with its selected traits.
+	 *
+	 * Constructs a new {@link PetEntity} using the provided command data, user, and profile image, then saves it to the repository.
+	 * For each trait specified in the command, associates the pet with the corresponding trait option, throwing a {@link PetBusinessException}
+	 * if any trait option is not found. Each selected trait is saved to the repository. Returns the saved pet entity.
+	 *
+	 * @param command      the command containing pet details and selected traits
+	 * @param user         the user to whom the pet belongs
+	 * @param profileImage the profile image for the pet
+	 * @return the persisted {@link PetEntity} with associated traits
+	 * @throws PetBusinessException if a specified trait option does not exist
+	 */
 	@Override
 	public PetEntity savePet(CreatePetCommand command, UserEntity user, ImageEntity profileImage) {
 		PetEntity pet = PetEntity.builder()

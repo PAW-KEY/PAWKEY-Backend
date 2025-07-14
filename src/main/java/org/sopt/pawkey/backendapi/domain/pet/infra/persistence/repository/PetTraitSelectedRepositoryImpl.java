@@ -11,6 +11,11 @@ import lombok.RequiredArgsConstructor;
 public class PetTraitSelectedRepositoryImpl implements PetTraitSelectedRepository {
 
 	private final SpringDataPetTraitSelectedRepository jpaRepository;
+	/**
+	 * Persists the given PetTraitSelectedEntity to the database.
+	 *
+	 * @param entity the PetTraitSelectedEntity to be saved
+	 */
 	@Override
 	public void save(PetTraitSelectedEntity entity) {
 		jpaRepository.save(entity);

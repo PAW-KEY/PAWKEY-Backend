@@ -23,7 +23,14 @@ public class UserRegisterFacade {
 	private final ImageService imageService;
 	private final PetService petService;
 
-	public UserRegisterResponseDto excute(UserRegisterCommand command, MultipartFile petProfileImage){
+	/**
+ * Registers a new user along with their pet and the pet's profile image in a single transactional operation.
+ *
+ * @param command the registration command containing user and pet information
+ * @param petProfileImage the multipart file representing the pet's profile image
+ * @return a response DTO containing details of the registered user and pet
+ */
+public UserRegisterResponseDto excute(UserRegisterCommand command, MultipartFile petProfileImage){
 
 		UserEntity user = userService.saveUser(command.userCommand());
 		ImageEntity imageEntity = imageService.storePetProfileImage(petProfileImage);

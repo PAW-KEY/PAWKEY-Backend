@@ -11,6 +11,13 @@ public record UserRegisterResponseDto(
 	String petName
 ) {
 
+	/**
+	 * Creates a UserRegisterResponseDto from the provided user and pet entities.
+	 *
+	 * @param user the user entity containing user information
+	 * @param pet the pet entity containing pet information
+	 * @return a UserRegisterResponseDto populated with data from the given user and pet
+	 */
 	public static UserRegisterResponseDto from(UserEntity user, PetEntity pet) {
 		return new UserRegisterResponseDto(
 			user.getUserId(),
