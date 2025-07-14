@@ -42,6 +42,7 @@ public class PostServiceImpl implements PostService {
 			.title(command.title())
 			.description(command.description())
 			.isPublic(command.isPublic())
+			.pet(writer.getPet())
 			.build();
 
 		for (ImageEntity image : images) {

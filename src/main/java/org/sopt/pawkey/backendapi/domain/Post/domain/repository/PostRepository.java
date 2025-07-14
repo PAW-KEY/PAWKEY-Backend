@@ -12,4 +12,6 @@ public interface PostRepository {
 	void save(PostEntity post);
 
 	List<PostEntity> findAllByUser(UserEntity user);
+
+	Optional<PostEntity> getPostWithAllDetails(Long postId);
 }

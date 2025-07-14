@@ -35,13 +35,6 @@ public class UserLikedPostQueryFacade {
 
 				String imageurldummy = "imageurl";
 
-				// String repImageUrl = post.getPostImageEntityList()
-				// 	.stream()
-				// 	.min(Comparator.comparing(PostImageEntity::getCreatedAt)) // 또는 다른 명확한 기준
-				// 	.map(PostImageEntity::getImage)      // ImageEntity
-				// 	.map(imageEntity -> imageEntity.getImageUrl())  // String URL
-				// 	.map("imageurl")
-				// 	.orElse(null);
 
 				var writer = post.getUser();
 				Long writerId = writer.getUserId();
