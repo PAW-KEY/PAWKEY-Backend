@@ -2,10 +2,7 @@ package org.sopt.pawkey.backendapi.domain.post.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import java.util.List;
-
 import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListResponseDto;
-import org.sopt.pawkey.backendapi.domain.category.application.dto.response.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostFilterFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;

@@ -28,7 +28,7 @@ public record CategoryResult(
 			categoryEntity.getCategoryId(),
 			categoryEntity.getCategoryName(),
 			categoryEntity.getCategoryOptionEntityList().stream()
-				.map(CategoryOptionResult::fromEntityWithSummary) // 이 메서드 아래 추가!
+				.map(CategoryOptionResult::fromEntityWithSummary)
 				.toList()
 		);
 	}
