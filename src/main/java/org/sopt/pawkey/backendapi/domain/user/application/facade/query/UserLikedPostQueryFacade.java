@@ -35,7 +35,6 @@ public class UserLikedPostQueryFacade {
 
 				String imageurldummy = "imageurl";
 
-
 				var writer = post.getUser();
 				Long writerId = writer.getUserId();
 				String writerPetName = writer.getPet() != null ? writer.getPet().getName() : null;

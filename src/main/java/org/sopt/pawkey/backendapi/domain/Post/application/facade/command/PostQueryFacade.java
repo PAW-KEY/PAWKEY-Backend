@@ -2,16 +2,12 @@ package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
-import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
-import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
-import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +22,15 @@ public class PostQueryFacade {
 	private final PostService postService;
 	private final UserService userService;
 
-	public PostResponseDto getPostDetail(Long postId, Long userId){
+	public PostResponseDto getPostDetail(Long postId, Long userId) {
 
 		PostEntity post = postService.findById(postId);
 
 		boolean isLiked = post.getPostLikeEntityList().stream()
 			.anyMatch(like -> like.getUser().getUserId().equals(userId));
 
-		String routeMapImageUrl = post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl():null;
+		String routeMapImageUrl =
+			post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl() : null;
 
 		List<String> walkingImages = post.getPostImages().stream()
 			.filter(img -> img.getImageType() == ImageType.WALK_POST)

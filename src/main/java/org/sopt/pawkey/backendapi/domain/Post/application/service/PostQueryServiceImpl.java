@@ -11,9 +11,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PostQueryServiceImpl implements PostQueryService{
+public class PostQueryServiceImpl implements PostQueryService {
 
-	public PostResponseDto getPostDetail(PostEntity post, boolean isLiked, String routeMapImage, List<String> walkingImages) {
+	public PostResponseDto getPostDetail(PostEntity post, boolean isLiked, String routeMapImage,
+		List<String> walkingImages) {
 
 		//작성자
 		AuthorDto authorDto = new AuthorDto(

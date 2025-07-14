@@ -5,4 +5,5 @@ public record AuthorDto(
 	Long petId,
 	String petName,
 	String petProfileImage
-) {}
+) {
+}
