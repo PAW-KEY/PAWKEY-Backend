@@ -5,6 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
@@ -40,7 +41,7 @@ public class PostController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping("")
-	public ResponseEntity<ApiResponse<Void>> createPost(
+	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> createPost(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@RequestPart("data") @Valid @NotNull PostCreateRequestDto requestDto,
 
@@ -48,8 +49,8 @@ public class PostController {
 
 	) {
 		PostRegisterCommand command = requestDto.toCommand();
-		postRegisterFacade.execute(userId.longValue(), command, images);
-		return ResponseEntity.ok(ApiResponse.success(null));
+		PostRegisterResponseDto response = postRegisterFacade.execute(userId.longValue(), command, images);
+		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
 }

@@ -8,7 +8,12 @@ import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetTraitCa
 public interface PetRepository {
 	List<PetTraitCategoryEntity> findAllPetTraitCategoriesWithOptions();
 
+
+	PetEntity save(PetEntity pet);
+
 	List<PetEntity> findAllPetsByUserId(Long userId);
+
 }
+
 
 
