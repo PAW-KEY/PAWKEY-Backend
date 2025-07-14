@@ -21,7 +21,7 @@ public class UserPetQueryFacade {
 
 	public List<PetProfileResponseDto> getUserPets(Long userId) {
 
-		UserEntity user = userService.getByUserId(userId);
+		UserEntity user = userService.findById(userId);
 
 		return userPetQueryService.getPetProfiles(user);
 	}

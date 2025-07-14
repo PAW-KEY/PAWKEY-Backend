@@ -5,7 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListResponseDto;
-import org.sopt.pawkey.backendapi.domain.category.application.dto.response.CategoryResult;
+import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryQueryService;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(API_PREFIX + "/posts/categories")
@@ -34,7 +33,8 @@ public class CategoryController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@GetMapping("")
-	public ResponseEntity<ApiResponse<CategoryListResponseDto>> getCategories(@RequestHeader(USER_ID_HEADER) @NotNull Integer userId) {
+	public ResponseEntity<ApiResponse<CategoryListResponseDto>> getCategories(
+		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId) {
 		List<CategoryResult> resultList = categoryQueryService.getAllCategories();
 		CategoryListResponseDto response = CategoryListResponseDto.from(resultList);
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
