@@ -34,7 +34,13 @@ public class RequestLoggingFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		// traceId 생성
+		String uri = httpRequest.getRequestURI();
+		// api/v1 만 로깅
+		if (!uri.startsWith("/api/v1")) {
+			chain.doFilter(request, response);
+			return;
+		}
+
 		String traceId = UUID.randomUUID().toString();
 		MDC.put("traceId", traceId);
 
@@ -56,7 +62,7 @@ public class RequestLoggingFilter implements Filter {
 				traceId
 			);
 
-			MDC.clear(); // 꼭 지워주기
+			MDC.clear();
 		}
 	}
 
