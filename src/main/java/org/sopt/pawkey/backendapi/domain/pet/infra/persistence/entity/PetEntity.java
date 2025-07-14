@@ -61,6 +61,9 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "breed", length = 50)
 	private String breed;
 
+	@Column(name = "walk_count", nullable = false)
+	private int walkCount;
+
 	@OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PetTraitSelectedEntity> petTraitSelectedEntityList = new ArrayList<>();
 
@@ -74,6 +77,7 @@ public class PetEntity extends BaseEntity {
 		UserEntity user,
 		boolean isNeutered,
 		String breed,
+		int walkCount,
 		List<PetTraitSelectedEntity> petTraitSelectedEntityList) {
 		this.petId = petId;
 		this.name = name;
@@ -84,6 +88,7 @@ public class PetEntity extends BaseEntity {
 		this.user = user;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
+		this.walkCount = walkCount;
 		this.petTraitSelectedEntityList =
 			petTraitSelectedEntityList != null ? petTraitSelectedEntityList : new ArrayList<>();
 	}
