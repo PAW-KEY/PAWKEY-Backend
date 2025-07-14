@@ -2,7 +2,7 @@ package org.sopt.pawkey.backendapi.domain.routes.application.dto.result;
 
 import lombok.Builder;
 
-public record GetRouteTrackingInfoResult(
+public record GetRouteInfoForPostResult(
 	RouteDto routeDto,
 	String petName
 ) {

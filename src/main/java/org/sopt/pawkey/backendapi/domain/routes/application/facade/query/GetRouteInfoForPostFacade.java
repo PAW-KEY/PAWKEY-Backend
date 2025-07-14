@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.GetRouteTrackingInfoCommand;
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteTrackingInfoResult;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.GetRouteInfoForPostCommand;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteInfoForPostResult;
 import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 @Transactional
-public class GetRouteTrackingInfoFacade {
+public class GetRouteInfoForPostFacade {
 
 	private final UserService userService;
 	private final RouteService routeService;
@@ -30,10 +30,10 @@ public class GetRouteTrackingInfoFacade {
 				.withLocale(Locale.KOREAN));
 	}
 
-	public GetRouteTrackingInfoResult execute(Long userId, GetRouteTrackingInfoCommand getRouteTrackingInfoCommand) {
+	public GetRouteInfoForPostResult execute(Long userId, GetRouteInfoForPostCommand getRouteInfoForPostCommand) {
 		UserEntity user = userService.getByUserId(userId);
 
-		RouteEntity route = routeService.getRouteById(getRouteTrackingInfoCommand.routeId());
+		RouteEntity route = routeService.getRouteById(getRouteInfoForPostCommand.routeId());
 
 		route.validateOwnership(user);
 		String dateDescription = getFormattedDate(route.getCreatedAt());
@@ -41,8 +41,8 @@ public class GetRouteTrackingInfoFacade {
 
 		PetEntity pet = user.getPetOrThrow();
 
-		return new GetRouteTrackingInfoResult(
-			GetRouteTrackingInfoResult.RouteDto.builder()
+		return new GetRouteInfoForPostResult(
+			GetRouteInfoForPostResult.RouteDto.builder()
 				.id(route.getRouteId())
 				.locationDescription(locationDescription)
 				.dateDescription(dateDescription)

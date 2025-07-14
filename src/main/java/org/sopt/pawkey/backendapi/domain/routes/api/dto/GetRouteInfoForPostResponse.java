@@ -1,15 +1,15 @@
 package org.sopt.pawkey.backendapi.domain.routes.api.dto;
 
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteTrackingInfoResult;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteInfoForPostResult;
 
 import lombok.Builder;
 
-public record GetRouteTrackingInfoResponse(
+public record GetRouteInfoForPostResponse(
 	RouteDto routeDto,
 	String petName
 ) {
-	public static GetRouteTrackingInfoResponse from(GetRouteTrackingInfoResult result) {
-		return new GetRouteTrackingInfoResponse(
+	public static GetRouteInfoForPostResponse from(GetRouteInfoForPostResult result) {
+		return new GetRouteInfoForPostResponse(
 			RouteDto.builder()
 				.id(result.routeDto().id())
 				.locationDescription(result.routeDto().locationDescription())

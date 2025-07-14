@@ -2,14 +2,14 @@ package org.sopt.pawkey.backendapi.domain.routes.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import org.sopt.pawkey.backendapi.domain.routes.api.dto.GetRouteTrackingInfoResponse;
+import org.sopt.pawkey.backendapi.domain.routes.api.dto.GetRouteInfoForPostResponse;
 import org.sopt.pawkey.backendapi.domain.routes.api.dto.RouteRegisterRequest;
 import org.sopt.pawkey.backendapi.domain.routes.api.dto.RouteRegisterResponse;
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.GetRouteTrackingInfoCommand;
-import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteTrackingInfoResult;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.GetRouteInfoForPostCommand;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteInfoForPostResult;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.RouteRegisterResult;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.RouteRegisterFacade;
-import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteTrackingInfoFacade;
+import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteInfoForPostFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class RouteController {
 
 	private final RouteRegisterFacade routeRegisterFacade;
-	private final GetRouteTrackingInfoFacade getRouteTrackingInfoFacade;
+	private final GetRouteInfoForPostFacade getRouteInfoForPostFacade;
 
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@Operation(summary = "산책 루트 정보 등록", description = "산책 루트 정보 등록 API입니다.", tags = {"Route"})
@@ -61,14 +61,14 @@ public class RouteController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401, U40402 또는 R40401 에러코드 확인)"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "권한 검증 실패 (R40301 에러코드 확인)")
 	})
-	public ResponseEntity<ApiResponse<GetRouteTrackingInfoResponse>> getTrackingInfo(
+	public ResponseEntity<ApiResponse<GetRouteInfoForPostResponse>> getTrackingInfo(
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@PathVariable("routeId") Long routeId
 	) {
 
-		GetRouteTrackingInfoResult result = getRouteTrackingInfoFacade.execute(userId,
-			new GetRouteTrackingInfoCommand(routeId));
+		GetRouteInfoForPostResult result = getRouteInfoForPostFacade.execute(userId,
+			new GetRouteInfoForPostCommand(routeId));
 
-		return ResponseEntity.ok(ApiResponse.success(GetRouteTrackingInfoResponse.from(result)));
+		return ResponseEntity.ok(ApiResponse.success(GetRouteInfoForPostResponse.from(result)));
 	}
 }
