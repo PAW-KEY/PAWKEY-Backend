@@ -28,6 +28,6 @@ public class PostRepositoryImpl implements PostRepository {
 
 	@Override
 	public List<PostEntity> findAllByWriter(UserEntity user) {
-		return jpaRepository.findAllByUserOrderByCreatedAtDesc(user);
+		return jpaRepository.findAllByUser(user);
 	}
 }

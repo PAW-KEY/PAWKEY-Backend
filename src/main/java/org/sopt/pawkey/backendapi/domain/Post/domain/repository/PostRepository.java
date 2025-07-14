@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 
+import com.querydsl.core.Fetchable;
+
 public interface PostRepository {
 	Optional<PostEntity> findById(Long postId);
 

@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long> {
 	Optional<PostEntity> getByPostId(Long postId);
 
-	List<PostEntity> findAllByUserOrderByCreatedAtDesc(UserEntity user);
+	List<PostEntity> findAllByUser(UserEntity user);
 }
