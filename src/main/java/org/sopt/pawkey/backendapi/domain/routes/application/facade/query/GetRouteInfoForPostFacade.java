@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.routes.application.facade.query;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
@@ -24,12 +25,6 @@ public class GetRouteInfoForPostFacade {
 	private final UserService userService;
 	private final RouteService routeService;
 
-	private static String getFormattedDate(LocalDateTime date) {
-		return date
-			.format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
-				.withLocale(Locale.KOREAN));
-	}
-
 	public GetRouteInfoForPostResult execute(Long userId, GetRouteInfoForPostCommand getRouteInfoForPostCommand) {
 		UserEntity user = userService.findById(userId);
 
@@ -41,13 +36,33 @@ public class GetRouteInfoForPostFacade {
 
 		PetEntity pet = user.getPetOrThrow();
 
+		List<String> descriptionTags = List.of(formatDistance(route.getDistance()),
+			formatDuration(route.getDuration()));
+
 		return new GetRouteInfoForPostResult(
 			GetRouteInfoForPostResult.RouteDto.builder()
 				.id(route.getRouteId())
 				.locationDescription(locationDescription)
 				.dateDescription(dateDescription)
+				.descriptionTags(descriptionTags)
 				.build(),
 			pet.getName()
 		);
+	}
+
+	private static String getFormattedDate(LocalDateTime date) {
+		return date
+			.format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
+				.withLocale(Locale.KOREAN));
+	}
+
+	private static String formatDistance(int meters) {
+		double km = meters / 1000.0;
+		return String.format("%.1fkm", km);
+	}
+
+	private static String formatDuration(int seconds) {
+		int minutes = seconds / 60;
+		return minutes + "분";
 	}
 }

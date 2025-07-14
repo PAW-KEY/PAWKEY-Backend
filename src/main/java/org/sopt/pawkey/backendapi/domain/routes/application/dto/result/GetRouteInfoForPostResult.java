@@ -1,5 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.routes.application.dto.result;
 
+import java.util.List;
+
 import lombok.Builder;
 
 public record GetRouteInfoForPostResult(
@@ -10,7 +12,8 @@ public record GetRouteInfoForPostResult(
 	public record RouteDto(
 		Long id,
 		String locationDescription,
-		String dateDescription
+		String dateDescription,
+		List<String> descriptionTags
 	) {
 
 	}
