@@ -31,7 +31,7 @@ public class GetRouteInfoForPostFacade {
 	}
 
 	public GetRouteInfoForPostResult execute(Long userId, GetRouteInfoForPostCommand getRouteInfoForPostCommand) {
-		UserEntity user = userService.getByUserId(userId);
+		UserEntity user = userService.findById(userId);
 
 		RouteEntity route = routeService.getRouteById(getRouteInfoForPostCommand.routeId());
 

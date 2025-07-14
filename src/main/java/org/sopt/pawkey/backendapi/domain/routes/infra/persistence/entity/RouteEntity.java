@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -13,6 +14,7 @@ import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException
 import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
+import org.sopt.pawkey.backendapi.global.util.GeoJsonUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -72,31 +74,8 @@ public class RouteEntity extends BaseEntity {
 	@Column(name = "ended_at", nullable = false)
 	private LocalDateTime endedAt;
 
-	public static RouteEntity createRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
-
-		LineString lineString = toLineString(command.coordinates());
-
-		return RouteEntity.builder()
-			.user(user)
-			.distance(command.distance())
-			.duration(command.duration())
-			.stepCount(command.stepCount())
-			.region(user.getRegion())
-			.trackingImage(trackingImage)
-			.startedAt(command.startedAt())
-			.coordinates(lineString)
-			.endedAt(command.endedAt())
-			.build();
-	}
-
-	private static LineString toLineString(List<org.sopt.pawkey.backendapi.domain.coordinate.Coordinate> coordinates) {
-		GeometryFactory geometryFactory = new GeometryFactory();
-
-		Coordinate[] coords = coordinates.stream()
-			.map(coord -> new Coordinate(coord.longitude(), coord.longitude()))
-			.toArray(Coordinate[]::new);
-
-		return geometryFactory.createLineString(coords);
+	public Map<String, Object> getGeoJson() {
+		return GeoJsonUtil.toGeoJson(coordinates);
 	}
 
 	public void validateOwnership(UserEntity user) {
