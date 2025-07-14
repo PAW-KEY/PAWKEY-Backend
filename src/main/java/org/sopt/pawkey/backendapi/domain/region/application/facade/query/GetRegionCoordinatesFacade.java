@@ -22,8 +22,8 @@ public class GetRegionCoordinatesFacade {
 	public GetRegionCoordinatesResult execute(Long userId,
 		GetRegionCoordinatesCommand getRegionCoordinatesCommand) {
 
-		UserEntity user = userService.getByUserId(userId);
-		RegionEntity region = regionService.getRegionById(getRegionCoordinatesCommand.regionId());
+		UserEntity user = userService.findById(userId);
+		RegionEntity region = regionService.getRegionByIdOrThrow(getRegionCoordinatesCommand.regionId());
 
 		return GetRegionCoordinatesResult.from(region);
 	}

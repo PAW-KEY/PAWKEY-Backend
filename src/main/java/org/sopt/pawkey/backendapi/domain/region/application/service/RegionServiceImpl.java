@@ -15,7 +15,7 @@ public class RegionServiceImpl implements RegionService {
 	private final RegionRepository regionRepository;
 
 	@Override
-	public RegionEntity getRegionById(Long regionId) {
+	public RegionEntity getRegionByIdOrThrow(Long regionId) {
 
 		return regionRepository.getById(regionId)
 			.orElseThrow(() -> new RegionBusinessException(RegionErrorCode.REGION_NOT_FOUND));

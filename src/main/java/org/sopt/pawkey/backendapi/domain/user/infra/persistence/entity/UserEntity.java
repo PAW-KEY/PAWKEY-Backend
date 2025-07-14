@@ -70,5 +70,8 @@ public class UserEntity extends BaseEntity {
 			.orElse(null);
 	} // Optional<PetEntity>을 반환하도록 변경하여 null 처리를 명시적으로 만드는 것을 고려
 
+	public void updateRegion(RegionEntity region) {
+		this.region = region;
+	}
 }
 

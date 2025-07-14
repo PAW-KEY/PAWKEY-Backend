@@ -1,7 +1,5 @@
 package org.sopt.pawkey.backendapi.global.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
 	/**
