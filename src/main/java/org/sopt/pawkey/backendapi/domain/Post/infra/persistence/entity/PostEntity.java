@@ -1,9 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
