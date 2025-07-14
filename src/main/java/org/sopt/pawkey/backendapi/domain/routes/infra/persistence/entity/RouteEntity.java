@@ -69,32 +69,4 @@ public class RouteEntity extends BaseEntity {
 
 	@Column(name = "ended_at", nullable = false)
 	private LocalDateTime endedAt;
-
-	public static RouteEntity createRoute(UserEntity user, RouteRegisterCommand command, ImageEntity trackingImage) {
-
-		LineString lineString = toLineString(command.coordinates());
-
-		return RouteEntity.builder()
-			.user(user)
-			.distance(command.distance())
-			.duration(command.duration())
-			.stepCount(command.stepCount())
-			.region(user.getRegion())
-			.trackingImage(trackingImage)
-			.startedAt(command.startedAt())
-			.coordinates(lineString)
-			.endedAt(command.endedAt())
-			.build();
-	}
-
-	private static LineString toLineString(List<org.sopt.pawkey.backendapi.domain.coordinate.Coordinate> coordinates) {
-		GeometryFactory geometryFactory = new GeometryFactory();
-
-		Coordinate[] coords = coordinates.stream()
-			.map(coord -> new Coordinate(coord.longitude(), coord.longitude()))
-			.toArray(Coordinate[]::new);
-
-		return geometryFactory.createLineString(coords);
-	}
-
 }
