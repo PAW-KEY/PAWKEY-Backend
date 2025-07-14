@@ -4,8 +4,6 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListResponseDto;
-import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
@@ -61,7 +59,6 @@ public class PostController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-
 	@Operation(summary = "게시물 상세 조회", description = "산책 게시물의 상세정보를 조회합니다.", tags = {"Posts"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공"),
@@ -72,9 +69,8 @@ public class PostController {
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@PathVariable("postId") Long postId
 	) {
-		PostResponseDto response = postQueryFacade.getPostDetail(postId,userId.longValue());
+		PostResponseDto response = postQueryFacade.getPostDetail(postId, userId.longValue());
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
 	}
-
 
 }

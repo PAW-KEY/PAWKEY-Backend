@@ -13,13 +13,12 @@ public record PostResponseDto(
 	String content,
 	boolean isLike,
 	AuthorDto authorInfo,
-	CategoryTagsDto  categoryTags,
+	CategoryTagsDto categoryTags,
 	String regionName,
 	LocalDateTime createdAt,
 	String routeMapImageUrl,
 	List<String> walkingImageUrls
 ) {
-
 
 	public static PostResponseDto of(
 		Long postId,
@@ -40,7 +39,7 @@ public record PostResponseDto(
 		);
 	}
 
-	public static PostResponseDto from(GetPostResult postResult){
+	public static PostResponseDto from(GetPostResult postResult) {
 		return new PostResponseDto(
 			postResult.postId(),
 			postResult.routeId(),
@@ -56,11 +55,9 @@ public record PostResponseDto(
 		);
 	}
 
-
 	public record CategoryTagsDto(
 		List<String> categoryOptionSummary
-	) {}
-
-
+	) {
+	}
 
 }
