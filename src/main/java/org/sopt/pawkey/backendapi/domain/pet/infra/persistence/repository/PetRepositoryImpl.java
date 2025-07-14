@@ -28,10 +28,9 @@ public class PetRepositoryImpl implements PetRepository {
 	}
 
 	@Override
-
 	public PetEntity save(PetEntity pet) {
 		return springDataPetRepository.save(pet);
-  
+	}
 	public List<PetEntity> findAllPetsByUserId(Long userId) {
 		return petRepository.findAllByUser_UserId(userId);
 	}
