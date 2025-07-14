@@ -1,11 +1,21 @@
 package org.sopt.pawkey.backendapi.domain.user.application.dto.request;
 
+import org.sopt.pawkey.backendapi.domain.pet.api.dto.request.PetRequestDto;
+import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.CreatePetCommand;
+
+import jakarta.validation.constraints.NotNull;
+
 public record CreateUserCommand(
+	String loginId,
+	String password,
 	String name,
-	String loginId
+	String gender,
+	int age,
+	Long regionId
 ) {
 
-	public static CreateUserCommand of(final String name, final String loginId) {
-		return new CreateUserCommand(name, loginId);
+	public static CreateUserCommand of(String loginId, String password, String name, String gender, int age, Long regionId) {
+		return new CreateUserCommand(loginId, password, name, gender, age, regionId);
 	}
+
 }
