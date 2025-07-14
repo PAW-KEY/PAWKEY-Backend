@@ -13,7 +13,7 @@ public record CategoryResult(
 
 ) {
 	//상위 -  카테고리(상세 옵션 포함)
-	public static CategoryResult fromEntity(CategoryEntity categoryEntity){
+	public static CategoryResult fromEntity(CategoryEntity categoryEntity) {
 		return new CategoryResult(
 			categoryEntity.getCategoryId(),
 			categoryEntity.getCategoryName(),
@@ -23,15 +23,31 @@ public record CategoryResult(
 		);
 	}
 
+	public static CategoryResult fromEntityWithSummary(CategoryEntity categoryEntity) {
+		return new CategoryResult(
+			categoryEntity.getCategoryId(),
+			categoryEntity.getCategoryName(),
+			categoryEntity.getCategoryOptionEntityList().stream()
+				.map(CategoryOptionResult::fromEntityWithSummary) // 이 메서드 아래 추가!
+				.toList()
+		);
+	}
+
 	//하위 -  카테고리 별 상세 옵션
 	public record CategoryOptionResult(
 		Long categoryOptionId,
 		String optionText
-	){
-		public static CategoryOptionResult fromEntity(CategoryOptionEntity categoryOptionEntity){
-			return new CategoryOptionResult(categoryOptionEntity.getId(),categoryOptionEntity.getOptionText());
+	) {
+		public static CategoryOptionResult fromEntity(CategoryOptionEntity categoryOptionEntity) {
+			return new CategoryOptionResult(categoryOptionEntity.getId(), categoryOptionEntity.getOptionText());
+		}
+
+		public static CategoryOptionResult fromEntityWithSummary(CategoryOptionEntity entity) {
+			return new CategoryOptionResult(
+				entity.getId(),
+				entity.getOptionSummary()
+			);
 		}
 	}
 }
-
 

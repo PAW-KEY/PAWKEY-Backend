@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class UserPetQueryServiceImpl implements UserPetQueryService {
 
 	private final PetRepository petRepository;
-	private final PetQueryRepository petQueryRepository;
 
 	@Override
 	public List<PetProfileResponseDto> getPetProfiles(UserEntity user) {

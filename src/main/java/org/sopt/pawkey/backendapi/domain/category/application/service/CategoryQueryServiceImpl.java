@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryQueryServiceImpl implements CategoryQueryService{
+public class CategoryQueryServiceImpl implements CategoryQueryService {
 	private final CategoryRepository categoryRepository;
 
 	@Override
@@ -19,6 +19,14 @@ public class CategoryQueryServiceImpl implements CategoryQueryService{
 		List<CategoryEntity> categoryEntityList = categoryRepository.findAllCategoryWithOptions();
 		return categoryEntityList.stream()
 			.map(CategoryResult::fromEntity)
+			.toList();
+	}
+
+	@Override
+	public List<CategoryResult> getAllCategoriesSummary() {
+		List<CategoryEntity> categoryEntityList = categoryRepository.findAllCategoryWithOptions();
+		return categoryEntityList.stream()
+			.map(CategoryResult::fromEntityWithSummary)
 			.toList();
 	}
 }
