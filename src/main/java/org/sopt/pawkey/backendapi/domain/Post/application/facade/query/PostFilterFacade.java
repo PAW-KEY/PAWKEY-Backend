@@ -2,20 +2,27 @@ package org.sopt.pawkey.backendapi.domain.post.application.facade.query;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListResponseDto;
+import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategorySelectListResponseDto;
 import org.sopt.pawkey.backendapi.domain.category.application.dto.response.CategoryResult;
+import org.sopt.pawkey.backendapi.domain.category.application.dto.response.SelectResult;
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryQueryService;
+import org.sopt.pawkey.backendapi.domain.category.application.service.SelectQueryService;
 import org.springframework.stereotype.Component;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class PostFilterFacade {
 	private final CategoryQueryService categoryQueryService;
+	private final SelectQueryService selectQueryService;
 
-	public CategoryListResponseDto getAllCategories() {
-		List<CategoryResult> results = categoryQueryService.getAllCategoriesSummary();
-		return CategoryListResponseDto.from(results);
+	public CategorySelectListResponseDto getAllCategories() {
+		List<SelectResult> selects = selectQueryService.getAllSelects();
+		List<CategoryResult> categories = categoryQueryService.getAllCategoriesSummary();
+
+		return CategorySelectListResponseDto.of(selects, categories);
 	}
 }
