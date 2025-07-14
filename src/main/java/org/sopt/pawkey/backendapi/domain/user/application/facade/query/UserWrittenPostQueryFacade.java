@@ -36,7 +36,7 @@ public class UserWrittenPostQueryFacade {
 		return posts.stream()
 			.map(post -> {
 				// 대표 이미지
-				String repImageUrl = post.getPostImageEntityList().stream()
+				String repImageUrl = post.getPostImages().stream()
 					.findFirst()
 					.map(img -> img.getImage().getImageUrl())
 					.orElse(null);
