@@ -2,7 +2,6 @@ package org.sopt.pawkey.backendapi.domain.post.application.service;
 
 import java.util.List;
 
-
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
@@ -36,7 +35,6 @@ public class PostServiceImpl implements PostService {
 		PostRegisterCommand command,
 		RouteEntity route,
 		List<ImageEntity> images) {
-
 
 		PostEntity post = PostEntity.builder()
 			.user(writer)

@@ -22,7 +22,7 @@ public class RouteRegisterFacade {
 	private final ImageService imageService;
 
 	public RouteRegisterResult execute(Long userId, RouteRegisterCommand command, MultipartFile trackingImage) {
-		UserEntity user = userService.getByUserId(userId);
+		UserEntity user = userService.findById(userId);
 		ImageEntity imageEntity = imageService.storeRouteImage(trackingImage);
 
 		try {

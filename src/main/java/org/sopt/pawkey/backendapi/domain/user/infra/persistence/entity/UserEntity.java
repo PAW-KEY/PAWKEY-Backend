@@ -2,11 +2,14 @@ package org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewEntity;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
@@ -72,7 +75,35 @@ public class UserEntity extends BaseEntity {
 		return petEntityList.stream()
 			.findFirst()
 			.orElse(null);
-	} // Optional<PetEntity>을 반환하도록 변경하여 null 처리를 명시적으로 만드는 것을 고려
+	}
 
+	public PetEntity getPetOrThrow() {
+		PetEntity pet = getPet();
+		if (pet == null) {
+			throw new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED);
+		}
+
+		return pet;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		UserEntity that = (UserEntity)o;
+
+		return userId != null && userId.equals(that.userId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(userId);
+	}
+	public void updateRegion(RegionEntity region) {
+		this.region = region;
+	}
 }
 

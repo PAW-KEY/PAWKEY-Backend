@@ -22,12 +22,12 @@ public interface SpringDataPostLikeRepository extends JpaRepository<PostLikeEnti
 	// 	  where pl.user.userId = :userId
 	// 	""")
 	@Query("""
-    SELECT pl FROM PostLikeEntity pl
-    JOIN FETCH pl.post p
-    JOIN FETCH p.postImages pi
-    JOIN FETCH pi.image
-    WHERE pl.user.id = :userId
-""")
+		    SELECT pl FROM PostLikeEntity pl
+		    JOIN FETCH pl.post p
+		    JOIN FETCH p.postImages pi
+		    JOIN FETCH pi.image
+		    WHERE pl.user.userId = :userId
+		""")
 	List<PostLikeEntity> findAllByUserWithPostAndImages(@Param("userId") Long userId);
 
 	Optional<PostLikeEntity> findByUser_UserIdAndPost_PostId(Long userId, Long postId);

@@ -1,7 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
-import java.util.List;
-
 import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
@@ -19,6 +17,5 @@ public class PostFacade {
 	private final ImageStorage imageStorage;
 	private final RouteService routeService;
 	private final ImageService imageService;
-
 
 }
