@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
-import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;

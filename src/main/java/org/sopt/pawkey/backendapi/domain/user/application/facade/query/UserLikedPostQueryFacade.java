@@ -1,10 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserLikedPostQueryService;
