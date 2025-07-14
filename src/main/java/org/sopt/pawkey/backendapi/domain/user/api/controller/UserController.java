@@ -33,7 +33,7 @@ public class UserController {
 	public ResponseEntity<ApiResponse<List<PetProfileResponseDto>>> getMyPets(
 		@RequestHeader("X-USER-ID") Long userId
 	) {
-		List<PetProfileResponseDto> pets = userPetQueryFacade.getUserPets(userId);
-		return ResponseEntity.ok(ApiResponse.success(pets));
+		List<PetProfileResponseDto> petDtos = userPetQueryFacade.getUserPets(userId);
+		return ResponseEntity.ok(ApiResponse.success(petDtos));
 	}
 }
