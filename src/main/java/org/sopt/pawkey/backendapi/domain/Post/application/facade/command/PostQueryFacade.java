@@ -1,10 +1,15 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
+import java.util.List;
+
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
+import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -15,21 +20,27 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-
 public class PostQueryFacade {
 
 	private final PostQueryService postQueryService;
-	private final UserService userService;
 	private final PostService postService;
-	private final ImageService imageService;
+	private final UserService userService;
 
-
-	public PostResponseDto getPostByPostId(Long postId){
+	public PostResponseDto getPostDetail(Long postId, Long userId){
 
 		PostEntity post = postService.findById(postId);
-		UserEntity writer = userService.findById(post.getUser().getUserId());
-		ImageEntity petProfileimage =
 
+		boolean isLiked = post.getPostLikeEntityList().stream()
+			.anyMatch(like -> like.getUser().getUserId().equals(userId));
+
+		String routeMapImageUrl = post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl():null;
+
+		List<String> walkingImages = post.getPostImages().stream()
+			.filter(img -> img.getImageType() == ImageType.WALK_POST)
+			.map(img -> img.getImage().getImageUrl())
+			.toList();
+
+		return postQueryService.getPostDetail(post, isLiked, routeMapImageUrl, walkingImages);
 	}
 
 }

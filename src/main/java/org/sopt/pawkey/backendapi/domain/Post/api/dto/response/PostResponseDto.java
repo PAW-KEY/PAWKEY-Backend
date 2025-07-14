@@ -3,7 +3,7 @@ package org.sopt.pawkey.backendapi.domain.post.api.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.category.api.dto.CategorySummaryTagsDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.AuthorDto;
 
 public record PostResponseDto(
@@ -12,13 +12,14 @@ public record PostResponseDto(
 	String title,
 	String content,
 	boolean isLike,
-	AuthorDto author,
-	CategoryTagsDto categoryTags,
+	AuthorDto authorInfo,
+	CategoryTagsDto  categoryTags,
 	String regionName,
 	LocalDateTime createdAt,
 	String routeMapImageUrl,
 	List<String> walkingImageUrls
 ) {
+
 
 	public static PostResponseDto of(
 		Long postId,
@@ -26,7 +27,7 @@ public record PostResponseDto(
 		String title,
 		String content,
 		boolean isLike,
-		AuthorDto author,
+		AuthorDto authorInfo,
 		CategoryTagsDto categoryTags,
 		String regionName,
 		LocalDateTime createdAt,
@@ -35,7 +36,23 @@ public record PostResponseDto(
 	) {
 		return new PostResponseDto(
 			postId, routeId, title, content, isLike,
-			author, categoryTags, regionName, createdAt, routeMapImageUrl, walkingImageUrls
+			authorInfo, categoryTags, regionName, createdAt, routeMapImageUrl, walkingImageUrls
+		);
+	}
+
+	public static PostResponseDto from(GetPostResult postResult){
+		return new PostResponseDto(
+			postResult.postId(),
+			postResult.routeId(),
+			postResult.title(),
+			postResult.content(),
+			postResult.isLike(),
+			postResult.author(),
+			new CategoryTagsDto(postResult.categoryTags()),
+			postResult.regionName(),
+			postResult.createdAt(),
+			postResult.routeMapImageUrl(),
+			postResult.walkingImageUrls()
 		);
 	}
 
@@ -43,6 +60,7 @@ public record PostResponseDto(
 	public record CategoryTagsDto(
 		List<String> categoryOptionSummary
 	) {}
+
 
 
 }

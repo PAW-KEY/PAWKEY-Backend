@@ -15,6 +15,7 @@ import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostQue
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +48,7 @@ public class PostController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "게시물 ID가 요청에 포함되어 있지 않습니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "해당 게시물을 찾을 수 없습니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
-	@PostMapping("")
+	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> createPost(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@RequestPart("data") @Valid @NotNull PostCreateRequestDto requestDto,
@@ -71,14 +72,9 @@ public class PostController {
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@PathVariable("postId") Long postId
 	) {
-		List<CategoryResult> resultList = categoryQueryService.getAllCategories();
-
-
-		PostResponseDto response = PostResponseDto.from(resultList);
+		PostResponseDto response = postQueryFacade.getPostDetail(postId,userId.longValue());
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
 	}
-
-
 
 
 }

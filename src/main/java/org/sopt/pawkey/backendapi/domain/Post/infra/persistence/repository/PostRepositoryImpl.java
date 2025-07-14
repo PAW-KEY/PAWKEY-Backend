@@ -30,4 +30,9 @@ public class PostRepositoryImpl implements PostRepository {
 	public List<PostEntity> findAllByUser(UserEntity user) {
 		return jpaRepository.findAllByUser(user);
 	}
+
+	@Override
+	public Optional<PostEntity> getPostWithAllDetails(Long postId) {
+		return jpaRepository.getPostWithLikesAndImages(postId);
+	}
 }

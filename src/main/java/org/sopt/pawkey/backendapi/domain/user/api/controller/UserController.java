@@ -7,6 +7,7 @@ import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterRespo
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserRegisterFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -65,7 +66,7 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "강아지 프로필 이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 
-	@PostMapping("")
+	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@RequestPart("data") @Valid @NotNull CreateUserRequestDto requestDto,
