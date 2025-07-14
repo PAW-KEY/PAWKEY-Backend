@@ -49,7 +49,9 @@ public class UserLikedPostQueryFacade {
 
 				// 작성자 정보
 				var writer = post.getUser();
-				var pet = writer.getPet();
+				var pet = writer.getPetEntityList().stream()
+					.findFirst()
+					.orElse(null);
 				Long writerId = writer.getUserId();
 				String writerPetName = pet != null ? pet.getName() : null;
 				String writerProfileImgUrl = (pet != null && pet.getProfileImage() != null)
