@@ -18,7 +18,7 @@ public class GetSharedRouteMapDataFacade {
 	private final UserService userService;
 
 	public GetSharedRouteMapDataResultDto execute(Long userId, GetSharedRouteMapDataCommandDto commandDto) {
-		UserEntity user = userService.getByUserId(userId);
+		UserEntity user = userService.findById(userId);
 		RouteEntity route = routeService.getRouteById(commandDto.routeId());
 
 		return GetSharedRouteMapDataResultDto.from(route);

@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public enum RouteErrorCode implements ErrorCode {
 
-	ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "R40401", "해당 경로를 찾을 수 없습니다.");
+	ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "R40401", "해당 경로를 찾을 수 없습니다."),
+	INVALID_ROUTE_COORDINATES(HttpStatus.BAD_REQUEST, "R40001", "유효하지 않은 좌표 데이터입니다.");
 
 	private final HttpStatus status;
 	private final String code;
