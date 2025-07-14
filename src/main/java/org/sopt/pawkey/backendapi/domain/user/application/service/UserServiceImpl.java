@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RegionRepository regionRepository;
 
+	@Override
 	public UserEntity findById(final Long id) {
 		return userRepository.findById(id)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserEntity saveUser(CreateUserCommand command) {
 		RegionEntity region = regionRepository.getById(command.regionId())
-			.orElseThrow(()-> new RegionBusinessException(RegionErrorCode.REGION_NOT_FOUND));
+			.orElseThrow(() -> new RegionBusinessException(RegionErrorCode.REGION_NOT_FOUND));
 
 		UserEntity user = UserEntity.builder()
 			.loginId(command.loginId())
@@ -44,13 +45,13 @@ public class UserServiceImpl implements UserService {
 			.region(region)
 			.build();
 
-
-
 		return userRepository.save(user);
-
-	public void updateUserRegion(UserEntity user, RegionEntity region) {
-		user.updateRegion(region);
-
 	}
-}
+	@Override
+	public void updateUserRegion(UserEntity user, RegionEntity region){
+			user.updateRegion(region);
+
+		}
+	}
+
 
