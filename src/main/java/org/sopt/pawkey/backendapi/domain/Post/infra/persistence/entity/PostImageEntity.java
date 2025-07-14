@@ -46,5 +46,4 @@ public class PostImageEntity extends BaseEntity { //Join 테이블
 	@JoinColumn(name = "post_id")
 	private PostEntity post;
 
-
 }

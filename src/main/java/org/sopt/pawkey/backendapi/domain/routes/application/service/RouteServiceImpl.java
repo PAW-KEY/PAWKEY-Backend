@@ -22,6 +22,18 @@ public class RouteServiceImpl implements RouteService {
 	private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory();
 	private final RouteRepository routeRepository;
 
+	private static LineString toLineString(List<Coordinate> coordinates) {
+		if (coordinates.size() < 2) {
+			throw new RouteBusinessException(RouteErrorCode.INVALID_ROUTE_COORDINATES);
+		}
+
+		org.locationtech.jts.geom.Coordinate[] coords = coordinates.stream()
+			.map(coord -> new org.locationtech.jts.geom.Coordinate(coord.longitude(), coord.latitude()))
+			.toArray(org.locationtech.jts.geom.Coordinate[]::new);
+
+		return GEOMETRY_FACTORY.createLineString(coords);
+	}
+
 	@Override
 	public RouteEntity getRouteById(Long routeId) {
 		return routeRepository.getRouteByRouteId(routeId)
@@ -45,17 +57,5 @@ public class RouteServiceImpl implements RouteService {
 			.build();
 
 		return routeRepository.save(route);
-	}
-
-	private static LineString toLineString(List<Coordinate> coordinates) {
-		if (coordinates.size() < 2) {
-			throw new RouteBusinessException(RouteErrorCode.INVALID_ROUTE_COORDINATES);
-		}
-
-		org.locationtech.jts.geom.Coordinate[] coords = coordinates.stream()
-			.map(coord -> new org.locationtech.jts.geom.Coordinate(coord.longitude(), coord.latitude()))
-			.toArray(org.locationtech.jts.geom.Coordinate[]::new);
-
-		return GEOMETRY_FACTORY.createLineString(coords);
 	}
 }
