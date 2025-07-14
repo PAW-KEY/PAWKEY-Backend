@@ -3,7 +3,6 @@ package org.sopt.pawkey.backendapi.domain.user.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UpdateUserRegionResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserRegionFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,9 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.command;
 
 import org.sopt.pawkey.backendapi.domain.region.application.service.RegionService;
+import org.sopt.pawkey.backendapi.domain.region.domain.model.RegionType;
+import org.sopt.pawkey.backendapi.domain.region.exception.RegionBusinessException;
+import org.sopt.pawkey.backendapi.domain.region.exception.RegionErrorCode;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UpdateUserRegionCommand;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
@@ -21,6 +24,11 @@ public class UpdateUserRegionFacade {
 	public void execute(Long userId, UpdateUserRegionCommand command) {
 		UserEntity user = userService.findById(userId);
 		RegionEntity region = regionService.getRegionByIdOrThrow(command.regionId());
+
+		if (region.getRegionType() != RegionType.DONG) {
+			throw new RegionBusinessException(RegionErrorCode.REGION_TYPE_NOT_DONG);
+		}
+
 		userService.updateUserRegion(user, region);
 	}
 }
