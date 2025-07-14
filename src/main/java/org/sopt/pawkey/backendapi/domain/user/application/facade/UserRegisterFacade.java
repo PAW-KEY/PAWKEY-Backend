@@ -26,11 +26,11 @@ public class UserRegisterFacade {
 	public UserRegisterResponseDto excute(UserRegisterCommand command, MultipartFile petProfileImage){
 
 		UserEntity user = userService.saveUser(command.userCommand());
-
-		PetEntity pet = petService.savePet(command.petCommand());
-
-		//이미지 저장
 		ImageEntity imageEntity = imageService.storePetProfileImage(petProfileImage);
+
+		PetEntity pet = petService.savePet(command.petCommand(),user,imageEntity);
+
+
 
 		return UserRegisterResponseDto.from(user, pet);
 

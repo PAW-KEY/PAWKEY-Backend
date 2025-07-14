@@ -55,18 +55,18 @@ public class UserEntity extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostLikeEntity> postLikeEntityList = new ArrayList<>();
 
-	@Builder
-	public UserEntity(Long userId,
-		String name,
-		String gender,
-		int age,
-		RegionEntity region) {
-		this.userId = userId;
-		this.name = name;
-		this.gender = gender;
-		this.age = age;
-		this.region = region;
-	}
+	// @Builder
+	// public UserEntity(Long userId,
+	// 	String name,
+	// 	String gender,
+	// 	int age,
+	// 	RegionEntity region) {
+	// 	this.userId = userId;
+	// 	this.name = name;
+	// 	this.gender = gender;
+	// 	this.age = age;
+	// 	this.region = region;
+	// }
 
 	public PetEntity getPet() {
 		return petEntityList.stream()
