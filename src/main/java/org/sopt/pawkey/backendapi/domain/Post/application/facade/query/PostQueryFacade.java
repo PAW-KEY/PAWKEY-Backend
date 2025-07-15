@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
@@ -20,11 +22,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostQueryFacade {
-	public PostListResponseDto getFilterPostList(FilterPostsRequestDto requestDto) {
-		List<GetPostResult> results = postQueryService.getFilteredPosts(requestDto);
+	public PostListResponseDto getFilterPostList(FilterPostsRequestDto requestDto, Long userId) {
+		List<GetPostCardResult> results = postQueryService.getFilteredPosts(requestDto, userId);
 
-		List<PostResponseDto> postResponseDtoList = results.stream()
-			.map(PostResponseDto::from)
+		List<PostCardResponseDto> postResponseDtoList = results.stream()
+			.map(PostCardResponseDto::from)
 			.toList();
 
 		return new PostListResponseDto(postResponseDtoList);

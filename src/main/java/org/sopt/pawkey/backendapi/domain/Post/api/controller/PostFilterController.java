@@ -52,7 +52,7 @@ public class PostFilterController {
 	public ResponseEntity<ApiResponse<PostListResponseDto>> filterPosts(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@RequestBody @Valid @NotNull FilterPostsRequestDto requestDto) {
-		PostListResponseDto response = postQueryFacade.getFilterPostList(requestDto);
+		PostListResponseDto response = postQueryFacade.getFilterPostList(requestDto, Long.valueOf(userId));
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }

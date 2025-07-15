@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostQueryRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
@@ -55,7 +56,7 @@ public class PostQueryServiceImpl implements PostQueryService {
 	private final PostQueryRepository postQueryRepository;
 
 	@Override
-	public List<GetPostResult> getFilteredPosts(FilterPostsRequestDto requestDto) {
-		return postQueryRepository.findByFilter(requestDto);
+	public List<GetPostCardResult> getFilteredPosts(FilterPostsRequestDto requestDto, Long userId) {
+		return postQueryRepository.findByFilter(requestDto, userId);
 	}
 }

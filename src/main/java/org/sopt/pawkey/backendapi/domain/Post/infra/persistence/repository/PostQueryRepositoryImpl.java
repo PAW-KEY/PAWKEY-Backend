@@ -9,7 +9,7 @@ import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.QCate
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.QImageEntity;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.QPetEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
-import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostQueryRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostEntity;
@@ -18,7 +18,6 @@ import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostLike
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostSelectedCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.QRegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.QRouteEntity;
-import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.AuthorDto;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.QUserEntity;
 import org.springframework.stereotype.Repository;
@@ -56,7 +55,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	QImageEntity imageEntity = QImageEntity.imageEntity;
 	QPetEntity pet = QPetEntity.petEntity;
 	QUserEntity user = QUserEntity.userEntity;
-	QPostLikeEntity like = QPostLikeEntity.postLikeEntity;
+	QPostLikeEntity postLike = QPostLikeEntity.postLikeEntity;
 	// 좋아요 여부 표시는 추후에 추가 예정
 
 
@@ -66,7 +65,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	 * @return 조건에 부합하는 게시글을 GetPostResult DTO 리스트로 반환
 	 */
 	@Override
-	public List<GetPostResult> findByFilter(FilterPostsRequestDto dto) {
+	public List<GetPostCardResult> findByFilter(FilterPostsRequestDto dto, Long userId) {
 
 		// 1) BooleanBuilder로 동적 where 절 구성 ----------
 		BooleanBuilder builder = new BooleanBuilder()
@@ -85,7 +84,6 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		});
 
 		// fetch 사용은, 성능상 중요한 post, route, region, user, pet
-
 		// 2) 메인 쿼리 실행 및 성능상 자주 쓰이는 연관 엔티티는 한 번에 가져와 N+1 방지
 		List<PostEntity> posts = query.selectFrom(post)
 			.join(post.route, route).fetchJoin()
@@ -98,27 +96,27 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
 		// 후처리용 N+1 safe 조회
 		Map<Long, List<String>> postIdToCategoryTags = getCategoryTagsMap(posts);
-		Map<Long, List<String>> postIdToWalkingImages = getWalkingImageMap(posts);
+
+		Set<Long> likedPostIds = getLikedPostIds(userId, posts); // 좋아요 정보 조회
 
 		// 4) Entity -> DTO 변환
 		return posts.stream().map(p -> {
 			Long postId = p.getPostId();
-			RouteEntity r = p.getRoute();
 
-			return new GetPostResult(
-				postId,
-				r.getRouteId(),
-				p.getTitle(),
-				p.getDescription(),
-				true, // isLiked(추후 확장 가능)
-				new AuthorDto(p.getUser().getUserId(), p.getPet().getPetId(), p.getPet().getName(),
-					p.getPet().getProfileImage().getImageUrl()),
-				postIdToCategoryTags.getOrDefault(postId, List.of()),
-				r.getRegion().getRegionName(),
-				p.getCreatedAt(),
-				r.getTrackingImage().getImageUrl(),
-				postIdToWalkingImages.getOrDefault(postId, List.of())
-			);
+			return GetPostCardResult.builder()
+				.postId(postId)
+				.title(p.getTitle())
+				.isLike(likedPostIds.contains(postId))
+				.author(new AuthorDto(
+					p.getUser().getUserId(),
+					p.getPet().getPetId(),
+					p.getPet().getName(),
+					p.getPet().getProfileImage().getImageUrl()
+				))
+				.categoryTags(postIdToCategoryTags.getOrDefault(postId, List.of()))
+				.createdAt(p.getCreatedAt())
+				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
+				.build();
 		}).toList();
 	}
 
@@ -141,21 +139,16 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		));
 	}
 
-	// --------------------------------------------------------------------------------
-	// (private) 산책 이미지 일괄 조회
-	// -----------------------------------------
-	private Map<Long, List<String>> getWalkingImageMap(List<PostEntity> posts) {
-		List<Tuple> results = query
-			.select(post.postId, imageEntity.imageUrl)
-			.from(image)
-			.join(image.post, post)
-			.join(image.image, imageEntity)
-			.where(image.post.in(posts))
-			.fetch();
-
-		return results.stream().collect(Collectors.groupingBy(
-			t -> t.get(post.postId),
-			Collectors.mapping(t -> t.get(imageEntity.imageUrl), Collectors.toList())
-		));
+	private Set<Long> getLikedPostIds(Long userId, List<PostEntity> posts) {
+		return query
+			.select(postLike.post.postId)
+			.from(postLike)
+			.where(
+				postLike.user.userId.eq(userId),
+				postLike.post.in(posts)
+			)
+			.fetch()
+			.stream()
+			.collect(Collectors.toSet());
 	}
 }
