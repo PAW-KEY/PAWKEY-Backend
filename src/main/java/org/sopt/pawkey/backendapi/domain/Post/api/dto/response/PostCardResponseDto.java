@@ -11,6 +11,7 @@ public record PostCardResponseDto(
 	Boolean isLike,
 	String title,
 	String representativeImageUrl,
+	Long routeId,
 	WriterDto writer,
 	List<String> descriptionTags
 ) {
@@ -21,6 +22,7 @@ public record PostCardResponseDto(
 		Boolean isLike,
 		String title,
 		String representativeImageUrl,
+		Long routeId,
 		WriterDto writer,
 		List<String> descriptionTags
 	) {
@@ -30,6 +32,7 @@ public record PostCardResponseDto(
 			isLike,
 			title,
 			representativeImageUrl,
+			routeId,
 			writer,
 			descriptionTags
 		);
@@ -42,6 +45,7 @@ public record PostCardResponseDto(
 			result.isLike(),
 			result.title(),
 			result.routeMapImageUrl(),
+			result.routeId(),
 			new WriterDto(
 				result.author().authorId(),
 				result.author().petName(),

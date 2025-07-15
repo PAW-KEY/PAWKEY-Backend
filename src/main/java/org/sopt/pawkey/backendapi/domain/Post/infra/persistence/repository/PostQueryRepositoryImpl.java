@@ -123,6 +123,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				.categoryTags(postIdToCategoryTags.getOrDefault(postId, List.of()))
 				.createdAt(p.getCreatedAt())
 				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
+				.routeId(p.getRoute().getRouteId())
 				.build();
 		}).toList();
 	}
