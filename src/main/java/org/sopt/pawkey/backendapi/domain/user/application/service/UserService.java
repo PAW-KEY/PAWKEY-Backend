@@ -12,3 +12,4 @@ public interface UserService {
 	void updateUserRegion(UserEntity user, RegionEntity region);
 
 }
+

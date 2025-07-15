@@ -10,7 +10,6 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public interface PostService {
 	PostEntity findById(Long postId);
-
 	PostEntity savePost(UserEntity writer,
 		PostRegisterCommand command,
 		RouteEntity route,

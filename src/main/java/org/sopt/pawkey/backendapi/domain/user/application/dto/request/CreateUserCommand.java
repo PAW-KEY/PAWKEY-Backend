@@ -13,5 +13,4 @@ public record CreateUserCommand(
 		Long regionId) {
 		return new CreateUserCommand(loginId, password, name, gender, age, regionId);
 	}
-
 }
