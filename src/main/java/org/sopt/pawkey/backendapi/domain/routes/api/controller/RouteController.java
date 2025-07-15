@@ -95,6 +95,4 @@ public class RouteController {
 		return ResponseEntity.ok(ApiResponse.success(GetRouteInfoForPostResponse.from(result)));
 	}
 
-
-
 }

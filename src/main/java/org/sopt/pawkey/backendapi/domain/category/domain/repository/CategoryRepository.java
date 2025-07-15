@@ -7,6 +7,4 @@ import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.Categ
 public interface CategoryRepository {
 	List<CategoryEntity> findAllCategoryWithOptions();
 
-
-
 }

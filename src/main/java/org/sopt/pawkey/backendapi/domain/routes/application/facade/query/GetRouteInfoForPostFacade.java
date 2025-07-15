@@ -25,6 +25,22 @@ public class GetRouteInfoForPostFacade {
 	private final UserService userService;
 	private final RouteService routeService;
 
+	private static String getFormattedDate(LocalDateTime date) {
+		return date
+			.format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
+				.withLocale(Locale.KOREAN));
+	}
+
+	private static String formatDistance(int meters) {
+		double km = meters / 1000.0;
+		return String.format("%.1fkm", km);
+	}
+
+	private static String formatDuration(int seconds) {
+		int minutes = seconds / 60;
+		return minutes + "분";
+	}
+
 	public GetRouteInfoForPostResult execute(Long userId, GetRouteInfoForPostCommand getRouteInfoForPostCommand) {
 		UserEntity user = userService.findById(userId);
 
@@ -49,22 +65,6 @@ public class GetRouteInfoForPostFacade {
 				.build(),
 			pet.getName()
 		);
-	}
-
-	private static String getFormattedDate(LocalDateTime date) {
-		return date
-			.format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
-				.withLocale(Locale.KOREAN));
-	}
-
-	private static String formatDistance(int meters) {
-		double km = meters / 1000.0;
-		return String.format("%.1fkm", km);
-	}
-
-	private static String formatDuration(int seconds) {
-		int minutes = seconds / 60;
-		return minutes + "분";
 	}
 
 	private String formatSteps(Integer stepCount) {

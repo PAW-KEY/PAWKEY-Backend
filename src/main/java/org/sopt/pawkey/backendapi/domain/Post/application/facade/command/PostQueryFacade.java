@@ -40,5 +40,4 @@ public class PostQueryFacade {
 		return postQueryService.getPostDetail(post, isLiked, routeMapImageUrl, walkingImages);
 	}
 
-
 }
