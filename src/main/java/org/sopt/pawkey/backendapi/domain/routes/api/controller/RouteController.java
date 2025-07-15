@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.routes.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
+import org.sopt.pawkey.backendapi.domain.review.api.dto.response.ReviewResponseDto;
 import org.sopt.pawkey.backendapi.domain.routes.api.dto.GetRouteInfoForPostResponse;
 import org.sopt.pawkey.backendapi.domain.routes.api.dto.GetSharedRouteMapDataResponseDto;
 import org.sopt.pawkey.backendapi.domain.routes.api.dto.RouteRegisterRequest;
@@ -15,6 +16,7 @@ import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.Route
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteInfoForPostFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetSharedRouteMapDataFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -94,4 +98,7 @@ public class RouteController {
 
 		return ResponseEntity.ok(ApiResponse.success(GetRouteInfoForPostResponse.from(result)));
 	}
+
+
+
 }
