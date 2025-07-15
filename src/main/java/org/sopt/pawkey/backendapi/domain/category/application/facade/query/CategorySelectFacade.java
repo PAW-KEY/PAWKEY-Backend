@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.post.application.facade.query;
+package org.sopt.pawkey.backendapi.domain.category.application.facade.query;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 @Transactional
-public class PostFilterFacade {
+public class CategorySelectFacade {
 	private final CategoryQueryService categoryQueryService;
 	private final SelectQueryService selectQueryService;
 
-	public CategorySelectListResponseDto getAllCategories() {
+	public CategorySelectListResponseDto getFilterOptions() {
 		List<SelectResult> selects = selectQueryService.getAllSelects();
 		List<CategoryResult> categories = categoryQueryService.getAllCategoriesSummary();
 
