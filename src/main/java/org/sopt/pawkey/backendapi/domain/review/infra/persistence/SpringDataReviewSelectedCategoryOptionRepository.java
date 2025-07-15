@@ -16,7 +16,4 @@ public interface SpringDataReviewSelectedCategoryOptionRepository extends JpaRep
         GROUP BY r.categoryOption
     """)
 	List<Object[]> countOptionGroupByCategory(@Param("routeId") Long routeId);
-
-public interface SpringDataReviewSelectedCategoryOptionRepository
-	extends JpaRepository<ReviewSelectedCategoryOptionEntity, Long> {
 }

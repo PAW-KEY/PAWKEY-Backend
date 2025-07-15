@@ -1,6 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
-import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostCategoryOptionTop3Entity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.springframework.stereotype.Repository;
