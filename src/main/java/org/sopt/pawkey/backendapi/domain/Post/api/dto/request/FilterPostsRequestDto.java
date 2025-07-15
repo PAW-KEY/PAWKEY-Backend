@@ -3,8 +3,8 @@ package org.sopt.pawkey.backendapi.domain.post.api.dto.request;
 import java.util.List;
 
 public record FilterPostsRequestDto(
-	int durationStart,
-	int durationEnd,
+	Integer durationStart,
+	Integer durationEnd,
 	List<CategoryFilterDto> selectedOptions) {
 
 	public record CategoryFilterDto(

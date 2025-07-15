@@ -56,38 +56,37 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	QPetEntity pet = QPetEntity.petEntity;
 	QUserEntity user = QUserEntity.userEntity;
 	QPostLikeEntity postLike = QPostLikeEntity.postLikeEntity;
-	// 좋아요 여부 표시는 추후에 추가 예정
 
-
-	/**
-	 * 필터 조건에 맞는 게시글 목록 조회.
-	 * @param dto 클라이언트가 전달한 필터링 조건(DTO)
-	 * @return 조건에 부합하는 게시글을 GetPostResult DTO 리스트로 반환
-	 */
 	@Override
 	public List<GetPostCardResult> findByFilter(FilterPostsRequestDto dto, Long userId) {
 
-		// 1) BooleanBuilder로 동적 where 절 구성 ----------
 		BooleanBuilder builder = new BooleanBuilder()
-			.and(post.isPublic.isTrue())
-			.and(route.duration.between(
+			.and(post.isPublic.isTrue());
+
+		// duration이 null이 아닐 경우만 필터링 (분 → 초 변환)
+		if (dto.durationStart() != null && dto.durationEnd() != null) {
+			builder.and(route.duration.between(
 				dto.durationStart() * 60,
 				dto.durationEnd() * 60
-			)); //분 → 초 변환
+			));
+		}
 
-		// 카테고리 옵션 필터링: 선택된 옵션이 모두 존재하는지 서브쿼리로 검증
-		dto.selectedOptions().forEach(cat -> {
-			builder.and(JPAExpressions.selectOne()
-				.from(sel)
-				.join(sel.categoryOption, opt)
-				.where(sel.post.eq(post),
-					opt.category.categoryId.eq(cat.categoryId()),
-					opt.id.in(cat.optionsIds()))
-				.exists());
-		});
+		// 선택된 카테고리 옵션만 필터링 조건에 추가
+		if (dto.selectedOptions() != null) {
+			dto.selectedOptions().forEach(cat -> {
+				if (cat.optionsIds() != null && !cat.optionsIds().isEmpty()) {
+					builder.and(JPAExpressions.selectOne()
+						.from(sel)
+						.join(sel.categoryOption, opt)
+						.where(
+							sel.post.eq(post),
+							opt.category.categoryId.eq(cat.categoryId()),
+							opt.id.in(cat.optionsIds())
+						).exists());
+				}
+			});
+		}
 
-		// fetch 사용은, 성능상 중요한 post, route, region, user, pet
-		// 2) 메인 쿼리 실행 및 성능상 자주 쓰이는 연관 엔티티는 한 번에 가져와 N+1 방지
 		List<PostEntity> posts = query.selectFrom(post)
 			.join(post.route, route).fetchJoin()
 			.join(route.region, region).fetchJoin()
