@@ -118,6 +118,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		List<Tuple> results = query
 			.select(post.postId, imageEntity.imageUrl)
 			.from(image)
+			.join(image.post, post)
 			.join(image.image, imageEntity)
 			.where(image.post.in(posts))
 			.fetch();
