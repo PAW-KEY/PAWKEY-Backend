@@ -9,12 +9,14 @@ import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseD
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.CreateUserRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapper;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserRegionFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLikedPostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserPetQueryFacade;
+import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
@@ -47,6 +49,8 @@ public class UserController {
 	private final UserLikedPostQueryFacade userLikedPostQueryFacade;
 	private final UserWrittenPostQueryFacade userWrittenPostQueryFacade;
 	private final UserRegisterFacade userRegisterFacade;
+	private final UserQueryFacade userQueryFacade;
+
 
 	@Operation(summary = "유저 정보 등록", description = "회원가입과 동시에, 유저 정보 등록. ", tags = {"Users"})
 	@ApiResponses({
@@ -82,6 +86,21 @@ public class UserController {
 		List<PostCardResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(likedPosts)));
 	}
+
+	@Operation(summary = "마이페이지 유저 정보 조회", description = "마이페이지에서 유저 상세 정보를 조회합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	@GetMapping("/me/userInfo")
+	public ResponseEntity<ApiResponse<UserInfoResponseDto>> getUserProfile(
+		@RequestHeader("X-USER-ID") Long userId
+	) {
+		UserInfoResponseDto response = userQueryFacade.getUserInfo(userId);
+		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
 
 	@Operation(summary = "내가 작성한 게시물 조회", description = "사용자가 작성한 게시물 목록을 반환합니다.", tags = {"Users"})
 	@ApiResponses({
