@@ -6,6 +6,7 @@ import org.sopt.pawkey.backendapi.domain.category.application.dto.result.Categor
 
 public record CategoryResponseDto(
 	Long categoryId,
+	String categoryDescription,
 	String categoryName,
 	List<CategoryOptionResponseDto> categoryOptions
 
@@ -13,6 +14,7 @@ public record CategoryResponseDto(
 	public static CategoryResponseDto from(CategoryResult categoryResult) {
 		return new CategoryResponseDto(
 			categoryResult.categoryId(),
+			categoryResult.categoryDescription(),
 			categoryResult.categoryName(),
 			categoryResult.options().stream()
 				.map(CategoryOptionResponseDto::from)
