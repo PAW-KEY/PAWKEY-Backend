@@ -2,7 +2,10 @@ package org.sopt.pawkey.backendapi.domain.post.application.service;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
+import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostQueryRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.AuthorDto;
 import org.springframework.stereotype.Service;
@@ -47,5 +50,12 @@ public class PostQueryServiceImpl implements PostQueryService {
 			routeMapImage,
 			walkingImages
 		);
+	}
+
+	private final PostQueryRepository postQueryRepository;
+
+	@Override
+	public List<GetPostResult> getFilteredPosts(FilterPostsRequestDto requestDto) {
+		return postQueryRepository.findByFilter(requestDto);
 	}
 }

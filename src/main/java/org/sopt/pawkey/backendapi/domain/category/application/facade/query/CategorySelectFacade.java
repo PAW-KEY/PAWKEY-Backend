@@ -3,8 +3,8 @@ package org.sopt.pawkey.backendapi.domain.category.application.facade.query;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategorySelectListResponseDto;
-import org.sopt.pawkey.backendapi.domain.category.application.dto.response.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.category.application.dto.response.SelectResult;
+import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryQueryService;
 import org.sopt.pawkey.backendapi.domain.category.application.service.SelectQueryService;
 import org.springframework.stereotype.Component;

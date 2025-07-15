@@ -1,9 +1,12 @@
-package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
+package org.sopt.pawkey.backendapi.domain.post.application.facade.query;
 
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
@@ -17,6 +20,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostQueryFacade {
+	public PostListResponseDto getFilterPostList(FilterPostsRequestDto requestDto) {
+		List<GetPostResult> results = postQueryService.getFilteredPosts(requestDto);
+
+		List<PostResponseDto> postResponseDtoList = results.stream()
+			.map(PostResponseDto::from)
+			.toList();
+
+		return new PostListResponseDto(postResponseDtoList);
+	}
 
 	private final PostQueryService postQueryService;
 	private final PostService postService;
@@ -32,7 +44,7 @@ public class PostQueryFacade {
 		String routeMapImageUrl =
 			post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl() : null;
 
-		List<String> walkingImages = post.getPostImages().stream()
+		List<String> walkingImages = post.getPostImageEntityList().stream()
 			.filter(img -> img.getImageType() == ImageType.WALK_POST)
 			.map(img -> img.getImage().getImageUrl())
 			.toList();
