@@ -19,4 +19,9 @@ public class ReviewSelectedCategoryOptionRepositoryImpl implements ReviewSelecte
 	public void saveAll(List<ReviewSelectedCategoryOptionEntity> selectedCategoryOptionEntityList) {
 		jpaRepository.saveAll(selectedCategoryOptionEntityList);
 	}
+
+	@Override
+	public List<Object[]> countOptionGroupByCategory(Long routeId) {
+		return jpaRepository.countOptionGroupByCategory(routeId);
+	}
 }

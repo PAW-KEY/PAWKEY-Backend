@@ -8,7 +8,7 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public interface PostRepository {
 	Optional<PostEntity> findById(Long postId);
-
+	PostEntity findByRouteId(Long routeId);
 	void save(PostEntity post);
 
 	List<PostEntity> findAllByUser(UserEntity user);

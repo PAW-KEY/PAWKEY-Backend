@@ -15,4 +15,6 @@ public interface PostService {
 		RouteEntity route,
 		List<ImageEntity> images);
 
+	void updateTop3CategoryOptionsFor(PostEntity post);
+
 }

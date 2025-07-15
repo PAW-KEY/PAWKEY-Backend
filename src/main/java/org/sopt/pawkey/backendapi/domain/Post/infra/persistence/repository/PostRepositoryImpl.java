@@ -18,7 +18,12 @@ public class PostRepositoryImpl implements PostRepository {
 
 	@Override
 	public Optional<PostEntity> findById(Long postId) {
-		return jpaRepository.getByPostId(postId);
+		return jpaRepository.findByPostId(postId);
+	}
+
+	@Override
+	public PostEntity findByRouteId(Long routeId) {
+		return jpaRepository.findByRoute_RouteId(routeId);
 	}
 
 	@Override

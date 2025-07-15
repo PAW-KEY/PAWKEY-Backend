@@ -7,7 +7,9 @@ import org.sopt.pawkey.backendapi.domain.category.domain.repository.CategoryRepo
 import org.sopt.pawkey.backendapi.domain.category.exception.CategoryBusinessException;
 import org.sopt.pawkey.backendapi.domain.category.exception.CategoryErrorCode;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
+import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.review.application.dto.command.ReviewRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewRepository;
 import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewSelectedCategoryOptionRepository;
@@ -33,6 +35,8 @@ public class ReviewServiceImpl implements ReviewService{
 	private final CategoryRepository categoryRepository;
 	private  final CategoryOptionRepository categoryOptionRepository;
 	private final ReviewSelectedCategoryOptionRepository reviewSelectedCategoryOptionRepository;
+
+	private final PostService postService;
 
 
 	@Override
@@ -60,6 +64,13 @@ public class ReviewServiceImpl implements ReviewService{
 
 
 		reviewSelectedCategoryOptionRepository.saveAll(selectedReviewOptionsForCategory);
+
+		//Top3 캐싱 테이블 업데이트 트리거
+		PostEntity relatedPost = postRepository.findByRouteId(route.getRouteId());
+		if (relatedPost != null) {
+			postService.updateTop3CategoryOptionsFor(relatedPost);
+		}
+
 		return review;
 
 	}

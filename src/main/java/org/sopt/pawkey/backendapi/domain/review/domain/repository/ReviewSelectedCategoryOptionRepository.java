@@ -7,4 +7,6 @@ import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewS
 public interface ReviewSelectedCategoryOptionRepository {
 
 	void saveAll(List<ReviewSelectedCategoryOptionEntity> selectedCategoryOptionEntityList);
+
+	List<Object[]> countOptionGroupByCategory(Long routeId);
 }

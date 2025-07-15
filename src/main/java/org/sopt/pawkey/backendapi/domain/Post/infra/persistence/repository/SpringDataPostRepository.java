@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long> {
-	Optional<PostEntity> getByPostId(Long postId);
+	Optional<PostEntity> findByPostId(Long postId);
+	PostEntity findByRoute_RouteId(Long routeId);
 
 	List<PostEntity> findAllByUser(UserEntity user);
 
