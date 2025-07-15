@@ -62,7 +62,6 @@ public class UserController {
 	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@RequestPart("data") @Valid @NotNull CreateUserRequestDto requestDto,
-
 		@RequestPart("pet_profile") @Valid @NotNull MultipartFile image) {
 		UserRegisterCommand command = requestDto.toCommand();
 		UserRegisterResponseDto response = userRegisterFacade.execute(command, image);

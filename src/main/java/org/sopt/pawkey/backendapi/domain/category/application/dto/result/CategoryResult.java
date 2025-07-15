@@ -7,6 +7,7 @@ import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.Categ
 
 public record CategoryResult(
 	Long categoryId,
+	String categoryDescription,
 	String categoryName,
 	List<CategoryOptionResult> options
 
@@ -15,6 +16,7 @@ public record CategoryResult(
 	public static CategoryResult fromEntity(CategoryEntity categoryEntity) {
 		return new CategoryResult(
 			categoryEntity.getCategoryId(),
+			categoryEntity.getCategoryDescription(),
 			categoryEntity.getCategoryName(),
 			categoryEntity.getCategoryOptionEntityList().stream()
 				.map(CategoryOptionResult::fromEntity)
@@ -25,6 +27,7 @@ public record CategoryResult(
 	public static CategoryResult fromEntityWithSummary(CategoryEntity categoryEntity) {
 		return new CategoryResult(
 			categoryEntity.getCategoryId(),
+			categoryEntity.getCategoryDescription(),
 			categoryEntity.getCategoryName(),
 			categoryEntity.getCategoryOptionEntityList().stream()
 				.map(CategoryOptionResult::fromEntityWithSummary)
