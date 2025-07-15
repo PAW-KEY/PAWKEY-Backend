@@ -72,23 +72,26 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		}
 
 		// 필터링
-		if (dto.selectedOptions() != null) {
-			for (var cat : dto.selectedOptions()) {
-				if (cat.optionsIds() != null && !cat.optionsIds().isEmpty()) {
-					for (Long optionId : cat.optionsIds()) {
-						builder.and(
-							JPAExpressions.selectOne()
-								.from(sel)
-								.where(
-									sel.post.eq(post),
-									sel.categoryOption.id.eq(optionId)
-								)
-								.exists()
-						);
+				if (dto.selectedOptions() != null) {
+						List<Long> allOptionIds = dto.selectedOptions().stream()
+								.filter(cat -> cat.optionsIds() != null && !cat.optionsIds().isEmpty())
+								.flatMap(cat -> cat.optionsIds().stream())
+								.toList();
+
+							if (!allOptionIds.isEmpty()) {
+								for (Long optionId : allOptionIds) {
+										builder.and(
+												JPAExpressions.selectOne()
+														.from(sel)
+													.where(
+														sel.post.eq(post),
+														sel.categoryOption.id.eq(optionId)
+														)
+													.exists()
+											);
+									}
+							}
 					}
-				}
-			}
-		}
 
 		List<PostEntity> posts = query.selectFrom(post)
 			.join(post.route, route).fetchJoin()
@@ -142,6 +145,10 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	}
 
 	private Set<Long> getLikedPostIds(Long userId, List<PostEntity> posts) {
+		if (userId == null || posts == null || posts.isEmpty()) {
+					return Set.of();
+				}
+
 		return query
 			.select(postLike.post.postId)
 			.from(postLike)
