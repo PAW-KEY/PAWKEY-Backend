@@ -1,13 +1,16 @@
 package org.sopt.pawkey.backendapi.domain.post.application.service;
 
-import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostCreateCommand;
+import java.util.List;
+
+import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostErrorCode;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteRepository;
-import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException;
-import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -28,19 +31,31 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void createPost(UserEntity writer, PostCreateCommand command) {
-
-		RouteEntity route = routeRepository.getRouteByRouteId(command.getRouteId())
-			.orElseThrow(() -> new RouteBusinessException(RouteErrorCode.ROUTE_NOT_FOUND));
+	public PostEntity savePost(UserEntity writer,
+		PostRegisterCommand command,
+		RouteEntity route,
+		List<ImageEntity> images) {
 
 		PostEntity post = PostEntity.builder()
 			.user(writer)
 			.route(route)
-			.title(command.getTitle())
-			.description(command.getDescription())
+			.title(command.title())
+			.description(command.description())
 			.isPublic(command.isPublic())
+			.pet(writer.getPet())
 			.build();
+
+		for (ImageEntity image : images) {
+			PostImageEntity postImage = PostImageEntity.builder()
+				.imageType(ImageType.WALK_POST)
+				.image(image)
+				.post(post)
+				.build();
+
+			post.getPostImages().add(postImage);
+		}
 		postRepository.save(post);
+		return post;
 	}
 
 }

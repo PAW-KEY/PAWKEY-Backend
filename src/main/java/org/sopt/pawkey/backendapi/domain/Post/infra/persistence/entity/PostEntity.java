@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
@@ -54,12 +55,17 @@ public class PostEntity extends BaseEntity {
 	@JoinColumn(name = "route_id", nullable = false)
 	private RouteEntity route;
 
+	@OneToOne
+	@JoinColumn(name = "pet_id", nullable = false)
+	private PetEntity pet;
+
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostLikeEntity> postLikeEntityList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostSelectedCategoryOptionEntity> postSelectedCategoryOptionEntityList = new ArrayList<>();
 
+  @Builder.Default
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostImageEntity> postImageEntityList = new ArrayList<>();
 
@@ -87,4 +93,5 @@ public class PostEntity extends BaseEntity {
 			new ArrayList<>()
 		);
 	}
+
 }

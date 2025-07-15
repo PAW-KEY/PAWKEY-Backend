@@ -26,7 +26,7 @@ public class ImageEntity extends BaseEntity {
 	@Column(name = "image_url", nullable = false, length = 500)
 	private String imageUrl;
 
-	@Column(name = "extension", nullable = false, length = 10)
+	@Column(name = "extension", nullable = false)
 	private String extension;
 
 	@Column(name = "width", nullable = false)
