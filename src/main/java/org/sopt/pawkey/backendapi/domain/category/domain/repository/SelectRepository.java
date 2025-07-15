@@ -3,7 +3,6 @@ package org.sopt.pawkey.backendapi.domain.category.domain.repository;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.SelectEntity;
-import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.SelectOptionEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
