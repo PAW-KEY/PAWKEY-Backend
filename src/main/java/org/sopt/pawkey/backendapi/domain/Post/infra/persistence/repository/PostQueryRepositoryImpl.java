@@ -72,18 +72,20 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		}
 
 		// 필터링
-		for (var cat : dto.selectedOptions()) {
-			if (cat.optionsIds() != null && !cat.optionsIds().isEmpty()) {
-				for (Long optionId : cat.optionsIds()) {
-					builder.and(
-						JPAExpressions.selectOne()
-							.from(sel)
-							.where(
-								sel.post.eq(post),
-								sel.categoryOption.id.eq(optionId)
-							)
-							.exists()
-					);
+		if (dto.selectedOptions() != null) {
+			for (var cat : dto.selectedOptions()) {
+				if (cat.optionsIds() != null && !cat.optionsIds().isEmpty()) {
+					for (Long optionId : cat.optionsIds()) {
+						builder.and(
+							JPAExpressions.selectOne()
+								.from(sel)
+								.where(
+									sel.post.eq(post),
+									sel.categoryOption.id.eq(optionId)
+								)
+								.exists()
+						);
+					}
 				}
 			}
 		}
