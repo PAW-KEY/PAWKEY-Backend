@@ -13,14 +13,14 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 
-public class ReviewCreateRequestDto{
+public class ReviewCreateRequestDto {
 	@NotNull(message = "루트 ID는 필수입니다.")
 	private final Long routeId;
 
 	@NotNull(message = "리뷰 카테고리 선택은 비어 있을 수 없습니다.")
 	private final List<@Valid SelectedReviewSet> selectedReviewSetList;
 
-	public ReviewRegisterCommand toCommand(){
+	public ReviewRegisterCommand toCommand() {
 		return ReviewRegisterCommand.builder()
 			.routeId(this.routeId)
 			.selectedReviewSetList(this.selectedReviewSetList)

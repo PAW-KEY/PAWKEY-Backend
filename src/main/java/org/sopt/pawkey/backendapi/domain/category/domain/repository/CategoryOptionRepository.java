@@ -8,5 +8,4 @@ public interface CategoryOptionRepository {
 
 	Optional<CategoryOptionEntity> findById(Long optionId);
 
-
 }
