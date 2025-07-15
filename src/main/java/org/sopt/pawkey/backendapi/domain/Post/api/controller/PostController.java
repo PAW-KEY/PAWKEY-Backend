@@ -84,7 +84,7 @@ public class PostController {
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@PathVariable("routeId") Long routeId
 	) {
-		ReviewResponseDto response = ReviewResponseDto.createMock();
+			ReviewResponseDto response = ReviewResponseDto.createMock();
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
 	}
 
