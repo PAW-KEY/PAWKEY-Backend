@@ -2,10 +2,14 @@ package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryOptionService;
+import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.SelectedOptionsForCategory;
+import org.sopt.pawkey.backendapi.domain.post.application.service.PostSelectedCategoryOptionService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
@@ -26,6 +30,8 @@ public class PostRegisterFacade {
 	private final RouteService routeService;
 	private final ImageService imageService;
 	private final PostService postService;
+	private final PostSelectedCategoryOptionService postSelectedCategoryOptionService;
+	private final CategoryOptionService categoryOptionService;
 
 	public PostRegisterResponseDto execute(Long userId,
 		PostRegisterCommand command,
@@ -34,11 +40,20 @@ public class PostRegisterFacade {
 		UserEntity writer = userService.findById(userId);
 		RouteEntity route = routeService.getRouteById(command.routeId());
 
-		// ✅ 이미지 저장
 		List<ImageEntity> imageEntities = imageService.storeWalkPostImages(postImages);
 
 		try {
 			PostEntity post = postService.savePost(writer, command, route, imageEntities);
+			List<SelectedOptionsForCategory> selectedOptionsForCategories = command.selectedOptionsForCategories();
+
+			List<Long> selectedOptionIds = selectedOptionsForCategories.stream()
+				.flatMap(selectedOptionsForCategory -> selectedOptionsForCategory.getSelectedOptionIds().stream())
+				.toList();
+
+			List<CategoryOptionEntity> selectedCategoryOptions = categoryOptionService.getAllWhereInIds(selectedOptionIds);
+
+			postSelectedCategoryOptionService.saveSelectedOption(post, selectedCategoryOptions);
+			
 			return PostRegisterResponseDto.from(post);
 		} catch (Exception e) {
 			// 이미지 rollback
