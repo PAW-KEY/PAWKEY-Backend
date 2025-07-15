@@ -7,7 +7,6 @@ import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.MyPostResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserQueryRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;

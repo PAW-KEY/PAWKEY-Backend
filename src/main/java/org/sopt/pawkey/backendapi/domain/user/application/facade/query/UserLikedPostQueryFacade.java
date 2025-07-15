@@ -4,11 +4,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
-import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserLikedPostQueryService;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserQueryRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;

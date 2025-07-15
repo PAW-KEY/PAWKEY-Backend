@@ -8,9 +8,7 @@ import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponse
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.CreateUserRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapper;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.MyPostResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserRegisterFacade;
