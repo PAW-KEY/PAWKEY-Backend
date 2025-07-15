@@ -24,6 +24,7 @@ public class PostCreateRequestDto {
 	@NotBlank(message = "게시물 본문은 비어 있을 수 없습니다.")
 	@Size(max = 1000, message = "게시물 본문은 1000자 이내여야 합니다.")
 	private final String description;
+
 	private final boolean isPublic;
 
 	@NotEmpty(message = "카테고리 선택은 비어 있을 수 없습니다.")
@@ -31,6 +32,10 @@ public class PostCreateRequestDto {
 
 	@NotNull(message = "루트 ID는 필수입니다.")
 	private final Long routeId;
+
+	public boolean getIsPublic() {
+		return isPublic;
+	}
 
 	public PostRegisterCommand toCommand() {
 		return PostRegisterCommand.builder()

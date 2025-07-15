@@ -55,8 +55,8 @@ public class PostEntity extends BaseEntity {
 	@JoinColumn(name = "route_id", nullable = false)
 	private RouteEntity route;
 
-	@OneToOne
-	@JoinColumn(name = "pet_id", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "pet_id", nullable = true)
 	private PetEntity pet;
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -65,11 +65,10 @@ public class PostEntity extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostSelectedCategoryOptionEntity> postSelectedCategoryOptionEntityList = new ArrayList<>();
 
-  @Builder.Default
+	@Builder.Default
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostImageEntity> postImageEntityList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<PostCategoryOptionTop3Entity> postCategoryOptionTop3EntityList = new ArrayList<>();
-
 }

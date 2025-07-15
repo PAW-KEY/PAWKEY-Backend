@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewSelectedCategoryOptionRepositoryImpl implements ReviewSelectedCategoryOptionRepository {
 
-
 	private final SpringDataReviewSelectedCategoryOptionRepository jpaRepository;
 
 	@Override

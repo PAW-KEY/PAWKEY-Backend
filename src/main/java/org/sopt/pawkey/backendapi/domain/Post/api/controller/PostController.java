@@ -11,6 +11,7 @@ import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegist
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
+import org.sopt.pawkey.backendapi.domain.review.api.dto.response.ReviewResponseDto;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -70,6 +71,20 @@ public class PostController {
 		@PathVariable("postId") Long postId
 	) {
 		PostResponseDto response = postQueryFacade.getPostDetail(postId, userId.longValue());
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
+	}
+
+	@Operation(summary = "리뷰 TOP3 조회  api", description = "리뷰 TOP3 를 반환합니다. 조회  api.", tags = {"Posts"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "리뷰 조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
+	@GetMapping("/{routeId}/reviews/top")
+	public ResponseEntity<ApiResponse<ReviewResponseDto>> getTopReviewsForPost(
+		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
+		@PathVariable("routeId") Long routeId
+	) {
+		ReviewResponseDto response = ReviewResponseDto.createMock();
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
 	}
 

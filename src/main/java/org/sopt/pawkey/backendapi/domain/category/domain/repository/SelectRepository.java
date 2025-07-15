@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.Query;
 public interface SelectRepository extends JpaRepository<SelectEntity, Long> {
 	@EntityGraph(attributePaths = "selectOptionEntityList")
 	@Query("SELECT s FROM SelectEntity s JOIN FETCH s.selectOptionEntityList")
-	List<SelectEntity> findAllSelectWithOptions();
+	List<SelectEntity> findAllSelectWithOptionsOrderedById();
 }

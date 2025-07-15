@@ -7,8 +7,6 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public interface ReviewService {
 
-
-	ReviewEntity saveReview(ReviewRegisterCommand command,UserEntity user, RouteEntity route);
-
+	ReviewEntity saveReview(ReviewRegisterCommand command, UserEntity user, RouteEntity route);
 
 }

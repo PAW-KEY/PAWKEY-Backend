@@ -21,6 +21,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostQueryFacade {
+	private final PostQueryService postQueryService;
+	private final PostService postService;
+	private final UserService userService;
+
 	public PostListResponseDto getFilterPostList(FilterPostsRequestDto requestDto, Long userId) {
 		List<GetPostCardResult> results = postQueryService.getFilteredPosts(requestDto, userId);
 
@@ -30,10 +34,6 @@ public class PostQueryFacade {
 
 		return new PostListResponseDto(postResponseDtoList);
 	}
-
-	private final PostQueryService postQueryService;
-	private final PostService postService;
-	private final UserService userService;
 
 	public PostResponseDto getPostDetail(Long postId, Long userId) {
 

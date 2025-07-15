@@ -15,7 +15,7 @@ public class SelectQueryServiceImpl implements SelectQueryService {
 
 	@Override
 	public List<SelectResult> getAllSelects() {
-		return selectRepository.findAllSelectWithOptions()
+		return selectRepository.findAllSelectWithOptionsOrderedById()
 			.stream()
 			.map(SelectResult::fromEntity)
 			.toList();

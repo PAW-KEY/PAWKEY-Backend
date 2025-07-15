@@ -27,7 +27,6 @@ public class ReviewController {
 
 	private final ReviewRegisterFacade reviewRegisterFacade;
 
-
 	@Operation(summary = "리뷰 카테고리 등록", description = "공유된 루트로 산책 완료 후, 리뷰 카테고리를 등록합니다.", tags = {"Reviews"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "리뷰 등록 성공"),
@@ -40,13 +39,9 @@ public class ReviewController {
 	) {
 		ReviewRegisterCommand command = requestDto.toCommand();
 
-		reviewRegisterFacade.execute(userId,command);
+		reviewRegisterFacade.execute(userId, command);
 
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
-
-
-
-
 
 }

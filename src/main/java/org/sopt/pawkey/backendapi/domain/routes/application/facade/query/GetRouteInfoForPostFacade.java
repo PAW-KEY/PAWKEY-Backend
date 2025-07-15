@@ -25,31 +25,6 @@ public class GetRouteInfoForPostFacade {
 	private final UserService userService;
 	private final RouteService routeService;
 
-	public GetRouteInfoForPostResult execute(Long userId, GetRouteInfoForPostCommand getRouteInfoForPostCommand) {
-		UserEntity user = userService.findById(userId);
-
-		RouteEntity route = routeService.getRouteById(getRouteInfoForPostCommand.routeId());
-
-		route.validateOwnership(user);
-		String dateDescription = getFormattedDate(route.getCreatedAt());
-		String locationDescription = route.getRegion().getFullRegionName();
-
-		PetEntity pet = user.getPetOrThrow();
-
-		List<String> descriptionTags = List.of(formatDistance(route.getDistance()),
-			formatDuration(route.getDuration()));
-
-		return new GetRouteInfoForPostResult(
-			GetRouteInfoForPostResult.RouteDto.builder()
-				.id(route.getRouteId())
-				.locationDescription(locationDescription)
-				.dateDescription(dateDescription)
-				.descriptionTags(descriptionTags)
-				.build(),
-			pet.getName()
-		);
-	}
-
 	private static String getFormattedDate(LocalDateTime date) {
 		return date
 			.format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
@@ -64,5 +39,35 @@ public class GetRouteInfoForPostFacade {
 	private static String formatDuration(int seconds) {
 		int minutes = seconds / 60;
 		return minutes + "분";
+	}
+
+	public GetRouteInfoForPostResult execute(Long userId, GetRouteInfoForPostCommand getRouteInfoForPostCommand) {
+		UserEntity user = userService.findById(userId);
+
+		RouteEntity route = routeService.getRouteById(getRouteInfoForPostCommand.routeId());
+
+		route.validateOwnership(user);
+		String dateDescription = getFormattedDate(route.getCreatedAt());
+		String locationDescription = route.getRegion().getFullRegionName();
+
+		PetEntity pet = user.getPetOrThrow();
+
+		Integer stepCount = route.getStepCount();
+		List<String> descriptionTags = List.of(formatDistance(route.getDistance()),
+			formatDuration(route.getDuration()), formatSteps(stepCount == null ? 0 : stepCount));
+
+		return new GetRouteInfoForPostResult(
+			GetRouteInfoForPostResult.RouteDto.builder()
+				.id(route.getRouteId())
+				.locationDescription(locationDescription)
+				.dateDescription(dateDescription)
+				.descriptionTags(descriptionTags)
+				.build(),
+			pet.getName()
+		);
+	}
+
+	private String formatSteps(Integer stepCount) {
+		return stepCount + "걸음";
 	}
 }

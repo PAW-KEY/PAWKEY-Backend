@@ -69,7 +69,7 @@ public class UserEntity extends BaseEntity {
 		this.gender = gender;
 		this.age = age;
 
- }
+	}
 
 	public PetEntity getPet() {
 		return petEntityList.stream()

@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostQueryServiceImpl implements PostQueryService {
 
+	private final PostQueryRepository postQueryRepository;
+
 	public PostResponseDto getPostDetail(PostEntity post, boolean isLiked, String routeMapImage,
 		List<String> walkingImages) {
 
@@ -51,8 +53,6 @@ public class PostQueryServiceImpl implements PostQueryService {
 			walkingImages
 		);
 	}
-
-	private final PostQueryRepository postQueryRepository;
 
 	@Override
 	public List<GetPostCardResult> getFilteredPosts(FilterPostsRequestDto requestDto, Long userId) {

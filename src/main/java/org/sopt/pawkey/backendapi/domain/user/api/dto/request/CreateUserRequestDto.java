@@ -11,8 +11,7 @@ import jakarta.validation.constraints.Size;
 public record CreateUserRequestDto(
 
 	@NotNull(message = "로그인 아이디는 필수값입니다.") String loginId,
-	@Size(min = 8, max = 50, message = "비밀번호는 8자 이상 50자 이하여야 합니다.") String password,
-
+	@Size(min = 1, max = 50, message = "비밀번호는 1자 이상 50자 이하여야 합니다.") String password,
 	@NotNull(message = "이름은 필수값입니다.") String name,
 	@NotNull(message = "성별은 필수값입니다.")
 	@Pattern(regexp = "^(M|F)$", message = "성별은 MALE 또는 FEMALE이어야 합니다.") String gender,

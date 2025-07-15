@@ -25,15 +25,14 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ReviewServiceImpl implements ReviewService{
+public class ReviewServiceImpl implements ReviewService {
 	private final PostRepository postRepository;
 	private final RouteRepository routeRepository;
 	private final UserRepository userRepository;
 	private final ReviewRepository reviewRepository;
 	private final CategoryRepository categoryRepository;
-	private  final CategoryOptionRepository categoryOptionRepository;
+	private final CategoryOptionRepository categoryOptionRepository;
 	private final ReviewSelectedCategoryOptionRepository reviewSelectedCategoryOptionRepository;
-
 
 	@Override
 	public ReviewEntity saveReview(ReviewRegisterCommand command, UserEntity user, RouteEntity route) {
@@ -44,11 +43,12 @@ public class ReviewServiceImpl implements ReviewService{
 
 		reviewRepository.save(review);
 
-		List<ReviewSelectedCategoryOptionEntity> selectedReviewOptionsForCategory = command.selectedReviewSetList().stream()
-			.flatMap(selectedReviewSet  -> selectedReviewSet.selectedReviewOptionIds().stream()
+		List<ReviewSelectedCategoryOptionEntity> selectedReviewOptionsForCategory = command.selectedReviewSetList()
+			.stream()
+			.flatMap(selectedReviewSet -> selectedReviewSet.selectedReviewOptionIds().stream()
 				.map(optionId -> {
 					CategoryOptionEntity option = categoryOptionRepository.findById(optionId)
-						.orElseThrow(()-> new CategoryBusinessException(CategoryErrorCode.CATEGORY_ERROR_CODE));
+						.orElseThrow(() -> new CategoryBusinessException(CategoryErrorCode.CATEGORY_ERROR_CODE));
 
 					return ReviewSelectedCategoryOptionEntity.builder()
 						.review(review)
@@ -57,7 +57,6 @@ public class ReviewServiceImpl implements ReviewService{
 				})
 			)
 			.toList();
-
 
 		reviewSelectedCategoryOptionRepository.saveAll(selectedReviewOptionsForCategory);
 		return review;

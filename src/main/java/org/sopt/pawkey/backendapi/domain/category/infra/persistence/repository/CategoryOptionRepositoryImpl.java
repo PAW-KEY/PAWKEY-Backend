@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.category.infra.persistence.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.category.domain.repository.CategoryOptionRepository;
@@ -16,5 +17,11 @@ public class CategoryOptionRepositoryImpl implements CategoryOptionRepository {
 	@Override
 	public Optional<CategoryOptionEntity> findById(Long optionId) {
 		return jpaRepository.findById(optionId);
+	}
+
+	@Override
+	public List<CategoryOptionEntity> findAllWhereInIds(List<Long> selectedOptionIds) {
+		List<CategoryOptionEntity> byIdIn = jpaRepository.findByIdIn(selectedOptionIds);
+		return byIdIn;
 	}
 }

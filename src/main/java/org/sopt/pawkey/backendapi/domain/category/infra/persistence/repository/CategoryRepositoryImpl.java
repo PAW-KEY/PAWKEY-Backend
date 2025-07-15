@@ -18,4 +18,5 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	public List<CategoryEntity> findAllCategoryWithOptions() {
 		return jpaRepository.findAllWithOptions();
 	}
+
 }
