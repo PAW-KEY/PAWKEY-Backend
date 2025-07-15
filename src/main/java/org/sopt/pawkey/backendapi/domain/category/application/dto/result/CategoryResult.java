@@ -22,6 +22,16 @@ public record CategoryResult(
 		);
 	}
 
+	public static CategoryResult fromEntityWithSummary(CategoryEntity categoryEntity) {
+		return new CategoryResult(
+			categoryEntity.getCategoryId(),
+			categoryEntity.getCategoryName(),
+			categoryEntity.getCategoryOptionEntityList().stream()
+				.map(CategoryOptionResult::fromEntityWithSummary)
+				.toList()
+		);
+	}
+
 	//하위 -  카테고리 별 상세 옵션
 	public record CategoryOptionResult(
 		Long categoryOptionId,
@@ -30,7 +40,13 @@ public record CategoryResult(
 		public static CategoryOptionResult fromEntity(CategoryOptionEntity categoryOptionEntity) {
 			return new CategoryOptionResult(categoryOptionEntity.getId(), categoryOptionEntity.getOptionText());
 		}
+
+		public static CategoryOptionResult fromEntityWithSummary(CategoryOptionEntity entity) {
+			return new CategoryOptionResult(
+				entity.getId(),
+				entity.getOptionSummary()
+			);
+		}
 	}
 }
-
 

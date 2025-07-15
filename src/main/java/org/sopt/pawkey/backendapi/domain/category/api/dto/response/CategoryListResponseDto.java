@@ -14,10 +14,3 @@ public record CategoryListResponseDto(
 		);
 	}
 }
-
-// public static PetTraitCategoryListResponseDto from(List<PetTraitCategoryResult> results) {
-// 	return new PetTraitCategoryListResponseDto(
-// 		results.stream()
-// 			.map(PetTraitCategoryResponseDto::from)
-// 			.toList()
-// 	);

@@ -12,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,21 +19,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category_select")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class CategoryEntity extends BaseEntity {
+public class SelectEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "category_id")
-	private Long categoryId;
+	@Column(name = "select_id")
+	private Long selectId;
 
-	@Column(name = "category_name", nullable = false)
-	private String categoryName;
+	@Column(name = "select_name", nullable = false)
+	private String selectName;
 
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("id ASC")
-	private List<CategoryOptionEntity> categoryOptionEntityList = new ArrayList<>();
+	@OneToMany(mappedBy = "select", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SelectOptionEntity> selectOptionEntityList = new ArrayList<>();
 }

@@ -1,18 +1,15 @@
 package org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,21 +17,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category")
+@Table(name = "select_option")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class CategoryEntity extends BaseEntity {
+public class SelectOptionEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "category_id")
-	private Long categoryId;
+	@Column(name = "select_option_id")
+	private Long id;
 
-	@Column(name = "category_name", nullable = false)
-	private String categoryName;
+	@Column(name = "select_text", nullable = false)
+	private String selectText;
 
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("id ASC")
-	private List<CategoryOptionEntity> categoryOptionEntityList = new ArrayList<>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "select_id", nullable = false)
+	private SelectEntity select;
 }

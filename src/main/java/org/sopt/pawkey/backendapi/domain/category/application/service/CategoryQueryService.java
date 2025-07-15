@@ -6,4 +6,6 @@ import org.sopt.pawkey.backendapi.domain.category.application.dto.result.Categor
 
 public interface CategoryQueryService {
 	List<CategoryResult> getAllCategories();
+
+	List<CategoryResult> getAllCategoriesSummary();
 }
