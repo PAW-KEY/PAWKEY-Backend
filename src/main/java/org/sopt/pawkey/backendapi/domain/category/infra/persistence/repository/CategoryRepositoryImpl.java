@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class CategoryRepositoryImpl implements CategoryRepository {
 
 	private final SpringDataCategoryRepository jpaRepository;
+
 	@Override
 	public List<CategoryEntity> findAllCategoryWithOptions() {
 		return jpaRepository.findAllWithOptions();

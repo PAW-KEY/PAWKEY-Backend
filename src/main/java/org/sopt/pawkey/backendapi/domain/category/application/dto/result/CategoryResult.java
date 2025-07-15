@@ -1,10 +1,9 @@
-package org.sopt.pawkey.backendapi.domain.category.application.dto.response;
+package org.sopt.pawkey.backendapi.domain.category.application.dto.result;
 
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryEntity;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
-
 
 public record CategoryResult(
 	Long categoryId,

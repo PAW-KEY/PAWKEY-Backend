@@ -2,7 +2,7 @@ package org.sopt.pawkey.backendapi.domain.category.application.service;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.category.application.dto.response.CategoryResult;
+import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.category.domain.repository.CategoryRepository;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryEntity;
 import org.springframework.stereotype.Service;

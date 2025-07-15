@@ -1,0 +1,51 @@
+package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
+
+import java.util.List;
+
+import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService;
+import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
+import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
+import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
+@Transactional
+public class PostRegisterFacade {
+	private final UserService userService;
+	private final RouteService routeService;
+	private final ImageService imageService;
+	private final PostService postService;
+
+	public PostRegisterResponseDto execute(Long userId,
+		PostRegisterCommand command,
+		List<MultipartFile> postImages) {
+
+		UserEntity writer = userService.findById(userId);
+		RouteEntity route = routeService.getRouteById(command.routeId());
+
+		// ✅ 이미지 저장
+		List<ImageEntity> imageEntities = imageService.storeWalkPostImages(postImages);
+
+		try {
+			PostEntity post = postService.savePost(writer, command, route, imageEntities);
+			return PostRegisterResponseDto.from(post);
+		} catch (Exception e) {
+			// 이미지 rollback
+			for (ImageEntity image : imageEntities) {
+				imageService.deleteImage(image);
+			}
+			throw e;
+		}
+	}
+}

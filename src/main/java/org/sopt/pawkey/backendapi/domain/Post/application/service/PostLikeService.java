@@ -10,4 +10,6 @@ public interface PostLikeService {
 	 * @param post 좋아요를 누를 게시글
 	 */
 	void like(final UserEntity user, final PostEntity post);
+
+	void cancelLike(UserEntity user, PostEntity post);
 }

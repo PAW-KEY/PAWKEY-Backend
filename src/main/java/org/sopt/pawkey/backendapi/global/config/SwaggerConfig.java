@@ -15,6 +15,12 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class SwaggerConfig {
 
+	public SwaggerConfig(MappingJackson2HttpMessageConverter converter) {
+		var supportedMediaTypes = new ArrayList<>(converter.getSupportedMediaTypes());
+		supportedMediaTypes.add(new MediaType("application", "octet-stream"));
+		converter.setSupportedMediaTypes(supportedMediaTypes);
+	}
+
 	@Bean
 	public GroupedOpenApi publicApi() { // GroupedOpenApi 빈을 통해 API를 그룹화
 		return GroupedOpenApi.builder()
@@ -31,11 +37,5 @@ public class SwaggerConfig {
 				.title("paw-key API")
 				.version("v1")
 				.description("paw-key API 명세서"));
-	}
-
-	public SwaggerConfig(MappingJackson2HttpMessageConverter converter) {
-		var supportedMediaTypes = new ArrayList<>(converter.getSupportedMediaTypes());
-		supportedMediaTypes.add(new MediaType("application", "octet-stream"));
-		converter.setSupportedMediaTypes(supportedMediaTypes);
 	}
 }
