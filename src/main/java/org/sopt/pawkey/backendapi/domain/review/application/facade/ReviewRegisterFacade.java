@@ -24,7 +24,6 @@ public class ReviewRegisterFacade {
 
 		UserEntity user = userService.findById(userId);
 		RouteEntity route = routeService.getRouteById(command.routeId());
-
 		ReviewEntity review = reviewService.saveReview(command, user, route);
 
 	}
