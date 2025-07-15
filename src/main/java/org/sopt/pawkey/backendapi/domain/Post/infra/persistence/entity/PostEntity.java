@@ -55,7 +55,7 @@ public class PostEntity extends BaseEntity {
 	@JoinColumn(name = "route_id", nullable = false)
 	private RouteEntity route;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "pet_id", nullable = true)
 	private PetEntity pet;
 
