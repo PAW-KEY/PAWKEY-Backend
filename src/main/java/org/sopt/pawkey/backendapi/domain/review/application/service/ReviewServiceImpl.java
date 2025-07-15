@@ -18,11 +18,13 @@ import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEn
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserRepository;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReviewServiceImpl implements ReviewService{
 	private final PostRepository postRepository;
 	private final RouteRepository routeRepository;

@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class ReviewRegisterFacade {
 
 	private final ReviewService reviewService;
