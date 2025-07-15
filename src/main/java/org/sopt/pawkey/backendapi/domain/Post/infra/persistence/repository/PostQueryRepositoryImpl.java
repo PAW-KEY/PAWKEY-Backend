@@ -70,7 +70,10 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		// 1) BooleanBuilder로 동적 where 절 구성 ----------
 		BooleanBuilder builder = new BooleanBuilder()
 			.and(post.isPublic.isTrue())
-			.and(route.duration.between(dto.durationStart(), dto.durationEnd()));
+			.and(route.duration.between(
+				dto.durationStart() * 60,
+				dto.durationEnd() * 60
+			)); //분 → 초 변환
 
 		// 카테고리 옵션 필터링: 선택된 옵션이 모두 존재하는지 서브쿼리로 검증
 		dto.selectedOptions().forEach(cat -> {
