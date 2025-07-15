@@ -3,7 +3,6 @@ package org.sopt.pawkey.backendapi.global.infra.filter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -40,16 +39,18 @@ public class RequestLoggingFilter implements Filter {
 		throws IOException, ServletException {
 
 		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		ContentCachingResponseWrapper cachingResponse = new ContentCachingResponseWrapper(
-			(HttpServletResponse)response);
-
+		HttpServletResponse httpResponse = (HttpServletResponse)response;
 
 		String uri = httpRequest.getRequestURI();
-		// api/v1 만 로깅
+
+		// api/v1이 아닌 요청은 로깅하지 않고 바로 통과
 		if (!uri.startsWith("/api/v1")) {
-			chain.doFilter(request, cachingResponse);
+			chain.doFilter(request, response);
 			return;
 		}
+
+		// ContentCachingResponseWrapper는 api/v1 요청에만 적용
+		ContentCachingResponseWrapper cachingResponse = new ContentCachingResponseWrapper(httpResponse);
 
 		String traceId = UUID.randomUUID().toString();
 		MDC.put("traceId", traceId);
@@ -66,6 +67,9 @@ public class RequestLoggingFilter implements Filter {
 
 			// 응답 로그
 			logResponse(cachingResponse, traceId, duration);
+
+			// 핵심: 캐시된 응답 본문을 실제 응답으로 복사
+			cachingResponse.copyBodyToResponse();
 
 			MDC.clear();
 		}
@@ -84,7 +88,7 @@ public class RequestLoggingFilter implements Filter {
 		}
 
 		log.info(
-			"\n[REQUEST]\n  Method: {}\n  URI: {}\n  Headers:{}\n traceId:{}",
+			"\n[REQUEST]\n  Method: {}\n  URI: {}\n  Headers:{}\n  TraceId: {}",
 			method,
 			uri,
 			!headers.isEmpty() ? headers.toString() : " (none)",
@@ -98,10 +102,13 @@ public class RequestLoggingFilter implements Filter {
 		String message = "";
 
 		try {
-			body = new String(response.getContentAsByteArray(), StandardCharsets.UTF_8);
-			JsonNode jsonNode = objectMapper.readTree(body);
-			code = jsonNode.path("code").asText();
-			message = jsonNode.path("message").asText();
+			byte[] content = response.getContentAsByteArray();
+			if (content.length > 0) {
+				body = new String(content, StandardCharsets.UTF_8);
+				JsonNode jsonNode = objectMapper.readTree(body);
+				code = jsonNode.path("code").asText();
+				message = jsonNode.path("message").asText();
+			}
 		} catch (Exception e) {
 			log.debug("Response body parsing failed: {}", e.getMessage());
 		}
