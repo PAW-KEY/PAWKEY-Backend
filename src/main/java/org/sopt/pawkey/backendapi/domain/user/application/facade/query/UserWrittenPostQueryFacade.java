@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.MyPostResponseDto;
@@ -24,7 +25,7 @@ public class UserWrittenPostQueryFacade {
 	private final UserQueryRepository userQueryRepository;
 	private final PostRepository postRepository;
 
-	public List<MyPostResponseDto> getMyPosts(Long userId) {
+	public List<PostCardResponseDto> getMyPosts(Long userId) {
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
@@ -35,26 +36,31 @@ public class UserWrittenPostQueryFacade {
 
 		return posts.stream()
 			.map(post -> {
-				// 대표 이미지
 				String repImageUrl = post.getPostImageEntityList().stream()
 					.findFirst()
 					.map(img -> img.getImage().getImageUrl())
 					.orElse(null);
 
-				// 작성자 정보
 				PetEntity pet = post.getUser().getPet();
-				MyPostResponseDto.WriterDto writer = new MyPostResponseDto.WriterDto(
+				PostCardResponseDto.WriterDto writer = new PostCardResponseDto.WriterDto(
 					post.getUser().getUserId(),
 					pet != null ? pet.getName() : null,
 					(pet != null && pet.getProfileImage() != null) ? pet.getProfileImage().getImageUrl() : null
 				);
 
-				// 설명 태그
-				List<String> tags = post.getPostCategoryOptionTop3EntityList().stream()
+				List<String> tags = post.getPostSelectedCategoryOptionEntityList().stream()
 					.map(opt -> opt.getCategoryOption().getOptionText())
 					.toList();
 
-				return MyPostResponseDto.of(post, repImageUrl, writer, tags);
+				return new PostCardResponseDto(
+					post.getPostId(),
+					post.getCreatedAt(),
+					false, // isLike = false (내 게시글)
+					post.getTitle(),
+					repImageUrl,
+					writer,
+					tags
+				);
 			})
 			.toList();
 	}

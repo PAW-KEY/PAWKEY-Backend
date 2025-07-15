@@ -5,6 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.CreateUserRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostResponseDto;
@@ -78,10 +79,10 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
 	})
 	@GetMapping("/me/likes")
-	public ResponseEntity<ApiResponse<ListResponseWrapper<LikedPostResponseDto>>> getMyLikedPosts(
+	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyLikedPosts(
 		@RequestHeader("X-USER-ID") Long userId
 	) {
-		List<LikedPostResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
+		List<PostCardResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(likedPosts)));
 	}
 
@@ -92,10 +93,10 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
 	})
 	@GetMapping("/me/posts")
-	public ResponseEntity<ApiResponse<ListResponseWrapper<MyPostResponseDto>>> getMyPosts(
+	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyPosts(
 		@RequestHeader("X-USER-ID") Long userId
 	) {
-		List<MyPostResponseDto> myPosts = userWrittenPostQueryFacade.getMyPosts(userId);
+		List<PostCardResponseDto> myPosts = userWrittenPostQueryFacade.getMyPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(myPosts)));
 	}
 
