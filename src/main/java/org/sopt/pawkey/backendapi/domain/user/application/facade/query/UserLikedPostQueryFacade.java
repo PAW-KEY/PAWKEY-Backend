@@ -23,34 +23,55 @@ public class UserLikedPostQueryFacade {
 	private final UserLikedPostQueryService userLikedPostQueryService;
 
 	public List<LikedPostResponseDto> getLikedPosts(Long userId) {
-
+		// 1. 사용자 조회
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
+		// 2. 좋아요한 PostLikeEntity 목록 조회
 		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(userId);
 
+		// 3. 최신순 정렬
+		likedPosts.sort(Comparator.comparing((PostLikeEntity pl) -> pl.getPost().getCreatedAt()).reversed());
+
+		// 4. DTO 변환
 		return likedPosts.stream()
 			.map(postLike -> {
 				var post = postLike.getPost();
 
+
+				// 대표 이미지: 가장 먼저 등록된 이미지
+				String repImageUrl = post.getPostImageEntityList().stream()
+					.min(Comparator.comparing(PostImageEntity::getCreatedAt))
+					.map(PostImageEntity::getImage)
+					.map(imageEntity -> imageEntity.getImageUrl())
+					.orElse(null);
+
 				String imageurldummy = "imageurl";
 
-				var writer = post.getUser();
-				Long writerId = writer.getUserId();
-				String writerPetName = writer.getPet() != null ? writer.getPet().getName() : null;
-				String writerProfileImgUrl = (writer.getPet() != null && writer.getPet().getProfileImage() != null) ?
-					writer.getPet().getProfileImage().getImageUrl() : null;
 
+				// 작성자 정보
+				var writer = post.getUser();
+				var pet = writer.getPetEntityList().stream()
+					.findFirst()
+					.orElse(null);
+				Long writerId = writer.getUserId();
+				String writerPetName = pet != null ? pet.getName() : null;
+				String writerProfileImgUrl = (pet != null && pet.getProfileImage() != null)
+					? pet.getProfileImage().getImageUrl()
+					: null;
+
+				// 설명 태그
 				List<String> descriptionTags = post.getPostCategoryOptionTop3EntityList()
 					.stream()
 					.map(optionTop3 -> optionTop3.getCategoryOption().getOptionText())
 					.toList();
 
-				boolean isLiked = true;
-
+				// DTO 반환
 				return new LikedPostResponseDto(
 					post.getPostId(),
 					post.getCreatedAt(),
+					true,
+					repImageUrl,
 					isLiked,
 					imageurldummy,
 					//repImageUrl,
@@ -65,3 +86,4 @@ public class UserLikedPostQueryFacade {
 			.toList();
 	}
 }
+

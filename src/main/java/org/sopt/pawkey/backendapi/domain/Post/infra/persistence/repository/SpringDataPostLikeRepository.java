@@ -11,17 +11,11 @@ import org.springframework.data.repository.query.Param;
 public interface SpringDataPostLikeRepository extends JpaRepository<PostLikeEntity, Long> {
 	boolean existsByUser_UserIdAndPost_PostId(Long userId, Long postId);
 
-	// @Query("""
-	// 	  select pl
-	// 	  from PostLikeEntity pl
-	// 	    join fetch pl.post p
-	// 	    join fetch p.postImageEntityList pi
-	// 	    join fetch pi.image
-	// 	    join fetch p.user u
-	// 	    left join fetch u.petEntityList
-	// 	  where pl.user.userId = :userId
-	// 	""")
-	@Query("""
+	
+
+		  select pl
+		  from PostLikeEntity pl
+		  where pl.user.userId = :userId
 		    SELECT pl FROM PostLikeEntity pl
 		    JOIN FETCH pl.post p
 		    JOIN FETCH p.postImages pi
