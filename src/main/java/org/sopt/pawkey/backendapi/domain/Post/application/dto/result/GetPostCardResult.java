@@ -15,6 +15,7 @@ public record GetPostCardResult(
 	AuthorDto author,
 	List<String> categoryTags,
 	LocalDateTime createdAt,
-	String routeMapImageUrl
+	String routeMapImageUrl,
+	Long routeId
 ) {
 }

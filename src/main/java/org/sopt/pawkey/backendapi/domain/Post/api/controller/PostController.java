@@ -9,8 +9,8 @@ import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterRespo
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostFacade;
-import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
+import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.response.ReviewResponseDto;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;

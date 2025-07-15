@@ -57,6 +57,7 @@ public class UserWrittenPostQueryFacade {
 					false, // isLike = false (내 게시글)
 					post.getTitle(),
 					repImageUrl,
+					post.getRoute().getRouteId(),
 					writer,
 					tags
 				);

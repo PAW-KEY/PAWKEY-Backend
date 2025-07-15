@@ -1,7 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
-import java.util.Optional;
-
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
@@ -13,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserQueryServiceImpl implements UserQueryService{
+public class UserQueryServiceImpl implements UserQueryService {
 
 	private final UserRepository userRepository;
 
@@ -23,7 +21,6 @@ public class UserQueryServiceImpl implements UserQueryService{
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 		return UserInfoResponseDto.from(user);
-
 
 	}
 }
