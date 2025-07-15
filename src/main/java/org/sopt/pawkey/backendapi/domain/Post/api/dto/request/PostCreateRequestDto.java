@@ -5,9 +5,6 @@ import java.util.List;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.SelectedOptionsForCategory;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

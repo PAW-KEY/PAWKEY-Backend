@@ -4,9 +4,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserLikedPostQueryService;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserQueryRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
@@ -25,7 +25,7 @@ public class UserLikedPostQueryFacade {
 	private final UserQueryRepository userQueryRepository;
 	private final UserLikedPostQueryService userLikedPostQueryService;
 
-	public List<LikedPostResponseDto> getLikedPosts(Long userId) {
+	public List<PostCardResponseDto> getLikedPosts(Long userId) {
 		// 1. 사용자 조회
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
@@ -41,47 +41,38 @@ public class UserLikedPostQueryFacade {
 			.map(postLike -> {
 				var post = postLike.getPost();
 
-				// 대표 이미지: 가장 먼저 등록된 이미지
 				String repImageUrl = post.getPostImageEntityList().stream()
 					.min(Comparator.comparing(PostImageEntity::getCreatedAt))
 					.map(PostImageEntity::getImage)
 					.map(ImageEntity::getImageUrl)
 					.orElse(null);
 
-				String imageurldummy = "imageurl";
-
-				// 작성자 정보
 				var writer = post.getUser();
-				var pet = writer.getPetEntityList().stream()
-					.findFirst()
-					.orElse(null);
-				Long writerId = writer.getUserId();
-				String writerPetName = pet != null ? pet.getName() : null;
-				String writerProfileImgUrl = (pet != null && pet.getProfileImage() != null)
-					? pet.getProfileImage().getImageUrl()
-					: null;
+				var pet = writer.getPetEntityList().stream().findFirst().orElse(null);
 
-				// 설명 태그
-				List<String> descriptionTags = post.getPostCategoryOptionTop3EntityList()
+				PostCardResponseDto.WriterDto writerDto = new PostCardResponseDto.WriterDto(
+					writer.getUserId(),
+					pet != null ? pet.getName() : null,
+					(pet != null && pet.getProfileImage() != null) ? pet.getProfileImage().getImageUrl() : null
+				);
+
+				List<String> descriptionTags = post.getPostSelectedCategoryOptionEntityList()
 					.stream()
 					.map(optionTop3 -> optionTop3.getCategoryOption().getOptionText())
 					.toList();
 
-				// DTO 반환
-				return new LikedPostResponseDto(
+				return new PostCardResponseDto(
 					post.getPostId(),
 					post.getCreatedAt(),
-					true,
+					true, // 좋아요한 게시글
+					post.getTitle(),
 					repImageUrl,
-					new LikedPostResponseDto.WriterDto(
-						writerId,
-						writerPetName,
-						writerProfileImgUrl
-					),
+					writerDto,
 					descriptionTags
 				);
 			})
 			.toList();
+
 	}
 }
 
