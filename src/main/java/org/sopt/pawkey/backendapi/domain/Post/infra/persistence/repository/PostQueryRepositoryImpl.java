@@ -30,12 +30,23 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 게시글(Post) 조회 전용 커스텀 리포지토리 구현체.
+ * <p>
+ *  - QueryDSL을 사용하여 동적 쿼리를 타입 세이프하게 작성.
+ *  - FilterPostsRequestDto에 담긴 조건을 기반으로 게시글을 필터링.
+ *  - fetch join을 활용해 N+1 문제를 방지 밒 성능 최적화.
+ *  - 카테고리 태그 / 산책 이미지 등 후처리 조회가 필요한 데이터는 별도 메서드에서 일괄 조회.
+ *  - 최종적으로 API 응답 전용 DTO(GetPostResult) 형태로 변환해서 반환.
+ */
 @Repository
 @RequiredArgsConstructor
 public class PostQueryRepositoryImpl implements PostQueryRepository {
 
+	// QueryDSL의 핵심. EntityManager를 주입받아 쿼리 빌더로 사용.
 	private final JPAQueryFactory query;
 
+	// === Q 클래스 인스턴스 (QueryDSL이 생성한 메타모델) ===
 	QPostEntity post = QPostEntity.postEntity;
 	QRouteEntity route = QRouteEntity.routeEntity;
 	QPostSelectedCategoryOptionEntity sel = QPostSelectedCategoryOptionEntity.postSelectedCategoryOptionEntity;
@@ -46,14 +57,23 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	QPetEntity pet = QPetEntity.petEntity;
 	QUserEntity user = QUserEntity.userEntity;
 	QPostLikeEntity like = QPostLikeEntity.postLikeEntity;
+	// 좋아요 여부 표시는 추후에 추가 예정
 
+
+	/**
+	 * 필터 조건에 맞는 게시글 목록 조회.
+	 * @param dto 클라이언트가 전달한 필터링 조건(DTO)
+	 * @return 조건에 부합하는 게시글을 GetPostResult DTO 리스트로 반환
+	 */
 	@Override
 	public List<GetPostResult> findByFilter(FilterPostsRequestDto dto) {
 
+		// 1) BooleanBuilder로 동적 where 절 구성 ----------
 		BooleanBuilder builder = new BooleanBuilder()
 			.and(post.isPublic.isTrue())
 			.and(route.duration.between(dto.durationStart(), dto.durationEnd()));
 
+		// 카테고리 옵션 필터링: 선택된 옵션이 모두 존재하는지 서브쿼리로 검증
 		dto.selectedOptions().forEach(cat -> {
 			builder.and(JPAExpressions.selectOne()
 				.from(sel)
@@ -65,6 +85,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		});
 
 		// fetch 사용은, 성능상 중요한 post, route, region, user, pet
+
+		// 2) 메인 쿼리 실행 및 성능상 자주 쓰이는 연관 엔티티는 한 번에 가져와 N+1 방지
 		List<PostEntity> posts = query.selectFrom(post)
 			.join(post.route, route).fetchJoin()
 			.join(route.region, region).fetchJoin()
@@ -78,6 +100,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		Map<Long, List<String>> postIdToCategoryTags = getCategoryTagsMap(posts);
 		Map<Long, List<String>> postIdToWalkingImages = getWalkingImageMap(posts);
 
+		// 4) Entity -> DTO 변환
 		return posts.stream().map(p -> {
 			Long postId = p.getPostId();
 			RouteEntity r = p.getRoute();
@@ -87,7 +110,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				r.getRouteId(),
 				p.getTitle(),
 				p.getDescription(),
-				true,
+				true, // isLiked(추후 확장 가능)
 				new AuthorDto(p.getUser().getUserId(), p.getPet().getPetId(), p.getPet().getName(),
 					p.getPet().getProfileImage().getImageUrl()),
 				postIdToCategoryTags.getOrDefault(postId, List.of()),
@@ -99,6 +122,9 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		}).toList();
 	}
 
+	// --------------------------------------------------------------------------------
+	// (private) 카테고리 태그 일괄 조회
+	// ---------------------------------------------------------------------------
 	private Map<Long, List<String>> getCategoryTagsMap(List<PostEntity> posts) {
 		List<Tuple> results = query
 			.select(post.postId, opt.optionSummary)
@@ -108,12 +134,16 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 			.where(post.in(posts))
 			.fetch();
 
+		// 결과를 postId 기준 Map으로 그룹핑
 		return results.stream().collect(Collectors.groupingBy(
 			t -> t.get(post.postId),
 			Collectors.mapping(t -> t.get(opt.optionSummary), Collectors.toList())
 		));
 	}
 
+	// --------------------------------------------------------------------------------
+	// (private) 산책 이미지 일괄 조회
+	// -----------------------------------------
 	private Map<Long, List<String>> getWalkingImageMap(List<PostEntity> posts) {
 		List<Tuple> results = query
 			.select(post.postId, imageEntity.imageUrl)
