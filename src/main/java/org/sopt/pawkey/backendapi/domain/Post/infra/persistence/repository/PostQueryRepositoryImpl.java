@@ -71,20 +71,25 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 			));
 		}
 
-		// 선택된 카테고리 옵션만 필터링 조건에 추가
+		// 필터링
 		if (dto.selectedOptions() != null) {
-			dto.selectedOptions().forEach(cat -> {
+			for (var cat : dto.selectedOptions()) {
 				if (cat.optionsIds() != null && !cat.optionsIds().isEmpty()) {
-					builder.and(JPAExpressions.selectOne()
-						.from(sel)
-						.join(sel.categoryOption, opt)
-						.where(
-							sel.post.eq(post),
-							opt.category.categoryId.eq(cat.categoryId()),
-							opt.id.in(cat.optionsIds())
-						).exists());
+					for (Long optionId : cat.optionsIds()) {
+						builder.and(
+							JPAExpressions.selectOne()
+								.from(sel)
+								.join(sel.categoryOption, opt)
+								.where(
+									sel.post.eq(post),
+									opt.id.eq(optionId),
+									opt.category.categoryId.eq(cat.categoryId())
+								)
+								.exists()
+						);
+					}
 				}
-			});
+			}
 		}
 
 		List<PostEntity> posts = query.selectFrom(post)
@@ -98,7 +103,6 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
 		// 후처리용 N+1 safe 조회
 		Map<Long, List<String>> postIdToCategoryTags = getCategoryTagsMap(posts);
-
 		Set<Long> likedPostIds = getLikedPostIds(userId, posts); // 좋아요 정보 조회
 
 		// 4) Entity -> DTO 변환
