@@ -32,7 +32,7 @@ public class PostQueryFacade {
 		String routeMapImageUrl =
 			post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl() : null;
 
-		List<String> walkingImages = post.getPostImages().stream()
+		List<String> walkingImages = post.getPostImageEntityList().stream()
 			.filter(img -> img.getImageType() == ImageType.WALK_POST)
 			.map(img -> img.getImage().getImageUrl())
 			.toList();

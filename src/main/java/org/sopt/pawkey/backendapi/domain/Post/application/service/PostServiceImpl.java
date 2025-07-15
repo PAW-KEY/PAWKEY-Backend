@@ -52,7 +52,7 @@ public class PostServiceImpl implements PostService {
 				.post(post)
 				.build();
 
-			post.getPostImages().add(postImage);
+			post.getPostImageEntityList().add(postImage);
 		}
 		postRepository.save(post);
 		return post;

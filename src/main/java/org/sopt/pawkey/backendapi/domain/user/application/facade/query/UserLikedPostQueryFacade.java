@@ -1,7 +1,10 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
 
+import java.util.Comparator;
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.LikedPostResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserLikedPostQueryService;
@@ -38,16 +41,14 @@ public class UserLikedPostQueryFacade {
 			.map(postLike -> {
 				var post = postLike.getPost();
 
-
 				// 대표 이미지: 가장 먼저 등록된 이미지
 				String repImageUrl = post.getPostImageEntityList().stream()
 					.min(Comparator.comparing(PostImageEntity::getCreatedAt))
 					.map(PostImageEntity::getImage)
-					.map(imageEntity -> imageEntity.getImageUrl())
+					.map(ImageEntity::getImageUrl)
 					.orElse(null);
 
 				String imageurldummy = "imageurl";
-
 
 				// 작성자 정보
 				var writer = post.getUser();
@@ -72,9 +73,6 @@ public class UserLikedPostQueryFacade {
 					post.getCreatedAt(),
 					true,
 					repImageUrl,
-					isLiked,
-					imageurldummy,
-					//repImageUrl,
 					new LikedPostResponseDto.WriterDto(
 						writerId,
 						writerPetName,

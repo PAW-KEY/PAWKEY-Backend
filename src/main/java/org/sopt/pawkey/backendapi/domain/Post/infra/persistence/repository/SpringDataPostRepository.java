@@ -18,7 +18,7 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 
 	@Query("SELECT p FROM PostEntity p " +
 		"LEFT JOIN FETCH p.postLikeEntityList " +
-		"LEFT JOIN FETCH p.postImages pi " +
+		"LEFT JOIN FETCH p.postImageEntityList pi " +
 		"LEFT JOIN FETCH pi.image " +
 		"LEFT JOIN FETCH p.user u " +
 		"LEFT JOIN FETCH p.pet pt " +
