@@ -50,10 +50,11 @@ public class PostRegisterFacade {
 				.flatMap(selectedOptionsForCategory -> selectedOptionsForCategory.getSelectedOptionIds().stream())
 				.toList();
 
-			List<CategoryOptionEntity> selectedCategoryOptions = categoryOptionService.getAllWhereInIds(selectedOptionIds);
+			List<CategoryOptionEntity> selectedCategoryOptions = categoryOptionService.getAllWhereInIds(
+				selectedOptionIds);
 
 			postSelectedCategoryOptionService.saveSelectedOption(post, selectedCategoryOptions);
-			
+
 			return PostRegisterResponseDto.from(post);
 		} catch (Exception e) {
 			// 이미지 rollback

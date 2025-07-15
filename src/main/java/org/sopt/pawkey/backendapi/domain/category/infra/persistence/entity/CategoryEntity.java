@@ -40,7 +40,6 @@ public class CategoryEntity extends BaseEntity {
 	@Column(name = "category_description", nullable = false)
 	private String categoryDescription;
 
-
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("id ASC")
 	private List<CategoryOptionEntity> categoryOptionEntityList = new ArrayList<>();

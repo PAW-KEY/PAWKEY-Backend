@@ -49,7 +49,8 @@ public record ReviewResponseDto(
 		Long postId,
 		int totalReviewCount,
 		List<CategoryTop> categoryTop3
-	) {}
+	) {
+	}
 
 	public record CategoryTop(
 		Long categoryId,
@@ -58,5 +59,6 @@ public record ReviewResponseDto(
 		String optionText,
 		int rank,
 		int percentage
-	) {}
+	) {
+	}
 }

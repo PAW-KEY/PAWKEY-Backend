@@ -19,5 +19,4 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		return jpaRepository.findAllWithOptions();
 	}
 
-
 }
