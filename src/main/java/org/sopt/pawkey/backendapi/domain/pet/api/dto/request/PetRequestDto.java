@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Positive;
 
 public record PetRequestDto(
 	@NotBlank(message = "반려동물 이름은 필수값입니다.") String name,
-	@NotBlank(message = "성별은 필수값입니다.") @Pattern(regexp = "^(MALE|FEMALE)$", message = "성별은 MALE 또는 FEMALE이어야 합니다.") String gender,
+	@NotBlank(message = "성별은 필수값입니다.") @Pattern(regexp = "^(M|F)$", message = "성별은 M 또는 F이어야 합니다.") String gender,
 	@Positive(message = "나이는 양수여야 합니다.") int age,
 	boolean isAgeKnown,
 	boolean isNeutered,
