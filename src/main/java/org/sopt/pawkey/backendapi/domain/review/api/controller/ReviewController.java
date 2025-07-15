@@ -2,24 +2,16 @@ package org.sopt.pawkey.backendapi.domain.review.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import java.util.List;
-
-import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestDto;
-import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
-import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.request.ReviewCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.review.application.dto.command.ReviewRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.review.application.facade.ReviewRegisterFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

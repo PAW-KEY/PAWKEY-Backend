@@ -122,9 +122,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		}).toList();
 	}
 
-	// --------------------------------------------------------------------------------
 	// (private) 카테고리 태그 일괄 조회
-	// ---------------------------------------------------------------------------
 	private Map<Long, List<String>> getCategoryTagsMap(List<PostEntity> posts) {
 		List<Tuple> results = query
 			.select(post.postId, opt.optionSummary)

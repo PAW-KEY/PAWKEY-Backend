@@ -8,7 +8,6 @@ import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseD
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
-import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
