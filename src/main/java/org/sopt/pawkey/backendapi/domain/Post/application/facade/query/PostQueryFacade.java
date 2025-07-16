@@ -11,7 +11,6 @@ import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCard
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
-import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
