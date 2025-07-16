@@ -14,4 +14,6 @@ public interface PostRepository {
 	List<PostEntity> findAllByUser(UserEntity user);
 
 	Optional<PostEntity> getPostWithAllDetails(Long postId);
+
+	boolean existsByRouteId(Long routeId);
 }

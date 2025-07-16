@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.routes.application.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -36,7 +37,7 @@ public class RouteServiceImpl implements RouteService {
 
 	@Override
 	public RouteEntity getRouteById(Long routeId) {
-		return routeRepository.getRouteByRouteId(routeId)
+		return getRouteByRouteId(routeId)
 			.orElseThrow(() -> new RouteBusinessException(RouteErrorCode.ROUTE_NOT_FOUND));
 	}
 
@@ -57,5 +58,9 @@ public class RouteServiceImpl implements RouteService {
 			.build();
 
 		return routeRepository.save(route);
+	}
+
+	private Optional<RouteEntity> getRouteByRouteId(Long routeId) {
+		return routeRepository.getRouteByRouteId(routeId);
 	}
 }

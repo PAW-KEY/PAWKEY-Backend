@@ -124,6 +124,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				.createdAt(p.getCreatedAt())
 				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
 				.routeId(p.getRoute().getRouteId())
+				.isMine(p.getUser().getUserId().equals(userId))
 				.build();
 		}).toList();
 	}

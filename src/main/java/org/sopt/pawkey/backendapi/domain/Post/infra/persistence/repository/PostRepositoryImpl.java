@@ -35,4 +35,9 @@ public class PostRepositoryImpl implements PostRepository {
 	public Optional<PostEntity> getPostWithAllDetails(Long postId) {
 		return jpaRepository.getPostWithLikesAndImages(postId);
 	}
+
+	@Override
+	public boolean existsByRouteId(Long routeId) {
+		return jpaRepository.existsByRouteRouteId(routeId);
+	}
 }
