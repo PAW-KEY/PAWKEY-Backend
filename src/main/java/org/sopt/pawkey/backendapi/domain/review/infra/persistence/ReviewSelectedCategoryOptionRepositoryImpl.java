@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewSelectedCategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewSelectedCategoryOptionEntity;
-import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;

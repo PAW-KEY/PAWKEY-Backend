@@ -11,11 +11,11 @@ public interface SpringDataReviewSelectedCategoryOptionRepository
 	extends JpaRepository<ReviewSelectedCategoryOptionEntity, Long> {
 
 	@Query("""
-		SELECT r.categoryOption, COUNT(r)
-		FROM ReviewSelectedCategoryOptionEntity r
-		WHERE r.review.route.routeId = :routeId
-		GROUP BY r.categoryOption
-		ORDER BY COUNT(r) DESC
-	""")
+			SELECT r.categoryOption, COUNT(r)
+			FROM ReviewSelectedCategoryOptionEntity r
+			WHERE r.review.route.routeId = :routeId
+			GROUP BY r.categoryOption
+			ORDER BY COUNT(r) DESC
+		""")
 	List<Object[]> countCategoryOptionSelectionsByRoute(@Param("routeId") Long routeId);
 }

@@ -10,9 +10,7 @@ import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEn
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewCategoryOptionTop3ServiceImpl implements ReviewCategoryOptionTop3Service {
@@ -25,23 +23,19 @@ public class ReviewCategoryOptionTop3ServiceImpl implements ReviewCategoryOption
 		reviewCategoryOptionTop3Repository.deleteAllByRoute(route); //기존 데이터 삭제
 
 		//route에 대해 category_option_id별 선택 count 집계
-		List<Object[]> countResults = reviewSelectedCategoryOptionRepository.countCategoryOptionSelectionsByRoute(route.getRouteId());
-		log.info("countResults",countResults);
-
+		List<Object[]> countResults = reviewSelectedCategoryOptionRepository.countCategoryOptionSelectionsByRoute(
+			route.getRouteId());
 
 		//상위 3개 추출
 
 		countResults.stream()
 			.limit(3)
 			.map(row -> ReviewCategoryOptionTop3Entity.builder()
-				.selectionCount(((Number) row[1]).intValue())
+				.selectionCount(((Number)row[1]).intValue())
 				.route(route)
-				.categoryOption((CategoryOptionEntity) row[0])
+				.categoryOption((CategoryOptionEntity)row[0])
 				.build())
 			.forEach(reviewCategoryOptionTop3Repository::save);
-
-
-
 
 	}
 }

@@ -22,5 +22,4 @@ public class ReviewCategoryOptionTop3RepositoryImpl implements ReviewCategoryOpt
 		jpaRepository.save(entity);
 	}
 
-
 }
