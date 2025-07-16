@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.region.infra.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.region.domain.RegionQueryRepository;
 import org.sopt.pawkey.backendapi.domain.region.domain.model.RegionType;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class RegionQueryRepositoryImpl implements RegionQueryRepository {
+	private final SpringDataRegionRepository springDataRegionRepository;
 	private final JPAQueryFactory queryFactory;
+
 
 	@Override
 	public List<RegionEntity> findDistrictByRegionNameWithChildren(String keyword) {
@@ -28,5 +31,10 @@ public class RegionQueryRepositoryImpl implements RegionQueryRepository {
 			.where(regionEntity.regionName.eq(keyword))
 			.leftJoin(regionEntity.childrenRegionList, childRegion).fetchJoin()
 			.fetch();
+	}
+
+	@Override
+	public Optional<RegionEntity> findCurrentRegionById(Long regionId) {
+		return springDataRegionRepository.findById(regionId);
 	}
 }
