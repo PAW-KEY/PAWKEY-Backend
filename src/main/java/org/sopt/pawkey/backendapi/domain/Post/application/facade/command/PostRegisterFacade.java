@@ -6,9 +6,9 @@ import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryOp
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
-import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.SelectedOptionsForCategory;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.PostRegisterResult;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostSelectedCategoryOptionService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
@@ -33,7 +33,7 @@ public class PostRegisterFacade {
 	private final PostSelectedCategoryOptionService postSelectedCategoryOptionService;
 	private final CategoryOptionService categoryOptionService;
 
-	public PostRegisterResponseDto execute(Long userId,
+	public PostRegisterResult execute(Long userId,
 		PostRegisterCommand command,
 		List<MultipartFile> postImages) {
 
@@ -55,7 +55,11 @@ public class PostRegisterFacade {
 
 			postSelectedCategoryOptionService.saveSelectedOption(post, selectedCategoryOptions);
 
-			return PostRegisterResponseDto.from(post);
+			return PostRegisterResult.builder()
+				.postId(post.getPostId())
+				.routeId(route.getRouteId())
+				.build();
+
 		} catch (Exception e) {
 			// 이미지 rollback
 			for (ImageEntity image : imageEntities) {
