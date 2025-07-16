@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,5 +35,7 @@ public class SelectEntity extends BaseEntity {
 	private String selectName;
 
 	@OneToMany(mappedBy = "select", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OrderBy("id ASC")
 	private List<SelectOptionEntity> selectOptionEntityList = new ArrayList<>();
+
 }
