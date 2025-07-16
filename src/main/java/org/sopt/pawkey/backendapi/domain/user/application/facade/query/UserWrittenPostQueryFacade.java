@@ -58,7 +58,8 @@ public class UserWrittenPostQueryFacade {
 					post.getRoute().getRouteId(),
 					writer,
 					tags,
-					post.isPublic()
+					post.isPublic(),
+					null
 				);
 			})
 			.toList();
