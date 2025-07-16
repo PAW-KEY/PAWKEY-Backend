@@ -4,4 +4,6 @@ import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionE
 
 public interface RegionService {
 	RegionEntity getRegionByIdOrThrow(Long regionId);
+
+	RegionEntity getDongTypeRegionByIdOrThrow(Long regionId);
 }

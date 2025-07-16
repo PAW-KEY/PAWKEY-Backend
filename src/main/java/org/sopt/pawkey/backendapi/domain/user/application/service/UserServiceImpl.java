@@ -29,9 +29,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserEntity saveUser(CreateUserCommand command) {
-		RegionEntity region = regionRepository.getById(command.regionId())
-			.orElseThrow(() -> new RegionBusinessException(RegionErrorCode.REGION_NOT_FOUND));
+	public UserEntity saveUser(CreateUserCommand command, RegionEntity region) {
 
 		UserEntity user = UserEntity.builder()
 			.loginId(command.loginId())
