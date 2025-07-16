@@ -44,7 +44,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest" \
+          docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest" \
                  -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:${{ github.sha }}" .
                  
       - name: Push Docker Image
