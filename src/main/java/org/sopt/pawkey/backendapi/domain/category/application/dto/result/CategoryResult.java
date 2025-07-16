@@ -5,6 +5,9 @@ import java.util.List;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryEntity;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record CategoryResult(
 	Long categoryId,
 	String categoryDescription,
