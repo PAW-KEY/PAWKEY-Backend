@@ -30,4 +30,6 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 		"LEFT JOIN FETCH sel.categoryOption co " +
 		"WHERE p.postId = :postId")
 	Optional<PostEntity> getPostWithLikesAndImages(@Param("postId") Long postId);
+
+	boolean existsByRouteRouteId(Long routeId);
 }

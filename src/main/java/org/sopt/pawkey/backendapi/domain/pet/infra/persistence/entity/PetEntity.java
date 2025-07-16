@@ -92,4 +92,8 @@ public class PetEntity extends BaseEntity {
 		this.petTraitSelectedEntityList =
 			petTraitSelectedEntityList != null ? petTraitSelectedEntityList : new ArrayList<>();
 	}
+
+	public void incrementWalkCount() {
+		this.walkCount++;
+	}
 }
