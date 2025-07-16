@@ -30,7 +30,7 @@ public class UserWrittenPostQueryFacade {
 
 		List<PostEntity> posts = postRepository.findAllByUser(user)
 			.stream()
-			.sorted(Comparator.comparing(PostEntity::getCreatedAt).reversed()) // 최신순 정렬
+			.sorted(Comparator.comparing(PostEntity::getPostId).reversed())
 			.toList();
 
 		return posts.stream()
