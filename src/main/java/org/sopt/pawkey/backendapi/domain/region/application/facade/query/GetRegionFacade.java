@@ -18,7 +18,7 @@ public class GetRegionFacade {
 	public GetRegionResult execute(Long userId){
 		RegionEntity currentRegion = regionQueryService.getCurrentRegion(userId);
 
-		return new GetRegionResult(currentRegion.getFullRegionName());
+		return new GetRegionResult(currentRegion.getRegionId(),currentRegion.getFullRegionName());
 	}
 
 }
