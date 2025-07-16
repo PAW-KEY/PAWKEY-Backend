@@ -17,35 +17,9 @@ public record PostCardResponseDto(
 	Long routeId,
 	WriterDto writer,
 	List<String> descriptionTags,
-
 	Boolean isPublic,
 	Boolean isMine
 ) {
-
-	public static PostCardResponseDto of(
-		Long postId,
-		String createdAt,
-		Boolean isLike,
-		String title,
-		String representativeImageUrl,
-		Long routeId,
-		WriterDto writer,
-		List<String> descriptionTags
-	) {
-		return new PostCardResponseDto(
-			postId,
-			createdAt,
-			isLike,
-			title,
-			representativeImageUrl,
-			routeId,
-			writer,
-			descriptionTags,
-			null,
-			null
-
-		);
-	}
 
 	public static PostCardResponseDto from(GetPostCardResult result) {
 		return new PostCardResponseDto(
@@ -64,6 +38,10 @@ public record PostCardResponseDto(
 			null,
 			result.isMine()
 		);
+	}
+
+	public boolean getIsPublic() {
+		return isPublic;
 	}
 
 	public record WriterDto(

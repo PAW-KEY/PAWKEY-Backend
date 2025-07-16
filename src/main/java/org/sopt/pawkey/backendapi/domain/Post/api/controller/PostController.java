@@ -50,7 +50,6 @@ public class PostController {
 	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> createPost(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
 		@RequestPart("data") @Valid @NotNull PostCreateRequestDto requestDto,
-
 		@RequestPart("images") @Valid @NotNull List<MultipartFile> images
 
 	) {
