@@ -1,17 +1,21 @@
 package org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewCategoryOptionTop3Entity;
 import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException;
 import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 import org.sopt.pawkey.backendapi.global.util.GeoJsonUtil;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,6 +24,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -63,6 +68,9 @@ public class RouteEntity extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id", nullable = true)
 	private ImageEntity trackingImage;
+
+	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<ReviewCategoryOptionTop3Entity> reviewCategoryOptionTop3EntityList = new ArrayList<>();
 
 	@Column(name = "started_at", nullable = false)
 	private LocalDateTime startedAt;

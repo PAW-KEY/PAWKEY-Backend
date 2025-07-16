@@ -41,7 +41,7 @@ public class ReviewServiceImpl implements ReviewService {
 			.route(route)
 			.build();
 
-		reviewRepository.save(review);
+		reviewRepository.save(review); //리뷰 저장
 
 		List<ReviewSelectedCategoryOptionEntity> selectedReviewOptionsForCategory = command.selectedReviewSetList()
 			.stream()
@@ -58,7 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
 			)
 			.toList();
 
-		reviewSelectedCategoryOptionRepository.saveAll(selectedReviewOptionsForCategory);
+		reviewSelectedCategoryOptionRepository.saveAll(selectedReviewOptionsForCategory); //선택된 리뷰 저장
 		return review;
 
 	}
