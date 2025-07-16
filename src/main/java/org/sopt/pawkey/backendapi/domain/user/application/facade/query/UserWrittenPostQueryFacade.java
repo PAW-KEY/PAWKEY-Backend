@@ -35,10 +35,7 @@ public class UserWrittenPostQueryFacade {
 
 		return posts.stream()
 			.map(post -> {
-				String repImageUrl = post.getPostImageEntityList().stream()
-					.findFirst()
-					.map(img -> img.getImage().getImageUrl())
-					.orElse(null);
+				String repImageUrl = post.getRoute().getTrackingImage().getImageUrl();
 
 				PetEntity pet = post.getUser().getPet();
 				PostCardResponseDto.WriterDto writer = new PostCardResponseDto.WriterDto(
