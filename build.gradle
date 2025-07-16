@@ -86,3 +86,9 @@ tasks.named("clean") {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar {
+    archiveBaseName.set("pawkey-dev")
+    archiveVersion.set("")
+    archiveClassifier.set("")
+}
