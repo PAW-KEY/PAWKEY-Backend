@@ -55,7 +55,7 @@ public class UserLikedPostQueryFacade {
 
 				List<String> descriptionTags = post.getPostSelectedCategoryOptionEntityList()
 					.stream()
-					.map(selectedOption -> selectedOption.getCategoryOption().getOptionText())
+					.map(selectedOption -> selectedOption.getCategoryOption().getOptionSummary())
 					.toList();
 
 				return new PostCardResponseDto(

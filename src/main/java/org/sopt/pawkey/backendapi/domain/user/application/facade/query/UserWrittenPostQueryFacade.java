@@ -45,7 +45,7 @@ public class UserWrittenPostQueryFacade {
 				);
 
 				List<String> tags = post.getPostSelectedCategoryOptionEntityList().stream()
-					.map(opt -> opt.getCategoryOption().getOptionText())
+					.map(opt -> opt.getCategoryOption().getOptionSummary())
 					.toList();
 
 				return new PostCardResponseDto(
