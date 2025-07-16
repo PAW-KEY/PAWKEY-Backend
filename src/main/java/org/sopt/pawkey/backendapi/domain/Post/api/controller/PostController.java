@@ -16,6 +16,7 @@ import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
@@ -49,9 +51,8 @@ public class PostController {
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> createPost(
 		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
-		@RequestPart("data") @Valid @NotNull PostCreateRequestDto requestDto,
-		@RequestPart("images") @Valid @NotNull List<MultipartFile> images
-
+		@RequestPart("data") @Validated @NotNull PostCreateRequestDto requestDto,
+		@RequestPart("images") @NotEmpty List<MultipartFile> images
 	) {
 		PostRegisterCommand command = requestDto.toCommand();
 		PostRegisterResult response = postRegisterFacade.execute(userId.longValue(), command, images);

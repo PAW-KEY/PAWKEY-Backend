@@ -21,6 +21,7 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWritt
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,8 +62,8 @@ public class UserController {
 
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
-		@RequestPart("data") @Valid CreateUserRequestDto requestDto,
-		@RequestPart("pet_profile") @Valid MultipartFile image) {
+		@RequestPart("data") @Validated CreateUserRequestDto requestDto,
+		@RequestPart("pet_profile") MultipartFile image) {
 
 		UserRegisterCommand command = requestDto.toCommand();
 		UserRegisterResponseDto response = userRegisterFacade.execute(command, image);

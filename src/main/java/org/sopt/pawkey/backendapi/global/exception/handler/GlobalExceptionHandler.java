@@ -20,6 +20,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import jakarta.validation.ConstraintViolationException;
@@ -76,6 +77,19 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(ResponseCode.BAD_REQUEST.getStatus())
 			.body(ApiResponse.error(ResponseCode.BAD_REQUEST.getCode(), messages));
+	}
+
+	/**
+	 * 필수 multipart 파트 누락 예외를 처리합니다.
+	 */
+	@ExceptionHandler(MissingServletRequestPartException.class)
+	public ResponseEntity<ApiResponse<Void>> handleMissingPart(MissingServletRequestPartException ex) {
+
+		String partName = ex.getRequestPartName(); // ex.getMessage()는 전체 메시지
+		String message = String.format("필수 입력값 '%s'가 누락되었습니다.", partName);
+
+		return ResponseEntity.status(ResponseCode.BAD_REQUEST.getStatus())
+			.body(ApiResponse.error(ResponseCode.BAD_REQUEST.getCode(), message));
 	}
 
 	/**
