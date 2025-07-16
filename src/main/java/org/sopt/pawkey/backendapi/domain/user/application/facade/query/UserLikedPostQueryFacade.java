@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserLikedPostQueryService;
@@ -31,21 +32,17 @@ public class UserLikedPostQueryFacade {
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
 		// 2. 좋아요한 PostLikeEntity 목록 조회
-		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(userId);
+		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(userId)
+			.stream()
+			.sorted(Comparator.comparing(PostLikeEntity::getPostLikeId).reversed())
 
-		// 3. 최신순 정렬
-		likedPosts.sort(Comparator.comparing((PostLikeEntity pl) -> pl.getPost().getCreatedAt()).reversed());
-
+			.toList();
 		// 4. DTO 변환
 		return likedPosts.stream()
 			.map(postLike -> {
 				var post = postLike.getPost();
 
-				String repImageUrl = post.getPostImageEntityList().stream()
-					.min(Comparator.comparing(PostImageEntity::getCreatedAt))
-					.map(PostImageEntity::getImage)
-					.map(ImageEntity::getImageUrl)
-					.orElse(null);
+				String repImageUrl = post.getRoute().getTrackingImage().getImageUrl();
 
 				var writer = post.getUser();
 				var pet = writer.getPetEntityList().stream().findFirst().orElse(null);
@@ -58,7 +55,7 @@ public class UserLikedPostQueryFacade {
 
 				List<String> descriptionTags = post.getPostSelectedCategoryOptionEntityList()
 					.stream()
-					.map(optionTop3 -> optionTop3.getCategoryOption().getOptionText())
+					.map(selectedOption -> selectedOption.getCategoryOption().getOptionSummary())
 					.toList();
 
 				return new PostCardResponseDto(

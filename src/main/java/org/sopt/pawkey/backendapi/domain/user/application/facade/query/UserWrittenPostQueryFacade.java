@@ -30,15 +30,12 @@ public class UserWrittenPostQueryFacade {
 
 		List<PostEntity> posts = postRepository.findAllByUser(user)
 			.stream()
-			.sorted(Comparator.comparing(PostEntity::getCreatedAt).reversed()) // 최신순 정렬
+			.sorted(Comparator.comparing(PostEntity::getPostId).reversed())
 			.toList();
 
 		return posts.stream()
 			.map(post -> {
-				String repImageUrl = post.getPostImageEntityList().stream()
-					.findFirst()
-					.map(img -> img.getImage().getImageUrl())
-					.orElse(null);
+				String repImageUrl = post.getRoute().getTrackingImage().getImageUrl();
 
 				PetEntity pet = post.getUser().getPet();
 				PostCardResponseDto.WriterDto writer = new PostCardResponseDto.WriterDto(
@@ -48,7 +45,7 @@ public class UserWrittenPostQueryFacade {
 				);
 
 				List<String> tags = post.getPostSelectedCategoryOptionEntityList().stream()
-					.map(opt -> opt.getCategoryOption().getOptionText())
+					.map(opt -> opt.getCategoryOption().getOptionSummary())
 					.toList();
 
 				return new PostCardResponseDto(
