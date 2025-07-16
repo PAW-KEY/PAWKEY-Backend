@@ -5,9 +5,6 @@ import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEnt
 import org.sopt.pawkey.backendapi.domain.pet.application.service.PetService;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.region.application.service.RegionService;
-import org.sopt.pawkey.backendapi.domain.region.domain.model.RegionType;
-import org.sopt.pawkey.backendapi.domain.region.exception.RegionBusinessException;
-import org.sopt.pawkey.backendapi.domain.region.exception.RegionErrorCode;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
