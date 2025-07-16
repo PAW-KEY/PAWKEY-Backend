@@ -4,6 +4,8 @@ import org.sopt.pawkey.backendapi.domain.image.application.service.command.Image
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.pet.application.service.PetService;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.domain.region.application.service.RegionService;
+import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
@@ -22,21 +24,23 @@ public class UserRegisterFacade {
 	private final UserService userService;
 	private final ImageService imageService;
 	private final PetService petService;
+	private final RegionService regionService;
 
 	public UserRegisterResponseDto execute(UserRegisterCommand command, MultipartFile petProfileImage) {
 		ImageEntity imageEntity = null;
 		try {
-			UserEntity user = userService.saveUser(command.userCommand());
-			imageEntity = imageService.storePetProfileImage(petProfileImage);
+			RegionEntity region = regionService.getDongTypeRegionByIdOrThrow(command.userCommand().regionId());
+			UserEntity user = userService.saveUser(command.userCommand(), region);
 
+			imageEntity = imageService.storePetProfileImage(petProfileImage);
 			PetEntity pet = petService.savePet(command.petCommand(), user, imageEntity);
 
 			return UserRegisterResponseDto.from(user, pet);
 		} catch (Exception e) {
 			if (imageEntity != null) {
-				imageService.deleteImage(imageEntity); // 저장소 및 DB 동기화 처리
+				imageService.deleteImage(imageEntity);
 			}
-			throw e; // 트랜잭션 롤백 유도
+			throw e;
 		}
 
 	}

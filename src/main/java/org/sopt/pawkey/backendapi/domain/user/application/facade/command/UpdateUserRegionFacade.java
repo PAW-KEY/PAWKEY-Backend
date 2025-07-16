@@ -23,7 +23,7 @@ public class UpdateUserRegionFacade {
 
 	public void execute(Long userId, UpdateUserRegionCommand command) {
 		UserEntity user = userService.findById(userId);
-		RegionEntity region = regionService.getRegionByIdOrThrow(command.regionId());
+		RegionEntity region = regionService.getDongTypeRegionByIdOrThrow(command.regionId());
 
 		if (region.getRegionType() != RegionType.DONG) {
 			throw new RegionBusinessException(RegionErrorCode.REGION_TYPE_NOT_DONG);

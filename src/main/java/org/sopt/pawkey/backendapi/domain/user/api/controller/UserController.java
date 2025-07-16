@@ -61,9 +61,9 @@ public class UserController {
 
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
-		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
-		@RequestPart("data") @Valid @NotNull CreateUserRequestDto requestDto,
-		@RequestPart("pet_profile") @Valid @NotNull MultipartFile image) {
+		@RequestPart("data") @Valid CreateUserRequestDto requestDto,
+		@RequestPart("pet_profile") @Valid MultipartFile image) {
+
 		UserRegisterCommand command = requestDto.toCommand();
 		UserRegisterResponseDto response = userRegisterFacade.execute(command, image);
 
@@ -79,7 +79,7 @@ public class UserController {
 	})
 	@GetMapping("/me/likes")
 	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyLikedPosts(
-		@RequestHeader("X-USER-ID") Long userId
+		@RequestHeader(USER_ID_HEADER) Long userId
 	) {
 		List<PostCardResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(likedPosts)));
@@ -93,7 +93,7 @@ public class UserController {
 	})
 	@GetMapping("/me/userInfo")
 	public ResponseEntity<ApiResponse<UserInfoResponseDto>> getUserProfile(
-		@RequestHeader("X-USER-ID") Long userId
+		@RequestHeader(USER_ID_HEADER) Long userId
 	) {
 		UserInfoResponseDto response = userQueryFacade.getUserInfo(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
@@ -107,7 +107,7 @@ public class UserController {
 	})
 	@GetMapping("/me/posts")
 	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyPosts(
-		@RequestHeader("X-USER-ID") Long userId
+		@RequestHeader(USER_ID_HEADER) Long userId
 	) {
 		List<PostCardResponseDto> myPosts = userWrittenPostQueryFacade.getMyPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(myPosts)));
@@ -121,7 +121,7 @@ public class UserController {
 	})
 	@GetMapping("/me/pets")
 	public ResponseEntity<ApiResponse<List<PetProfileResponseDto>>> getMyPets(
-		@RequestHeader("X-USER-ID") Long userId
+		@RequestHeader(USER_ID_HEADER) Long userId
 	) {
 		List<PetProfileResponseDto> petDtos = userPetQueryFacade.getUserPets(userId);
 		return ResponseEntity.ok(ApiResponse.success(petDtos));

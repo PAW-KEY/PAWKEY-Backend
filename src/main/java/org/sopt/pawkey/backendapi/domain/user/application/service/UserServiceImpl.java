@@ -1,8 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
 import org.sopt.pawkey.backendapi.domain.region.domain.RegionRepository;
-import org.sopt.pawkey.backendapi.domain.region.exception.RegionBusinessException;
-import org.sopt.pawkey.backendapi.domain.region.exception.RegionErrorCode;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.CreateUserCommand;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserQueryRepository;
@@ -29,9 +27,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserEntity saveUser(CreateUserCommand command) {
-		RegionEntity region = regionRepository.getById(command.regionId())
-			.orElseThrow(() -> new RegionBusinessException(RegionErrorCode.REGION_NOT_FOUND));
+	public UserEntity saveUser(CreateUserCommand command, RegionEntity region) {
 
 		UserEntity user = UserEntity.builder()
 			.loginId(command.loginId())

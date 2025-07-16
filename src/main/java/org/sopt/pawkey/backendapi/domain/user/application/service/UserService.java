@@ -7,7 +7,7 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 public interface UserService {
 	UserEntity findById(Long userId);
 
-	UserEntity saveUser(CreateUserCommand command);
+	UserEntity saveUser(CreateUserCommand command, RegionEntity region);
 
 	void updateUserRegion(UserEntity user, RegionEntity region);
 
