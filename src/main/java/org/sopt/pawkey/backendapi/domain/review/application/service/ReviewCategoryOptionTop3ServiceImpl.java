@@ -2,9 +2,8 @@ package org.sopt.pawkey.backendapi.domain.review.application.service;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.category.domain.repository.CategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
-import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewCachingRepository;
+import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewCategoryOptionTop3Repository;
 import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewSelectedCategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewCategoryOptionTop3Entity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
@@ -16,14 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReviewCachingServiceImpl implements ReviewCachingService{
+public class ReviewCategoryOptionTop3ServiceImpl implements ReviewCategoryOptionTop3Service {
 
 	private final ReviewSelectedCategoryOptionRepository reviewSelectedCategoryOptionRepository;
-	private final ReviewCachingRepository reviewCachingRepository;
+	private final ReviewCategoryOptionTop3Repository reviewCategoryOptionTop3Repository;
 
 	@Override
 	public void recalculateTop3ByRoute(RouteEntity route) {
-		reviewCachingRepository.deleteAllByRoute(route); //기존 데이터 삭제
+		reviewCategoryOptionTop3Repository.deleteAllByRoute(route); //기존 데이터 삭제
 
 		//route에 대해 category_option_id별 선택 count 집계
 		List<Object[]> countResults = reviewSelectedCategoryOptionRepository.countCategoryOptionSelectionsByRoute(route.getRouteId());
@@ -39,7 +38,7 @@ public class ReviewCachingServiceImpl implements ReviewCachingService{
 				.route(route)
 				.categoryOption((CategoryOptionEntity) row[0])
 				.build())
-			.forEach(reviewCachingRepository::save);
+			.forEach(reviewCategoryOptionTop3Repository::save);
 
 
 
