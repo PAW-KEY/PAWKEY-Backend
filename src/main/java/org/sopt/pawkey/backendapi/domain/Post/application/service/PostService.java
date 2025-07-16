@@ -16,4 +16,5 @@ public interface PostService {
 		RouteEntity route,
 		List<ImageEntity> images);
 
+	boolean existsByRouteId(Long routeId);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
+import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
@@ -22,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class PostServiceImpl implements PostService {
 
 	private final PostRepository postRepository;
-	private final RouteRepository routeRepository;
 
 	@Override
 	public PostEntity findById(Long postId) {
@@ -36,13 +36,18 @@ public class PostServiceImpl implements PostService {
 		RouteEntity route,
 		List<ImageEntity> images) {
 
+		if (!route.getUser().equals(writer)) {
+			throw new PostBusinessException(PostErrorCode.POST_WRITE_FORBIDDEN);
+		}
+
+		PetEntity pet = writer.getPetOrThrow();
 		PostEntity post = PostEntity.builder()
 			.user(writer)
 			.route(route)
 			.title(command.title())
 			.description(command.description())
 			.isPublic(command.isPublic())
-			.pet(writer.getPet())
+			.pet(pet)
 			.build();
 
 		for (ImageEntity image : images) {
@@ -54,8 +59,14 @@ public class PostServiceImpl implements PostService {
 
 			post.getPostImageEntityList().add(postImage);
 		}
+		pet.incrementWalkCount();
 		postRepository.save(post);
 		return post;
+	}
+
+	@Override
+	public boolean existsByRouteId(Long routeId) {
+		return postRepository.existsByRouteId(routeId);
 	}
 
 }
