@@ -65,21 +65,21 @@ jobs:
           chmod 600 ssh_key.pem
 
       - name: Deploy to EC2
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@${{ secrets.DEV_EC2_PUBLIC_IP }} << EOF
             echo "📦 Pull latest image"
-            sudo docker pull ${DOCKER_USERNAME}/pawkey-dev:latest
+            sudo docker pull $DOCKER_USERNAME/pawkey-dev:latest
 
             echo "🗑 Remove old container"
             sudo docker rm -f pawkey-dev-container || true
 
             echo "🚀 Run new container"
-            sudo docker run -d -p 8080:8080 --name pawkey-dev-container ${DOCKER_USERNAME}/pawkey-dev:latest
+            sudo docker run -d -p 8080:8080 --name pawkey-dev-container $DOCKER_USERNAME/pawkey-dev:latest
 
             echo "🔄 Reload nginx"
             sudo nginx -t && sudo systemctl reload nginx
 
             echo "✅ Deployment complete"
           EOF
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
