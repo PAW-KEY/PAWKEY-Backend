@@ -41,11 +41,7 @@ public class UserLikedPostQueryFacade {
 			.map(postLike -> {
 				var post = postLike.getPost();
 
-				String repImageUrl = post.getPostImageEntityList().stream()
-					.min(Comparator.comparing(PostImageEntity::getCreatedAt))
-					.map(PostImageEntity::getImage)
-					.map(ImageEntity::getImageUrl)
-					.orElse(null);
+				String repImageUrl = post.getRoute().getTrackingImage().getImageUrl();
 
 				var writer = post.getUser();
 				var pet = writer.getPetEntityList().stream().findFirst().orElse(null);
@@ -58,7 +54,7 @@ public class UserLikedPostQueryFacade {
 
 				List<String> descriptionTags = post.getPostSelectedCategoryOptionEntityList()
 					.stream()
-					.map(optionTop3 -> optionTop3.getCategoryOption().getOptionText())
+					.map(selectedOption -> selectedOption.getCategoryOption().getOptionText())
 					.toList();
 
 				return new PostCardResponseDto(
