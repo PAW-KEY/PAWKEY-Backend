@@ -1,6 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.post.api.dto.response;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
