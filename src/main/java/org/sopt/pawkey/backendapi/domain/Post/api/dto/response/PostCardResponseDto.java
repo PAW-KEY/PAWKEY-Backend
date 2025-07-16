@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record PostCardResponseDto(
 	Long postId,
 	LocalDateTime createdAt,
@@ -13,7 +16,9 @@ public record PostCardResponseDto(
 	String representativeImageUrl,
 	Long routeId,
 	WriterDto writer,
-	List<String> descriptionTags
+	List<String> descriptionTags,
+
+	Boolean isPublic
 ) {
 
 	public static PostCardResponseDto of(
@@ -34,7 +39,8 @@ public record PostCardResponseDto(
 			representativeImageUrl,
 			routeId,
 			writer,
-			descriptionTags
+			descriptionTags,
+			null
 		);
 	}
 
@@ -51,7 +57,8 @@ public record PostCardResponseDto(
 				result.author().petName(),
 				result.author().petProfileImage()
 			),
-			result.categoryTags()
+			result.categoryTags(),
+			null
 		);
 	}
 

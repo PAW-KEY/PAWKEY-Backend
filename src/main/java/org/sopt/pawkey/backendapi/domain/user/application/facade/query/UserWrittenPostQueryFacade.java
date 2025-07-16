@@ -51,12 +51,13 @@ public class UserWrittenPostQueryFacade {
 				return new PostCardResponseDto(
 					post.getPostId(),
 					post.getCreatedAt(),
-					false, // isLike = false (내 게시글)
+					null,
 					post.getTitle(),
 					repImageUrl,
 					post.getRoute().getRouteId(),
 					writer,
-					tags
+					tags,
+					post.isPublic()
 				);
 			})
 			.toList();

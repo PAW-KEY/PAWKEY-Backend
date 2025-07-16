@@ -63,7 +63,8 @@ public class UserLikedPostQueryFacade {
 					repImageUrl,
 					post.getRoute().getRouteId(),
 					writerDto,
-					descriptionTags
+					descriptionTags,
+					null
 				);
 			})
 			.toList();
