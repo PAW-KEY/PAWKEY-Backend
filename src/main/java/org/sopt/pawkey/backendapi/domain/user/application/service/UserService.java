@@ -10,6 +10,5 @@ public interface UserService {
 	UserEntity saveUser(CreateUserCommand command, RegionEntity region);
 
 	void updateUserRegion(UserEntity user, RegionEntity region);
-
 }
 

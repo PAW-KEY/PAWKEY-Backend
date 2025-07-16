@@ -1,6 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.region.application.facade.query;
 
-import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionCommand;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegionResult;
 import org.sopt.pawkey.backendapi.domain.region.application.service.query.RegionQueryService;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
@@ -15,10 +14,10 @@ import lombok.RequiredArgsConstructor;
 public class GetRegionFacade {
 	private final RegionQueryService regionQueryService;
 
-	public GetRegionResult execute(Long userId){
+	public GetRegionResult execute(Long userId) {
 		RegionEntity currentRegion = regionQueryService.getCurrentRegion(userId);
 
-		return new GetRegionResult(currentRegion.getRegionId(),currentRegion.getFullRegionName());
+		return new GetRegionResult(currentRegion.getRegionId(), currentRegion.getFullRegionName());
 	}
 
 }

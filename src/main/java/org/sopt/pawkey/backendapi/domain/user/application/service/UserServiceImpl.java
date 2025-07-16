@@ -29,6 +29,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserEntity saveUser(CreateUserCommand command, RegionEntity region) {
 
+		if (userRepository.existsByLoginId(command.loginId())) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_LOGIN_ID);
+		}
+
 		UserEntity user = UserEntity.builder()
 			.loginId(command.loginId())
 			.password(command.password())

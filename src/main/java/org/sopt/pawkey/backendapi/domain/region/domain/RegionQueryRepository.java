@@ -7,5 +7,6 @@ import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionE
 
 public interface RegionQueryRepository {
 	List<RegionEntity> findDistrictByRegionNameWithChildren(String keyword);
+
 	Optional<RegionEntity> findCurrentRegionById(Long regionId);
 }

@@ -1,9 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.region.application.service.query;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionCommand;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionListCommand;
 import org.sopt.pawkey.backendapi.domain.region.domain.RegionQueryRepository;
 import org.sopt.pawkey.backendapi.domain.region.exception.RegionBusinessException;
@@ -22,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class RegionQueryServiceImpl implements RegionQueryService {
 
 	private final RegionQueryRepository regionQueryRepository;
-	private  final UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	@Override
 	public List<RegionEntity> searchGusWithRegion(GetRegionListCommand command) {

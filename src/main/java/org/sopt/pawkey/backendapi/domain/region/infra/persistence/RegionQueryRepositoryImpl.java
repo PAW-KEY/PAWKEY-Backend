@@ -19,7 +19,6 @@ public class RegionQueryRepositoryImpl implements RegionQueryRepository {
 	private final SpringDataRegionRepository springDataRegionRepository;
 	private final JPAQueryFactory queryFactory;
 
-
 	@Override
 	public List<RegionEntity> findDistrictByRegionNameWithChildren(String keyword) {
 		QRegionEntity regionEntity = QRegionEntity.regionEntity;

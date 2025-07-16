@@ -5,7 +5,6 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import org.sopt.pawkey.backendapi.domain.region.api.dto.GetRegionCoordinatesResponseDto;
 import org.sopt.pawkey.backendapi.domain.region.api.dto.GetRegionListResponseDto;
 import org.sopt.pawkey.backendapi.domain.region.api.dto.GetRegionResponseDto;
-import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionCommand;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionCoordinatesCommand;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.command.GetRegionListCommand;
 import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegionCoordinatesResult;
@@ -52,6 +51,7 @@ public class RegionController {
 		return ResponseEntity.ok(
 			ApiResponse.success(GetRegionListResponseDto.from(result)));
 	}
+
 	@GetMapping("/current")
 	@Operation(summary = "현재 지역 조회", description = "대시보드에서 현재 지역을 조회하는 API입니다.", tags = {"Region"})
 	@ApiResponses({
