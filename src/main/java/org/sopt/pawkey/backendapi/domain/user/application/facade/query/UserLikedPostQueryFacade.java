@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,8 +33,10 @@ public class UserLikedPostQueryFacade {
 		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(userId)
 			.stream()
 			.sorted(Comparator.comparing(PostLikeEntity::getPostLikeId).reversed())
-
+			// 3. 비공개 게시물 필터링
+			.filter(postLike -> postLike.getPost().isPublic())
 			.toList();
+
 		// 4. DTO 변환
 		return likedPosts.stream()
 			.map(postLike -> {
@@ -57,13 +60,14 @@ public class UserLikedPostQueryFacade {
 
 				return new PostCardResponseDto(
 					post.getPostId(),
-					post.getCreatedAt(),
+					post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
 					true, // 좋아요한 게시글
 					post.getTitle(),
 					repImageUrl,
 					post.getRoute().getRouteId(),
 					writerDto,
-					descriptionTags
+					descriptionTags,
+					null
 				);
 			})
 			.toList();

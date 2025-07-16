@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -50,13 +51,14 @@ public class UserWrittenPostQueryFacade {
 
 				return new PostCardResponseDto(
 					post.getPostId(),
-					post.getCreatedAt(),
-					false, // isLike = false (내 게시글)
+					post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+					null,
 					post.getTitle(),
 					repImageUrl,
 					post.getRoute().getRouteId(),
 					writer,
-					tags
+					tags,
+					post.isPublic()
 				);
 			})
 			.toList();

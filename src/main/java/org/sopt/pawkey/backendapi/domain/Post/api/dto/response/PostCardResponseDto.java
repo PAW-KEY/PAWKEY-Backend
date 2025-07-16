@@ -1,24 +1,29 @@
 package org.sopt.pawkey.backendapi.domain.post.api.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record PostCardResponseDto(
 	Long postId,
-	LocalDateTime createdAt,
+	String createdAt,
 	Boolean isLike,
 	String title,
 	String representativeImageUrl,
 	Long routeId,
 	WriterDto writer,
-	List<String> descriptionTags
+	List<String> descriptionTags,
+
+	Boolean isPublic
 ) {
 
 	public static PostCardResponseDto of(
 		Long postId,
-		LocalDateTime createdAt,
+		String createdAt,
 		Boolean isLike,
 		String title,
 		String representativeImageUrl,
@@ -34,14 +39,15 @@ public record PostCardResponseDto(
 			representativeImageUrl,
 			routeId,
 			writer,
-			descriptionTags
+			descriptionTags,
+			null
 		);
 	}
 
 	public static PostCardResponseDto from(GetPostCardResult result) {
 		return new PostCardResponseDto(
 			result.postId(),
-			result.createdAt(),
+			result.createdAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
 			result.isLike(),
 			result.title(),
 			result.routeMapImageUrl(),
@@ -51,7 +57,8 @@ public record PostCardResponseDto(
 				result.author().petName(),
 				result.author().petProfileImage()
 			),
-			result.categoryTags()
+			result.categoryTags(),
+			null
 		);
 	}
 
