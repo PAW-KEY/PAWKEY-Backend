@@ -30,12 +30,12 @@ jobs:
         run: |
           mkdir -p ./src/main/resources
           echo "${{ secrets.CD_APPLICATION }}" > ./src/main/resources/application.yml
-      
+
       - name: Generate application-aws.yml
         run: |
           mkdir -p ./src/main/resources
           echo "${{ secrets.CD_APPLICATION_AWS }}" > ./src/main/resources/application-aws.yml
-          
+
       - name: Build Project (skip tests)
         run: ./gradlew clean build -x test
 
@@ -45,15 +45,16 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest" \
-                 -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:${{ github.sha }}" .
-                 
+                       -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:${{ github.sha }}" .
+
       - name: Push Docker Image
-        run: docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest"
+        run: |
+          docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest"
+          docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:${{ github.sha }}"
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     steps:
       - name: Install SSH Client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
@@ -65,18 +66,20 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@${{ secrets.DEV_EC2_PUBLIC_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@${{ secrets.DEV_EC2_PUBLIC_IP }} << EOF
             echo "📦 Pull latest image"
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
+            sudo docker pull ${DOCKER_USERNAME}/pawkey-dev:latest
 
             echo "🗑 Remove old container"
             sudo docker rm -f pawkey-dev-container || true
 
             echo "🚀 Run new container"
-            sudo docker run -d -p 8080:8080 --name pawkey-dev-container ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
+            sudo docker run -d -p 8080:8080 --name pawkey-dev-container ${DOCKER_USERNAME}/pawkey-dev:latest
 
             echo "🔄 Reload nginx"
             sudo nginx -t && sudo systemctl reload nginx
 
             echo "✅ Deployment complete"
           EOF
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
