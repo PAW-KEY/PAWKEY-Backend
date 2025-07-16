@@ -114,6 +114,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				.postId(postId)
 				.title(p.getTitle())
 				.isLike(likedPostIds.contains(postId))
+				.isPublic(p.isPublic())
 				.author(new AuthorDto(
 					p.getUser().getUserId(),
 					p.getPet().getPetId(),

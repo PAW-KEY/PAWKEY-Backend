@@ -17,6 +17,7 @@ public record GetPostCardResult(
 	LocalDateTime createdAt,
 	String routeMapImageUrl,
 	Long routeId,
-	Boolean isMine
+	boolean isPublic,
+	boolean isMine
 ) {
 }

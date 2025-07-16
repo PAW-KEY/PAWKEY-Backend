@@ -52,14 +52,14 @@ public class UserWrittenPostQueryFacade {
 				return new PostCardResponseDto(
 					post.getPostId(),
 					post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
-					null,
+					false,
 					post.getTitle(),
 					repImageUrl,
 					post.getRoute().getRouteId(),
 					writer,
 					tags,
 					post.isPublic(),
-					null
+					true
 				);
 			})
 			.toList();

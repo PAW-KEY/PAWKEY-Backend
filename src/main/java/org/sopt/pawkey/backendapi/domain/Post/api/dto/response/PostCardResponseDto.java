@@ -11,14 +11,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public record PostCardResponseDto(
 	Long postId,
 	String createdAt,
-	Boolean isLike,
+	boolean isLike,
 	String title,
 	String representativeImageUrl,
 	Long routeId,
 	WriterDto writer,
 	List<String> descriptionTags,
-	Boolean isPublic,
-	Boolean isMine
+	boolean isPublic,
+	boolean isMine
 ) {
 
 	public static PostCardResponseDto from(GetPostCardResult result) {
@@ -35,7 +35,7 @@ public record PostCardResponseDto(
 				result.author().petProfileImage()
 			),
 			result.categoryTags(),
-			null,
+			result.isPublic(),
 			result.isMine()
 		);
 	}
