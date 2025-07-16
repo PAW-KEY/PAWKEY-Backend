@@ -10,9 +10,7 @@ import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEn
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewCategoryOptionTop3ServiceImpl implements ReviewCategoryOptionTop3Service {
@@ -27,7 +25,6 @@ public class ReviewCategoryOptionTop3ServiceImpl implements ReviewCategoryOption
 		//route에 대해 category_option_id별 선택 count 집계
 		List<Object[]> countResults = reviewSelectedCategoryOptionRepository.countCategoryOptionSelectionsByRoute(
 			route.getRouteId());
-		log.info("countResults", countResults);
 
 		//상위 3개 추출
 
