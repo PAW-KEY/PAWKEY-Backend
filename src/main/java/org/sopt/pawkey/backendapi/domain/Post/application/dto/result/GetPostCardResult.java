@@ -16,6 +16,7 @@ public record GetPostCardResult(
 	List<String> categoryTags,
 	LocalDateTime createdAt,
 	String routeMapImageUrl,
-	Long routeId
+	Long routeId,
+	Boolean isMine
 ) {
 }

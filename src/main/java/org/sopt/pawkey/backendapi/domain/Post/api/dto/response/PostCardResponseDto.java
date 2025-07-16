@@ -18,7 +18,8 @@ public record PostCardResponseDto(
 	WriterDto writer,
 	List<String> descriptionTags,
 
-	Boolean isPublic
+	Boolean isPublic,
+	Boolean isMine
 ) {
 
 	public static PostCardResponseDto of(
@@ -40,7 +41,9 @@ public record PostCardResponseDto(
 			routeId,
 			writer,
 			descriptionTags,
+			null,
 			null
+
 		);
 	}
 
@@ -58,7 +61,8 @@ public record PostCardResponseDto(
 				result.author().petProfileImage()
 			),
 			result.categoryTags(),
-			null
+			null,
+			result.isMine()
 		);
 	}
 
