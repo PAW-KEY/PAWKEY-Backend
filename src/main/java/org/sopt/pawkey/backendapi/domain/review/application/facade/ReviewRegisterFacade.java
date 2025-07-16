@@ -28,10 +28,8 @@ public class ReviewRegisterFacade {
 		RouteEntity route = routeService.getRouteById(command.routeId());
 		ReviewEntity review = reviewService.saveReview(command, user, route); //리뷰 생성
 
-
 		//Top3 캐싱 테이블 갱신
 		reviewCategoryOptionTop3Service.recalculateTop3ByRoute(route);
-
 
 	}
 }

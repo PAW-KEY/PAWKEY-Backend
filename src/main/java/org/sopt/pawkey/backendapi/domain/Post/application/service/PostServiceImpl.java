@@ -11,7 +11,6 @@ import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostErrorCode;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
-import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteRepository;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;

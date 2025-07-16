@@ -25,23 +25,20 @@ public class ReviewCategoryOptionTop3ServiceImpl implements ReviewCategoryOption
 		reviewCategoryOptionTop3Repository.deleteAllByRoute(route); //기존 데이터 삭제
 
 		//route에 대해 category_option_id별 선택 count 집계
-		List<Object[]> countResults = reviewSelectedCategoryOptionRepository.countCategoryOptionSelectionsByRoute(route.getRouteId());
-		log.info("countResults",countResults);
-
+		List<Object[]> countResults = reviewSelectedCategoryOptionRepository.countCategoryOptionSelectionsByRoute(
+			route.getRouteId());
+		log.info("countResults", countResults);
 
 		//상위 3개 추출
 
 		countResults.stream()
 			.limit(3)
 			.map(row -> ReviewCategoryOptionTop3Entity.builder()
-				.selectionCount(((Number) row[1]).intValue())
+				.selectionCount(((Number)row[1]).intValue())
 				.route(route)
-				.categoryOption((CategoryOptionEntity) row[0])
+				.categoryOption((CategoryOptionEntity)row[0])
 				.build())
 			.forEach(reviewCategoryOptionTop3Repository::save);
-
-
-
 
 	}
 }

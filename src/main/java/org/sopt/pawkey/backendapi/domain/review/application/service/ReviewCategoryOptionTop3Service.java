@@ -4,6 +4,5 @@ import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEn
 
 public interface ReviewCategoryOptionTop3Service {
 
-
 	void recalculateTop3ByRoute(RouteEntity route);
 }

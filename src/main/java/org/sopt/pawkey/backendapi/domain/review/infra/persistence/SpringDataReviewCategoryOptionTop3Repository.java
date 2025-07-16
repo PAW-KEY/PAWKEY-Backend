@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface SpringDataReviewCategoryOptionTop3Repository extends JpaRepository<ReviewCategoryOptionTop3Entity,Long> {
-
+public interface SpringDataReviewCategoryOptionTop3Repository
+	extends JpaRepository<ReviewCategoryOptionTop3Entity, Long> {
 
 	@Modifying
 	@Transactional
