@@ -30,7 +30,7 @@ public record CategoryResult(
 	public static CategoryResult fromEntityWithSummary(CategoryEntity categoryEntity) {
 		return new CategoryResult(
 			categoryEntity.getCategoryId(),
-			categoryEntity.getCategoryDescription(),
+			null,
 			categoryEntity.getCategoryName(),
 			categoryEntity.getCategoryOptionEntityList().stream()
 				.map(CategoryOptionResult::fromEntityWithSummary)
