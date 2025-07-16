@@ -8,7 +8,7 @@ import org.sopt.pawkey.backendapi.domain.post.api.dto.request.PostCreateRequestD
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
-import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostFacade;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.PostRegisterResult;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.response.ReviewResponseDto;
@@ -37,7 +37,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(API_PREFIX + "/posts")
 public class PostController {
 
-	private final PostFacade postFacade;
 	private final PostRegisterFacade postRegisterFacade;
 	private final PostQueryFacade postQueryFacade;
 
@@ -56,8 +55,9 @@ public class PostController {
 
 	) {
 		PostRegisterCommand command = requestDto.toCommand();
-		PostRegisterResponseDto response = postRegisterFacade.execute(userId.longValue(), command, images);
-		return ResponseEntity.ok(ApiResponse.success(response));
+		PostRegisterResult response = postRegisterFacade.execute(userId.longValue(), command, images);
+
+		return ResponseEntity.ok(ApiResponse.success(PostRegisterResponseDto.from(response)));
 	}
 
 	@Operation(summary = "게시물 상세 조회", description = "산책 게시물의 상세정보를 조회합니다.", tags = {"Posts"})
