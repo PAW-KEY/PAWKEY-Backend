@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class UserWrittenPostQueryFacade {
 
 				return new PostCardResponseDto(
 					post.getPostId(),
-					post.getCreatedAt(),
+					post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
 					null,
 					post.getTitle(),
 					repImageUrl,
