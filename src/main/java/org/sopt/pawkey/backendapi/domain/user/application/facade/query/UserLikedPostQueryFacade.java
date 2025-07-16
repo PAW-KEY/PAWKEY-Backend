@@ -32,8 +32,10 @@ public class UserLikedPostQueryFacade {
 		List<PostLikeEntity> likedPosts = userLikedPostQueryService.findLikedPostsByUserWithPostAndImages(userId)
 			.stream()
 			.sorted(Comparator.comparing(PostLikeEntity::getPostLikeId).reversed())
-
+			// 3. 비공개 게시물 필터링
+			.filter(postLike -> postLike.getPost().isPublic())
 			.toList();
+
 		// 4. DTO 변환
 		return likedPosts.stream()
 			.map(postLike -> {
