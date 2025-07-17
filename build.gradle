@@ -69,6 +69,9 @@ dependencies {
 
     // JTS Geometry
     implementation 'org.locationtech.jts:jts-core:1.19.0'
+
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile;
