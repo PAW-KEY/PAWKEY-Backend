@@ -32,7 +32,7 @@
 
 | [한다은](https://github.com/daeun-han) | [👸이수민](https://github.com/dltnals317) | [한성재](https://github.com/bingle625) |
 |:------------------------------------:|:-------------------------:|:------------------------------:|
-| <img width="210" alt="image" src="https://github.com/user-attachments/assets/ef1c249f-3847-4fd7-81df-8a2ee5874b3d" /> | <img width="210" alt="image" src="https://github.com/user-attachments/assets/5fc473cf-081b-419a-a6e0-aced3314b088" /> | <img width="210" alt="image" src="https://github.com/user-attachments/assets/ece20fe4-f50b-4c0c-98cf-e15fbe0140c8" /> |
+| <img width="210" alt="image" src="https://github.com/user-attachments/assets/1f717cd5-b788-40c2-b7fb-2c2e030079aa" /> | <img width="210" alt="image" src="https://github.com/user-attachments/assets/272b582e-d441-4045-b0bf-88e2c5609c4b" /> | <img width="210" alt="image" src="https://github.com/user-attachments/assets/20c1c40d-21a8-4a58-91c7-4c635556d7b9" /> |
 |`검색 필터링 로직`| `인프라`  | `코드 품질 관리` |
 
 ## 🛠️ Tech Stack
