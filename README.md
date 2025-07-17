@@ -3,7 +3,7 @@
 **반려동물과 보호자의 산책 경험을 더 풍부하게 만들어주는, 위치 기반 산책 큐레이션 플랫폼의 백엔드 서버**
 
 > 36th AT SOPT - PAWKEY 백엔드 레포지토리  
-> 📅 2025.06.21 ~ ing
+> 📅 2025.06.26 ~ ing
 
 <img src ="https://github.com/user-attachments/assets/a83be8cb-5cf4-4309-99f6-c4b10ea23fd7"/>
 
