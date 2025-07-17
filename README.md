@@ -39,13 +39,11 @@
 
 | **Category** | **Content** |
 | :-- | :-- |
-| **Language** | Kotlin, Java, Node.js 등 |
-| **Framework** | Spring Boot, Ktor, Express 등 |
+| **Language** | Java 등 |
+| **Framework** | Spring Boot |
 | **DB** | PostgreSQL(Spatial), Redis(캐싱/세션) |
 | **API 문서화** | Swagger, OpenAPI |
-| **Auth** | JWT, OAuth2(카카오/네이버 등) |
-| **Realtime** | WebSocket, SSE |
-| **CI/CD** | GitHub Actions, Docker, AWS ECS/Beanstalk 등 |
+| **CI/CD** | GitHub Actions, Docker, DockerHub |
 | **기타** | JPA/QueryDSL, S3(사진업로드), GeoJSON, MapBox API(지도 연동) |
 
 ## 💡 Convention
