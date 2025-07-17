@@ -3,6 +3,9 @@ package org.sopt.pawkey.backendapi.domain.user.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
+import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +20,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class S3Controller {
 
-	private final ImageStorage s3ImageService;
+	private final ImageService imageService;
 
-	@PostMapping("/upload/profiles")
-	public ResponseEntity<String> uploadProfileImage(@RequestParam("image") MultipartFile image) {
+	@PostMapping(value = "/upload/profiles", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<ImageEntity> uploadProfileImage(@RequestParam("image") MultipartFile image) {
 
-		return ResponseEntity.ok(s3ImageService.uploadImage(image, "profile"));
+		return ResponseEntity.ok(imageService.storePetProfileImage(image));
 	}
 }

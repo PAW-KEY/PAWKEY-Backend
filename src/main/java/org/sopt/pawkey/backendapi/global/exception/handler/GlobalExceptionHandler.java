@@ -20,6 +20,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -90,6 +91,13 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(ResponseCode.BAD_REQUEST.getStatus())
 			.body(ApiResponse.error(ResponseCode.BAD_REQUEST.getCode(), message));
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<ApiResponse<Void>> handleMaxSizeException(MaxUploadSizeExceededException ex) {
+		return ResponseEntity.status(GlobalErrorCode.FILE_SIZE_TOO_LARGE.getStatus())
+			.body(ApiResponse.error(GlobalErrorCode.FILE_SIZE_TOO_LARGE.getCode(),
+				GlobalErrorCode.FILE_SIZE_TOO_LARGE.getMessage()));
 	}
 
 	/**
