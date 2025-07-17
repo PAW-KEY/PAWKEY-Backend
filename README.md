@@ -44,7 +44,7 @@
 | **DB** | PostgreSQL(Spatial), Redis(캐싱/세션) |
 | **API 문서화** | Swagger, OpenAPI |
 | **CI/CD** | GitHub Actions, Docker, DockerHub |
-| **기타** | JPA/QueryDSL, S3(사진업로드), GeoJSON, MapBox API(지도 연동) |
+| **기타** | JPA/QueryDSL, S3(사진업로드), GeoJSON |
 
 ## 💡 Convention
 #### 🐾 Git Convention
