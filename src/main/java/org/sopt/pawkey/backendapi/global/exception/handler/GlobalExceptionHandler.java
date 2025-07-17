@@ -95,6 +95,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public ResponseEntity<ApiResponse<Void>> handleMaxSizeException(MaxUploadSizeExceededException ex) {
+		log.warn("File size exceeded: {}", ex.getMessage());
 		return ResponseEntity.status(GlobalErrorCode.FILE_SIZE_TOO_LARGE.getStatus())
 			.body(ApiResponse.error(GlobalErrorCode.FILE_SIZE_TOO_LARGE.getCode(),
 				GlobalErrorCode.FILE_SIZE_TOO_LARGE.getMessage()));

@@ -2,7 +2,6 @@ package org.sopt.pawkey.backendapi.domain.user.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import org.sopt.pawkey.backendapi.domain.common.ImageStorage;
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.springframework.http.MediaType;
