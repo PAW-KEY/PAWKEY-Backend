@@ -63,12 +63,18 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		BooleanBuilder builder = new BooleanBuilder()
 			.and(post.isPublic.isTrue());
 
-		// duration이 null이 아닐 경우만 필터링 (분 → 초 변환)
-		if (dto.durationStart() != null && dto.durationEnd() != null) {
-			builder.and(route.duration.between(
-				dto.durationStart() * 60,
-				dto.durationEnd() * 60
-			));
+		// duration 필터 처리 (분 → 초)
+		if (dto.durationStart() != null || dto.durationEnd() != null) {
+			Integer startInSec = dto.durationStart() != null ? dto.durationStart() * 60 : null;
+			Integer endInSec = dto.durationEnd() != null ? dto.durationEnd() * 60 : null;
+
+			if (startInSec != null && endInSec != null) {
+				builder.and(route.duration.between(startInSec, endInSec));
+			} else if (startInSec != null) {
+				builder.and(route.duration.goe(startInSec));
+			} else if (endInSec != null) {
+				builder.and(route.duration.loe(endInSec));
+			}
 		}
 
 		// 필터링

@@ -1,9 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
-import org.sopt.pawkey.backendapi.domain.region.domain.RegionRepository;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.CreateUserCommand;
-import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserQueryRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
