@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 
 	private final PostRepository postRepository;
-	
+
 	public PostEntity findById(Long postId) {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> new PostBusinessException(PostErrorCode.POST_NOT_FOUND));

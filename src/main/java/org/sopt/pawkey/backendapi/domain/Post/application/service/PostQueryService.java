@@ -53,7 +53,7 @@ public class PostQueryService {
 			walkingImages
 		);
 	}
-	
+
 	public List<GetPostCardResult> getFilteredPosts(FilterPostsRequestDto requestDto, Long userId) {
 		return postQueryRepository.findByFilter(requestDto, userId);
 	}

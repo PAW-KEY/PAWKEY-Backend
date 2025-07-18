@@ -54,7 +54,7 @@ public class ImageService {
 
 		return imageRepository.saveAll(images);
 	}
-	
+
 	public void deleteImage(ImageEntity imageEntity) {
 		imageStorage.deleteImage(imageEntity.getImageUrl());
 		imageRepository.delete(imageEntity);

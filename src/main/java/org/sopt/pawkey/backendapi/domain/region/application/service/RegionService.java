@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class RegionService {
 
 	private final RegionRepository regionRepository;
-	
+
 	public RegionEntity getDongTypeRegionByIdOrThrow(Long regionId) {
 		RegionEntity region = findRegion(regionId)
 			.orElseThrow(() -> new RegionBusinessException(RegionErrorCode.REGION_NOT_FOUND));

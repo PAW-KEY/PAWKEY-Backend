@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class UserPetQueryService {
 
 	private final PetRepository petRepository;
-	
+
 	public List<PetProfileResponseDto> getPetProfiles(UserEntity user) {
 		List<PetEntity> petEntityList = petRepository.findAllPetsByUserId(user.getUserId());
 

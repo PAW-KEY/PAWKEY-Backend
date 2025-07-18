@@ -34,7 +34,7 @@ public class RouteService {
 
 		return GEOMETRY_FACTORY.createLineString(coords);
 	}
-	
+
 	public RouteEntity getRouteById(Long routeId) {
 		return getRouteByRouteId(routeId)
 			.orElseThrow(() -> new RouteBusinessException(RouteErrorCode.ROUTE_NOT_FOUND));

@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CategoryQueryService {
 	private final CategoryRepository categoryRepository;
-	
+
 	public List<CategoryResult> getAllCategories() {
 		List<CategoryEntity> categoryEntityList = categoryRepository.findAllCategoryWithOptions();
 		return categoryEntityList.stream()

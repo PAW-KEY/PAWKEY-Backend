@@ -24,7 +24,7 @@ public class PetService {
 	private final PetRepository petRepository;
 	private final PetTraitOptionRepository petTraitOptionRepository;
 	private final PetTraitSelectedRepository petTraitSelectedRepository;
-	
+
 	public PetEntity savePet(CreatePetCommand command, UserEntity user, ImageEntity profileImage) {
 		PetEntity pet = PetEntity.builder()
 			.name(command.name())
