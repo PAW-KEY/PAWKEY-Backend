@@ -1,7 +1,9 @@
 package org.sopt.pawkey.backendapi.domain.post.api.dto.response;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostResult;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.AuthorDto;
@@ -15,7 +17,7 @@ public record PostResponseDto(
 	AuthorDto authorInfo,
 	CategoryTagsDto categoryTags,
 	String regionName,
-	LocalDateTime createdAt,
+	String createdAt,
 	String routeMapImageUrl,
 	List<String> walkingImageUrls
 ) {
@@ -29,7 +31,7 @@ public record PostResponseDto(
 		AuthorDto authorInfo,
 		CategoryTagsDto categoryTags,
 		String regionName,
-		LocalDateTime createdAt,
+		String createdAt,
 		String routeMapImageUrl,
 		List<String> walkingImageUrls
 	) {
@@ -49,7 +51,8 @@ public record PostResponseDto(
 			postResult.author(),
 			new CategoryTagsDto(postResult.categoryTags()),
 			postResult.regionName(),
-			postResult.createdAt(),
+			postResult.createdAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
+				.withLocale(Locale.KOREAN)),
 			postResult.routeMapImageUrl(),
 			postResult.walkingImageUrls()
 		);

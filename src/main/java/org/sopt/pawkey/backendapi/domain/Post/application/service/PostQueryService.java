@@ -1,6 +1,8 @@
 package org.sopt.pawkey.backendapi.domain.post.application.service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
@@ -48,7 +50,8 @@ public class PostQueryService {
 			authorDto,
 			categoryTagsDto,
 			regionName,
-			post.getCreatedAt(),
+			post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
+				.withLocale(Locale.KOREAN)),
 			routeMapImage,
 			walkingImages
 		);
