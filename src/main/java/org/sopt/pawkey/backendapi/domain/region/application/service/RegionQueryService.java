@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.region.application.service.query;
+package org.sopt.pawkey.backendapi.domain.region.application.service;
 
 import java.util.List;
 
@@ -17,18 +17,16 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class RegionQueryServiceImpl implements RegionQueryService {
+public class RegionQueryService {
 
 	private final RegionQueryRepository regionQueryRepository;
 	private final UserRepository userRepository;
 
-	@Override
 	public List<RegionEntity> searchGusWithRegion(GetRegionListCommand command) {
 
 		return regionQueryRepository.findDistrictByRegionNameWithChildren(command.searchKeyword());
 	}
 
-	@Override
 	public RegionEntity getCurrentRegion(Long userId) {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
