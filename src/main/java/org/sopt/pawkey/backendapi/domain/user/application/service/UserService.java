@@ -16,10 +16,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 
-	private final UserQueryRepository userQueryRepository;
 	private final UserRepository userRepository;
-	private final RegionRepository regionRepository;
-	
+
 	public UserEntity findById(final Long id) {
 		return userRepository.findById(id)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
