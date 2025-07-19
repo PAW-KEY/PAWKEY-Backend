@@ -48,7 +48,7 @@ public class RouteController {
 	public ResponseEntity<ApiResponse<RouteRegisterResponse>> registerRoute(
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@RequestPart("trackingImage") MultipartFile trackingImage,
-		@RequestPart("routeRequest") @Validated RouteRegisterRequest routeRegisterRequest) {
+		@RequestPart("routeRequest") RouteRegisterRequest routeRegisterRequest) {
 
 		RouteRegisterResult result = routeRegisterFacade.execute(
 			userId,
