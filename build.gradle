@@ -72,6 +72,17 @@ dependencies {
 
     // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+
+    // security / oauth2 resource server
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // 소셜 로그인 토큰 검증(JWT 파싱/JWK 서명 검증) + Access/Refresh 발급
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.37'
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile;
