@@ -15,7 +15,7 @@ public enum AuthErrorCode implements ErrorCode {
 	TOKEN_SIGNATURE_INVALID(HttpStatus.UNAUTHORIZED, "A40103", "토큰 서명이 유효하지 않습니다."),
 	TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "A40104", "토큰이 만료되었습니다."),
 	TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "A40105", "인증 토큰이 누락되었습니다."),
-
+	TOKEN_DEVICE_ID_INVALID(HttpStatus.UNAUTHORIZED, "A40107", "요청된 기기 ID와 토큰 내부의 기기 ID가 일치하지 않습니다."),
 
 	// 소셜 로그인 관련 오류
 	SOCIAL_LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "A40106", "소셜 로그인 인증에 실패했습니다. (외부 서버 오류 등)"),

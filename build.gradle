@@ -56,7 +56,9 @@ dependencies {
     implementation 'com.h2database:h2'
 
     // swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+
 
     // s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
@@ -81,8 +83,15 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    // 소셜 로그인 토큰 검증(JWT 파싱/JWK 서명 검증) + Access/Refresh 발급
+    // 소셜 로그인 토큰 검증(JWT 파싱/JWK 서명 검증)
     implementation 'com.nimbusds:nimbus-jose-jwt:9.37'
+
+
+    // JWT (JJWT) - 내부 토큰 관리용
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile;

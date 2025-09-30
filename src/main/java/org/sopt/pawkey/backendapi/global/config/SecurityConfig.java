@@ -33,7 +33,11 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/auth/**", "/health").permitAll()
+				.requestMatchers("/auth/**",
+					"/health",
+					"/v3/api-docs/**",
+					"/swagger-ui/**",
+					"/swagger-ui.html").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.decoder(jwtDecoder)))

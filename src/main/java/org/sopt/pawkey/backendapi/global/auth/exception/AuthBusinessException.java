@@ -1,7 +1,12 @@
 package org.sopt.pawkey.backendapi.global.auth.exception;
 
-public class AuthBusinessException extends RuntimeException {
-	public AuthBusinessException(String message) {
-		super(message);
+import org.sopt.pawkey.backendapi.global.exception.BusinessException;
+import org.sopt.pawkey.backendapi.global.exception.ErrorCode;
+
+public class AuthBusinessException extends BusinessException {
+	public AuthBusinessException(ErrorCode errorCode) {
+
+		super(errorCode);
+
 	}
 }
