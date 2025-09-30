@@ -34,7 +34,8 @@ public class CategoryController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@GetMapping("")
 	public ResponseEntity<ApiResponse<CategoryListResponseDto>> getCategories(
-		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId) {
+	)
+	{
 		List<CategoryResult> resultList = categoryQueryService.getAllCategories();
 		CategoryListResponseDto response = CategoryListResponseDto.from(resultList);
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));

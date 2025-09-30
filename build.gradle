@@ -56,7 +56,7 @@ dependencies {
     implementation 'com.h2database:h2'
 
     // swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
 
 
 

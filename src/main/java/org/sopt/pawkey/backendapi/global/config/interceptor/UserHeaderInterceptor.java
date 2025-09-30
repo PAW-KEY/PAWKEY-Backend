@@ -15,6 +15,16 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+		String uri = request.getRequestURI();
+
+		// 로그인/토큰 재발급 같은 공개 엔드포인트는 헤더 검사 스킵
+		if (uri.startsWith("/api/v1/auth")) {
+			return true;
+		}
+		if (uri.startsWith("/api/v1/posts")) {
+			return true;
+		}
+
 		String userId = request.getHeader(USER_ID_HEADER);
 		if (userId == null || userId.isBlank()) {
 			throw new BusinessException(GlobalErrorCode.MISSING_REQUIRED_HEADER);
@@ -26,3 +36,4 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
 		return true;
 	}
 }
+

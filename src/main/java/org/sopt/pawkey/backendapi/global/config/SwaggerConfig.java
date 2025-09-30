@@ -8,8 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
@@ -36,6 +39,13 @@ public class SwaggerConfig {
 			.info(new Info()
 				.title("paw-key API")
 				.version("v1")
-				.description("paw-key API 명세서"));
+				.description("paw-key API 명세서"))
+				.components(new Components()
+				.addSecuritySchemes("bearerAuth",
+					new SecurityScheme()
+						.type(SecurityScheme.Type.HTTP)
+						.scheme("bearer")
+						.bearerFormat("JWT")))
+			.addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
 	}
 }
