@@ -1,4 +1,5 @@
 package org.sopt.pawkey.backendapi.global.auth.api.dto.request;
 
-public class RefreshRequestDTO {
-}
+import jakarta.validation.constraints.NotBlank;
+
+public record RefreshRequestDTO (@NotBlank String refreshToken) {}
