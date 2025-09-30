@@ -4,6 +4,5 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long> {
-
 	UserEntity getByUserId(Long userId);
 }
