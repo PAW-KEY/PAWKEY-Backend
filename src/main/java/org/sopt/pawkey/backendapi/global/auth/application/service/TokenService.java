@@ -40,15 +40,13 @@ public class TokenService {
 
 	@PostConstruct
 	public void init() {
-		// 비밀 키를 Base64로 디코딩하여 Key 객체로 변환
+
+		// HMAC SHA-256 알고리즘에 사용할 SecretKey 초기화
 		this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
 
-	// --- 1. JWT 생성 유틸리티 ---
 
-	/**
-	 * Access Token 또는 Refresh Token을 생성합니다.
-	 */
+	// Access Token 또는 Refresh Token을 생성
 	private String createToken(Long userId, String deviceId, long expirationMinutes) {
 		Date now = new Date();
 		Date expiration = new Date(now.getTime() + expirationMinutes * 60 * 1000);
@@ -63,9 +61,7 @@ public class TokenService {
 			.compact();
 	}
 
-	/**
-	 * Refresh Token을 Redis에 저장합니다.
-	 */
+	// 발급된 Refresh Token을 Redis에 저장
 	private void saveRefreshToken(Long userId, String deviceId, String refreshToken) {
 		String key = REFRESH_PREFIX + userId + ":" + deviceId;
 		redisTemplate.opsForValue().set(
@@ -75,15 +71,11 @@ public class TokenService {
 		);
 	}
 
-	// --- 2. 핵심 API 메서드 ---
 
-	/**
-	 * 1. issueTokens: Access Token과 Refresh Token을 발급하고 Refresh Token을 저장합니다.
-	 */
+	// Access Token과 Refresh Token을 발급하고, Refresh Token을 저장소에 캐시
 	public TokenResponseDTO issueTokens(Long userId, String deviceId) {
 		String accessToken = createToken(userId, deviceId, accessExpMinutes);
-		// Refresh Token은 만료 기간을 '일' 단위로 사용
-		String refreshToken = createToken(userId, deviceId, refreshExpDays * 24 * 60);
+		String refreshToken = createToken(userId, deviceId, refreshExpDays * 24 * 60); // Refresh Token은 '일' 단위 만료 기간을 사용
 
 		saveRefreshToken(userId, deviceId, refreshToken);
 
@@ -91,7 +83,7 @@ public class TokenService {
 	}
 
 	/**
-	 * 2. rotate: Refresh Token을 검증하고 새로운 Access/Refresh Token 쌍을 발급합니다.
+	 * Refresh Token을 검증하고 새로운 Access/Refresh Token 쌍을 발급
 	 */
 	public TokenResponseDTO rotate(String oldRefreshToken, String deviceId) {
 		Jws<Claims> claimsJws = validateAndParseToken(oldRefreshToken);
@@ -106,35 +98,33 @@ public class TokenService {
 		String redisKey = REFRESH_PREFIX + userId + ":" + deviceId;
 		String savedToken = redisTemplate.opsForValue().get(redisKey);
 
-		// 2. Redis에 저장된 Refresh Token과 일치하는지 확인 (Token Rotation 검증)
+		// 2. Redis에 저장된 Refresh Token과 일치하는지 확인
 		if (savedToken == null || !savedToken.equals(oldRefreshToken)) {
-			// Redis에 없거나 토큰이 일치하지 않으면 유효하지 않은 토큰 (이미 폐기되었거나 탈취 시도)
-			throw new AuthBusinessException(AuthErrorCode.REFRESH_TOKEN_INVALID);
+			throw new AuthBusinessException(AuthErrorCode.REFRESH_TOKEN_INVALID); // Redis에 없으면 유효하지 않은 토큰으로 간주
 		}
 
-		// 3. 토큰 폐기 및 재발급
+		// 3. 토큰 폐기 & 재발급
 		redisTemplate.delete(redisKey); // 기존 토큰 삭제 (사용 후 폐기)
 		return issueTokens(userId, deviceId); // 새로운 토큰 발급 및 Redis 저장
 	}
 
+
 	/**
-	 * 3. revoke: 로그아웃 처리 (Refresh Token 삭제)
+	 * 로그아웃 처리: Redis에서 Refresh Token을 삭제
 	 */
 	public void revoke(Long userId, String deviceId) {
 		String key = REFRESH_PREFIX + userId + ":" + deviceId;
 		redisTemplate.delete(key);
 	}
 
-	// --- 4. JWT 파싱 및 검증 ---
 
 	/**
-	 * JWT를 파싱하고 유효성을 검증합니다.
+	 * JWT의 유효성을 검증하고 클레임 정보를 파싱
 	 */
 	public Jws<Claims> validateAndParseToken(String token) {
 		try {
-			// ✅ verifyWith()가 SecretKey 타입을 인식하고 정상 동작
 			return Jwts.parser()
-				.verifyWith(signingKey) // SecretKey 타입으로 오류 해결
+				.verifyWith(signingKey)
 				.build()
 				.parseSignedClaims(token);
 		} catch (Exception e) {
@@ -142,9 +132,8 @@ public class TokenService {
 		}
 	}
 
-
 	/**
-	 * Access Token에서 사용자 ID를 추출합니다.
+	 * Access Token에서 사용자 ID를 추출
 	 */
 	public Long extractUserId(String accessToken) {
 		Jws<Claims> claimsJws = validateAndParseToken(accessToken);

@@ -18,6 +18,7 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLiked
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserPetQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
+import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +81,7 @@ public class UserController {
 	})
 	@GetMapping("/me/likes")
 	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyLikedPosts(
-		@RequestHeader(USER_ID_HEADER) Long userId
+		@UserId Long userId
 	) {
 		List<PostCardResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(likedPosts)));
@@ -94,7 +95,7 @@ public class UserController {
 	})
 	@GetMapping("/me/userInfo")
 	public ResponseEntity<ApiResponse<UserInfoResponseDto>> getUserProfile(
-		@RequestHeader(USER_ID_HEADER) Long userId
+		@UserId Long userId
 	) {
 		UserInfoResponseDto response = userQueryFacade.getUserInfo(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
@@ -108,7 +109,7 @@ public class UserController {
 	})
 	@GetMapping("/me/posts")
 	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyPosts(
-		@RequestHeader(USER_ID_HEADER) Long userId
+		@UserId Long userId
 	) {
 		List<PostCardResponseDto> myPosts = userWrittenPostQueryFacade.getMyPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(myPosts)));
@@ -122,7 +123,7 @@ public class UserController {
 	})
 	@GetMapping("/me/pets")
 	public ResponseEntity<ApiResponse<List<PetProfileResponseDto>>> getMyPets(
-		@RequestHeader(USER_ID_HEADER) Long userId
+		@UserId Long userId
 	) {
 		List<PetProfileResponseDto> petDtos = userPetQueryFacade.getUserPets(userId);
 		return ResponseEntity.ok(ApiResponse.success(petDtos));
@@ -136,7 +137,7 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "리소스 찾을 수 없음(U40401, R40401)")
 	})
 	public ResponseEntity<ApiResponse<Void>> updateRegion(
-		@RequestHeader(USER_ID_HEADER) @NotNull Long userId,
+		@UserId Long userId,
 		@Valid @RequestBody UpdateUserRegionRequestDto updateUserRegionRequestDto
 	) {
 		updateUserRegionFacade.execute(userId, updateUserRegionRequestDto.toCommand());

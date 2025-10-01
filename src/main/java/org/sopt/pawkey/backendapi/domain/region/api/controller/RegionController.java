@@ -13,6 +13,7 @@ import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegion
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionCoordinatesFacade;
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionFacade;
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionListFacade;
+import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.constants.AppConstants;
 import org.sopt.pawkey.backendapi.global.exception.BusinessException;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
@@ -58,7 +59,7 @@ public class RegionController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "현재 지역 리스트 조회")
 	})
 	public ResponseEntity<ApiResponse<GetRegionResponseDto>> getCurrentRegion(
-		@RequestHeader(AppConstants.USER_ID_HEADER) Long userId
+		@UserId Long userId
 	) {
 		GetRegionResult result = getRegionFacade.execute(userId);
 
@@ -72,7 +73,7 @@ public class RegionController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "지역 범위 좌표 조회"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessException.class)))})
 	public ResponseEntity<ApiResponse<GetRegionCoordinatesResponseDto>> getRegionCoordinates(
-		@RequestHeader(AppConstants.USER_ID_HEADER) Long userId,
+		@UserId Long userId,
 		@PathVariable("regionId") Long regionId
 	) {
 

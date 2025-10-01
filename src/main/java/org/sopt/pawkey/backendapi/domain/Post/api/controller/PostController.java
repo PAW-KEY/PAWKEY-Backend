@@ -12,6 +12,7 @@ import org.sopt.pawkey.backendapi.domain.post.application.dto.result.PostRegiste
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.response.ReviewResponseDto;
+import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +49,7 @@ public class PostController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> createPost(
-		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
+		@UserId Long userId,
 		@RequestPart("data") @Validated @NotNull PostCreateRequestDto requestDto,
 		@RequestPart("images") @NotEmpty List<MultipartFile> images
 	) {
@@ -66,7 +66,7 @@ public class PostController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@GetMapping("/{postId}")
 	public ResponseEntity<ApiResponse<PostResponseDto>> getPosts(
-		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
+		@UserId Long userId,
 		@PathVariable("postId") Long postId
 	) {
 		PostResponseDto response = postQueryFacade.getPostDetail(postId, userId.longValue());
@@ -80,7 +80,7 @@ public class PostController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@GetMapping("/{routeId}/reviews/top")
 	public ResponseEntity<ApiResponse<ReviewResponseDto>> getTopReviewsForPost(
-		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
+		@UserId Long userId,
 		@PathVariable("routeId") Long routeId
 	) {
 		ReviewResponseDto response = ReviewResponseDto.createMock();

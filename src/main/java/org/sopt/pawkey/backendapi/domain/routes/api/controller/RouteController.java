@@ -14,6 +14,7 @@ import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.RouteRegi
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.RouteRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteInfoForPostFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetSharedRouteMapDataFacade;
+import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,7 @@ public class RouteController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 루트 정보 등록 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)")})
 	public ResponseEntity<ApiResponse<RouteRegisterResponse>> registerRoute(
-		@RequestHeader(USER_ID_HEADER) Long userId,
+		@UserId Long userId,
 		@RequestPart("trackingImage") MultipartFile trackingImage,
 		@RequestPart("routeRequest") RouteRegisterRequest routeRegisterRequest) {
 
@@ -65,7 +66,7 @@ public class RouteController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 루트 정보 조회 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)")})
 	public ResponseEntity<ApiResponse<GetSharedRouteMapDataResponseDto>> getSharedRouteMapData(
-		@RequestHeader(USER_ID_HEADER) Long userId,
+		@UserId Long userId,
 		@PathVariable("routeId") Long routeId
 	) {
 		GetSharedRouteMapDataCommandDto commandDto = new GetSharedRouteMapDataCommandDto(routeId);
@@ -85,7 +86,7 @@ public class RouteController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "권한 검증 실패 (R40301 에러코드 확인)")
 	})
 	public ResponseEntity<ApiResponse<GetRouteInfoForPostResponse>> getTrackingInfo(
-		@RequestHeader(USER_ID_HEADER) Long userId,
+		@UserId Long userId,
 		@PathVariable("routeId") Long routeId
 	) {
 

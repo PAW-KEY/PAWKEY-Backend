@@ -7,6 +7,7 @@ import org.sopt.pawkey.backendapi.domain.category.application.facade.query.Categ
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
+import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,7 @@ public class PostFilterController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping("")
 	public ResponseEntity<ApiResponse<PostListResponseDto>> filterPosts(
-		@RequestHeader(USER_ID_HEADER) @NotNull Integer userId,
+		@UserId Long userId,
 		@RequestBody @Valid @NotNull FilterPostsRequestDto requestDto) {
 		PostListResponseDto response = postQueryFacade.getFilterPostList(requestDto, Long.valueOf(userId));
 		return ResponseEntity.ok(ApiResponse.success(response));
