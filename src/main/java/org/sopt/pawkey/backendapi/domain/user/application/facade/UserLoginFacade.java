@@ -20,18 +20,16 @@ public class UserLoginFacade {
 	private final GoogleVerifierService googleVerifierService;
 	private final KakaoVerifierService kakaoVerifierService;
 	public TokenResponseDTO googleLogin(String idToken, String deviceId) {
-
 		Map<String, String> socialUserInfo = googleVerifierService.verifyGoogleToken(idToken);
 
-		String platformUserId = "dummyGoogleId12345";
-		String primaryEmail = "dummy@google.com";
-
+		String platformUserId = socialUserInfo.get("platformUserId");
+		String primaryEmail = socialUserInfo.get("primaryEmail");
 
 		Long userId = userService.findOrCreateUserBySocialId("GOOGLE", platformUserId, primaryEmail);
 
-
 		return tokenService.issueTokens(userId, deviceId);
 	}
+
 
 	public TokenResponseDTO kakaoLogin(String accessToken, String deviceId) {
 		Map<String, String> socialUserInfo = kakaoVerifierService.verifyKakaoToken(accessToken);
