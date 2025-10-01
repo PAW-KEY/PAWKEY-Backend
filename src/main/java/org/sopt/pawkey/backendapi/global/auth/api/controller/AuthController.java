@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +59,19 @@ public class AuthController {
 		// ApiResponse 유틸리티를 사용한다고 가정하고 코드를 작성합니다.
 		// return ResponseEntity.ok(ApiResponse.success(response));
 		return ResponseEntity.ok(response);
+	}
+
+	// 3. 카카오 로그인 API
+	@Operation(summary = "Kakao 소셜 로그인", description = "Access Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {"Auth"})
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "최초 토큰 발급 성공"),
+		@ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (Access Token 또는 Device ID 누락)", content = @Content(mediaType = "application/json")),
+		@ApiResponse(responseCode = "401", description = "소셜 토큰 검증 실패 (A40106)", content = @Content(mediaType = "application/json")),
+		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
+	})
+	@PostMapping("/kakao/login")
+	public TokenResponseDTO kakaoLogin(@RequestBody @Valid LoginRequestDTO request) {
+		// 카카오는 idToken 대신 Access Token을 받으므로 request.idToken() -> accessToken 개념임
+		return userLoginFacade.kakaoLogin(request.idToken(), request.deviceId());
 	}
 }
