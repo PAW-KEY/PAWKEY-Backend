@@ -5,6 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.request.ReviewCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.review.application.dto.command.ReviewRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.review.application.facade.ReviewRegisterFacade;
+import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class ReviewController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping("")
 	public ResponseEntity<ApiResponse<Void>> createPost(
-		@RequestHeader(USER_ID_HEADER) @NotNull Long userId,
+		@NotNull @UserId Long userId,
 		@RequestBody @Valid @NotNull ReviewCreateRequestDto requestDto
 	) {
 		ReviewRegisterCommand command = requestDto.toCommand();

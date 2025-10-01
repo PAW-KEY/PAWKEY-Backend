@@ -1,24 +1,22 @@
-// package org.sopt.pawkey.backendapi.global.config;
-//
-// import org.sopt.pawkey.backendapi.global.config.interceptor.UserHeaderInterceptor;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-// import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-//
-// @Configuration
-// public class WebConfig implements WebMvcConfigurer {
-//
-// 	private final UserHeaderInterceptor userHeaderInterceptor;
-//
-// 	public WebConfig(UserHeaderInterceptor userHeaderInterceptor) {
-// 		this.userHeaderInterceptor = userHeaderInterceptor;
-// 	}
-//
-// 	@Override
-// 	public void addInterceptors(InterceptorRegistry registry) {
-// 		registry.addInterceptor(userHeaderInterceptor)
-// 			.addPathPatterns("/api/**")
-// 			.excludePathPatterns("/api/v1/regions")
-// 		; // 적용하고 싶은 URL 경로
-// 	}
-// }
+package org.sopt.pawkey.backendapi.global.config;
+
+import java.util.List;
+
+import org.sopt.pawkey.backendapi.global.auth.resolver.UserIdArgumentResolver;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import lombok.RequiredArgsConstructor;
+
+@Configuration
+@RequiredArgsConstructor
+public class WebConfig implements WebMvcConfigurer {
+
+	private final UserIdArgumentResolver userIdArgumentResolver;
+
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(userIdArgumentResolver);
+	}
+}
