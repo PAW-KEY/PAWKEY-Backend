@@ -6,6 +6,7 @@ import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
 import org.sopt.pawkey.backendapi.global.auth.application.verifier.GoogleVerifierService;
+import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoVerifierService;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,10 @@ public class UserLoginFacade {
 	private final UserService userService;
 	private final TokenService tokenService;
 	private final GoogleVerifierService googleVerifierService;
+	private final KakaoVerifierService kakaoVerifierService;
 	public TokenResponseDTO googleLogin(String idToken, String deviceId) {
 
 		Map<String, String> socialUserInfo = googleVerifierService.verifyGoogleToken(idToken);
-
-
 
 		String platformUserId = "dummyGoogleId12345";
 		String primaryEmail = "dummy@google.com";
@@ -33,4 +33,15 @@ public class UserLoginFacade {
 		return tokenService.issueTokens(userId, deviceId);
 	}
 
+	public TokenResponseDTO kakaoLogin(String accessToken, String deviceId) {
+		Map<String, String> socialUserInfo = kakaoVerifierService.verifyKakaoToken(accessToken);
+
+		Long userId = userService.findOrCreateUserBySocialId(
+			socialUserInfo.get("platform"),
+			socialUserInfo.get("platformUserId"),
+			socialUserInfo.get("primaryEmail")
+		);
+
+		return tokenService.issueTokens(userId, deviceId);
+	}
 }
