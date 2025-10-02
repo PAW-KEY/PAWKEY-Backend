@@ -88,7 +88,12 @@ jobs:
             echo "🚀 Run new container"
             sudo docker run -d -p 8080:8080 \
               --name pawkey-dev-container \
+              -e SPRING_PROFILES_ACTIVE=aws \
               -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
+              -e DOKI_GOOGLE_CLIENT_ID=${{ secrets.DOKI_GOOGLE_CLIENT_ID }} \
+              -e DOKI_APPLE_CLIENT_ID=${{ secrets.DOKI_APPLE_CLIENT_ID }} \
+              -e DOKI_KAKAO_CLIENT_ID=${{ secrets.DOKI_KAKAO_CLIENT_ID }} \
+              -e DOKI_KAKAO_REDIRECT_URI=${{ secrets.DOKI_KAKAO_REDIRECT_URI }} \
               ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
 
             echo "🔄 Reload nginx"
