@@ -86,7 +86,10 @@ jobs:
             sudo docker rm -f pawkey-dev-container || true
 
             echo "🚀 Run new container"
-            sudo docker run -d -p 8080:8080 --name pawkey-dev-container ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
+            sudo docker run -d -p 8080:8080 \
+              --name pawkey-dev-container \
+              -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
+              ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
 
             echo "🔄 Reload nginx"
             sudo nginx -t && sudo systemctl reload nginx
