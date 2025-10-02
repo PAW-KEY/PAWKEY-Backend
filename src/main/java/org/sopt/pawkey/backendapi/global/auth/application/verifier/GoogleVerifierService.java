@@ -72,7 +72,6 @@ public class GoogleVerifierService {
 			log.info("✅ GoogleVerifierService 초기화 완료 (clientId={})", googleClientId);
 
 		} catch (MalformedURLException e) {
-			log.error("❌ Google JWKS URL이 잘못되었습니다: {}", GOOGLE_JWKS_URL, e);
 			throw new RuntimeException("Google Verifier 초기화 실패", e);
 		}
 	}
@@ -90,7 +89,6 @@ public class GoogleVerifierService {
 			Boolean emailVerified = claimsSet.getBooleanClaim("email_verified");
 
 			if (emailVerified == null || !emailVerified) {
-				log.error("❌ Google ID Token: 이메일 인증 안됨");
 				throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
 			}
 
@@ -104,13 +102,10 @@ public class GoogleVerifierService {
 			return userInfo;
 
 		} catch (ParseException e) {
-			log.error("❌ Google ID Token 파싱 오류", e);
 			throw new AuthBusinessException(AuthErrorCode.ACCESS_TOKEN_INVALID);
 		} catch (BadJOSEException e) {
-			log.error("❌ Google ID Token 검증 실패: {}", e.getMessage());
 			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
 		} catch (Exception e) {
-			log.error("❌ Google ID Token 검증 중 예외 발생", e);
 			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
 		}
 	}
