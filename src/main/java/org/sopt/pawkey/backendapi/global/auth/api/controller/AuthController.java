@@ -3,14 +3,18 @@ package org.sopt.pawkey.backendapi.global.auth.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
+import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.LoginRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.RefreshTokenRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
+import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoAuthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +31,7 @@ public class AuthController {
 
 	private final UserLoginFacade userLoginFacade;
 	private final TokenService tokenService;
+	private final KakaoAuthService kakaoAuthService;
 
 	// 1. 소셜 로그인 API
 	@Operation(summary = "Google 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {"Auth"})
@@ -74,4 +79,12 @@ public class AuthController {
 		// 카카오는 idToken 대신 Access Token을 받으므로 request.idToken() -> accessToken 개념임
 		return userLoginFacade.kakaoLogin(request.idToken(), request.deviceId());
 	}
+	@GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
+	public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
+		String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
+		TokenResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, "KAKAO");
+		return ResponseEntity.ok(tokens);
+
+	}
+
 }
