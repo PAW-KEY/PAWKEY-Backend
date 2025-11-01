@@ -1,5 +1,18 @@
 package org.sopt.pawkey.backendapi.global.auth.application.service;
 
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.Date;
+
+import javax.crypto.SecretKey;
+
+import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
+import org.sopt.pawkey.backendapi.global.auth.exception.AuthBusinessException;
+import org.sopt.pawkey.backendapi.global.auth.exception.AuthErrorCode;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -7,20 +20,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-
-import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
-
-import org.sopt.pawkey.backendapi.global.auth.exception.AuthBusinessException;
-import org.sopt.pawkey.backendapi.global.auth.exception.AuthErrorCode;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
-
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.Date;
-
-import javax.crypto.SecretKey;
 
 @Service
 @RequiredArgsConstructor

@@ -14,13 +14,11 @@ import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegi
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionFacade;
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionListFacade;
 import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
-import org.sopt.pawkey.backendapi.global.constants.AppConstants;
 import org.sopt.pawkey.backendapi.global.exception.BusinessException;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

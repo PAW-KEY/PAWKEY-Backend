@@ -1,6 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity;
 
-import org.hibernate.annotations.BatchSize;
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;

@@ -1,6 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity;
 
-import org.hibernate.annotations.BatchSize;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 

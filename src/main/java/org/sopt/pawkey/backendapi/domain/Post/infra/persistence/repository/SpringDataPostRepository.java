@@ -3,7 +3,6 @@ package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.annotations.BatchSize;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
