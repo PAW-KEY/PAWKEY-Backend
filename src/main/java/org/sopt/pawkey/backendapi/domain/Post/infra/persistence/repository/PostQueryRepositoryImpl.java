@@ -57,6 +57,9 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	QUserEntity user = QUserEntity.userEntity;
 	QPostLikeEntity postLike = QPostLikeEntity.postLikeEntity;
 
+	QImageEntity petProfileImage = new QImageEntity("petProfileImage");
+	QImageEntity routeTrackingImage = new QImageEntity("routeTrackingImage");
+
 	@Override
 	public List<GetPostCardResult> findByFilter(FilterPostsRequestDto dto, Long userId) {
 
@@ -104,6 +107,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 			.join(route.region, region).fetchJoin()
 			.join(post.user, user).fetchJoin()
 			.join(post.user.petEntityList, pet).fetchJoin()
+			.leftJoin(pet.profileImage, petProfileImage).fetchJoin()
+			.leftJoin(route.trackingImage, routeTrackingImage).fetchJoin()
 			.where(builder)
 			.orderBy(post.createdAt.desc())
 			.fetch();

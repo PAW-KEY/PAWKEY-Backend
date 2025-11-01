@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity;
 
+import org.hibernate.annotations.BatchSize;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
@@ -35,6 +36,7 @@ public class PostSelectedCategoryOptionEntity extends BaseEntity {
 	@JoinColumn(name = "post_id", nullable = false)
 	private PostEntity post;
 
+	// @BatchSize(size = 100)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_option_id", nullable = false)
 	private CategoryOptionEntity categoryOption;
