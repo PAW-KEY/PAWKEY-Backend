@@ -28,7 +28,6 @@ public class SocialAccountEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private UserEntity user;
@@ -53,7 +52,8 @@ public class SocialAccountEntity extends BaseEntity {
 	/**
 	 * SocialAccount 객체 생성 메서드
 	 */
-	public static SocialAccountEntity create(UserEntity user, String platform, String platformUserId, String primaryEmail) {
+	public static SocialAccountEntity create(UserEntity user, String platform, String platformUserId,
+		String primaryEmail) {
 		return SocialAccountEntity.builder()
 			.user(user)
 			.platform(platform)

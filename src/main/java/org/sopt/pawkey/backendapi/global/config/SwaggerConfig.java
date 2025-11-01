@@ -40,7 +40,7 @@ public class SwaggerConfig {
 				.title("paw-key API")
 				.version("v1")
 				.description("paw-key API 명세서"))
-				.components(new Components()
+			.components(new Components()
 				.addSecuritySchemes("bearerAuth",
 					new SecurityScheme()
 						.type(SecurityScheme.Type.HTTP)

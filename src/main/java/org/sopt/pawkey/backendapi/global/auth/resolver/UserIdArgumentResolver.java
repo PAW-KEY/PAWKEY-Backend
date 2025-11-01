@@ -11,7 +11,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class UserIdArgumentResolver implements HandlerMethodArgumentResolver{
+public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -31,6 +31,6 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver{
 			return null; // 인증 안 된 경우 → 컨트롤러 단에서 예외 처리 해줘야함
 		}
 
-		return (Long) authentication.getPrincipal();
+		return (Long)authentication.getPrincipal();
 	}
 }

@@ -17,7 +17,7 @@ public class ReviewCategoryOptionTop3Service {
 
 	private final ReviewSelectedCategoryOptionRepository reviewSelectedCategoryOptionRepository;
 	private final ReviewCategoryOptionTop3Repository reviewCategoryOptionTop3Repository;
-	
+
 	public void recalculateTop3ByRoute(RouteEntity route) {
 		reviewCategoryOptionTop3Repository.deleteAllByRoute(route); //기존 데이터 삭제
 

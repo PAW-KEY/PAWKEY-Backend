@@ -52,7 +52,8 @@ public class UserService {
 	@Transactional
 	public Long findOrCreateUserBySocialId(String platform, String platformUserId, String primaryEmail) {
 		// 1. SocialAccount가 이미 존재하는지 확인 (로그인 시도)
-		Optional<SocialAccountEntity> existingAccount = socialAccountRepository.findByPlatformAndPlatformUserId(platform, platformUserId);
+		Optional<SocialAccountEntity> existingAccount = socialAccountRepository.findByPlatformAndPlatformUserId(
+			platform, platformUserId);
 
 		if (existingAccount.isPresent()) {
 			// 2. 존재하면, 연결된 User ID 반환 (로그인)
@@ -84,7 +85,6 @@ public class UserService {
 			return newUser.getUserId();
 		}
 	}
-
 
 }
 

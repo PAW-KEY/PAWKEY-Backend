@@ -27,10 +27,14 @@ public class TokenService {
 
 	private final StringRedisTemplate redisTemplate;
 
-	@Value("${security.jwt.secret}") private String secret;
-	@Value("${security.jwt.issuer}") private String issuer;
-	@Value("${security.jwt.access-exp-minutes}") private long accessExpMinutes;
-	@Value("${security.jwt.refresh-exp-days}") private long refreshExpDays;
+	@Value("${security.jwt.secret}")
+	private String secret;
+	@Value("${security.jwt.issuer}")
+	private String issuer;
+	@Value("${security.jwt.access-exp-minutes}")
+	private long accessExpMinutes;
+	@Value("${security.jwt.refresh-exp-days}")
+	private long refreshExpDays;
 
 	private SecretKey signingKey;
 	private static final String REFRESH_PREFIX = "refresh:";
@@ -43,7 +47,6 @@ public class TokenService {
 		// HMAC SHA-256 알고리즘에 사용할 SecretKey 초기화
 		this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
-
 
 	// Access Token 또는 Refresh Token을 생성
 	private String createToken(Long userId, String deviceId, long expirationMinutes) {
@@ -70,11 +73,11 @@ public class TokenService {
 		);
 	}
 
-
 	// Access Token과 Refresh Token을 발급하고, Refresh Token을 저장소에 캐시
 	public TokenResponseDTO issueTokens(Long userId, String deviceId) {
 		String accessToken = createToken(userId, deviceId, accessExpMinutes);
-		String refreshToken = createToken(userId, deviceId, refreshExpDays * 24 * 60); // Refresh Token은 '일' 단위 만료 기간을 사용
+		String refreshToken = createToken(userId, deviceId,
+			refreshExpDays * 24 * 60); // Refresh Token은 '일' 단위 만료 기간을 사용
 
 		saveRefreshToken(userId, deviceId, refreshToken);
 
@@ -107,7 +110,6 @@ public class TokenService {
 		return issueTokens(userId, deviceId); // 새로운 토큰 발급 및 Redis 저장
 	}
 
-
 	/**
 	 * 로그아웃 처리: Redis에서 Refresh Token을 삭제
 	 */
@@ -115,7 +117,6 @@ public class TokenService {
 		String key = REFRESH_PREFIX + userId + ":" + deviceId;
 		redisTemplate.delete(key);
 	}
-
 
 	/**
 	 * JWT의 유효성을 검증하고 클레임 정보를 파싱

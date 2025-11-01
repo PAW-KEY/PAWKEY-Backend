@@ -19,6 +19,7 @@ public class UserLoginFacade {
 	private final TokenService tokenService;
 	private final GoogleVerifierService googleVerifierService;
 	private final KakaoVerifierService kakaoVerifierService;
+
 	public TokenResponseDTO googleLogin(String idToken, String deviceId) {
 		Map<String, String> socialUserInfo = googleVerifierService.verifyGoogleToken(idToken);
 
@@ -29,7 +30,6 @@ public class UserLoginFacade {
 
 		return tokenService.issueTokens(userId, deviceId);
 	}
-
 
 	public TokenResponseDTO kakaoLogin(String accessToken, String deviceId) {
 		Map<String, String> socialUserInfo = kakaoVerifierService.verifyKakaoToken(accessToken);
