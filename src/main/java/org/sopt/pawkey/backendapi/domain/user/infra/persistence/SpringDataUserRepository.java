@@ -11,10 +11,7 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
 	@Override
 	@EntityGraph(attributePaths = {
 		"region",
-		"region.parent",
-		"petEntityList",
-		"reviewEntityList",
-		"postLikeEntityList"
+		"region.parent"
 	})
 	Optional<UserEntity> findById(Long id);
 }
