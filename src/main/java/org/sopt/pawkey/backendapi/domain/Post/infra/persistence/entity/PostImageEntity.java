@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity;
 
+import org.hibernate.annotations.BatchSize;
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
@@ -38,6 +39,7 @@ public class PostImageEntity extends BaseEntity { //Join 테이블
 	@Column(name = "image_type", nullable = false, length = 20)
 	private ImageType imageType;
 
+	// @BatchSize(size = 100)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id")
 	private ImageEntity image;

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class UserLikedPostQueryService {
 
 	private final PostLikeRepository postLikeRepository;
-	
+
 	public List<PostLikeEntity> findLikedPostsByUserWithPostAndImages(Long userId) {
 		return postLikeRepository.findAllByUserWithPostAndImages(userId);
 	}

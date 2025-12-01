@@ -10,9 +10,7 @@ public interface PostLikeRepository {
 
 	boolean existsByUserIdAndPostId(Long userId, Long postId);
 
-	Optional<PostLikeEntity> findByUserIdAndPostId(Long userId, Long postId);
-
-	void delete(PostLikeEntity postLike);
-
 	List<PostLikeEntity> findAllByUserWithPostAndImages(Long userId);
+
+	void deleteByUserIdAndPostId(Long userId, Long postId);
 }

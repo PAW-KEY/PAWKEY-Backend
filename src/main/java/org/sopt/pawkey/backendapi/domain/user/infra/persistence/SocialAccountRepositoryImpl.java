@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SocialAccountRepositoryImpl implements SocialAccountRepository {
 	private final SpringDataSocialAccountRepository jpaRepository;
+
 	@Override
 	public Optional<SocialAccountEntity> findByPlatformAndPlatformUserId(String platform, String platformUserId) {
 		return jpaRepository.findByPlatformAndPlatformUserId(platform, platformUserId);

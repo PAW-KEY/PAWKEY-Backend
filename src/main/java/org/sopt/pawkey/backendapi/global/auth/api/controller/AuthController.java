@@ -3,7 +3,6 @@ package org.sopt.pawkey.backendapi.global.auth.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
-import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.LoginRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.RefreshTokenRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
@@ -34,7 +33,8 @@ public class AuthController {
 	private final KakaoAuthService kakaoAuthService;
 
 	// 1. 소셜 로그인 API
-	@Operation(summary = "Google 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {"Auth"})
+	@Operation(summary = "Google 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
+		"Auth"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "최초 토큰 발급 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (ID Token 또는 Device ID 누락)", content = @Content(mediaType = "application/json")),
@@ -48,7 +48,8 @@ public class AuthController {
 	}
 
 	// 2. 토큰 갱신 API
-	@Operation(summary = "토큰 재발급", description = "Refresh Token과 Device ID를 사용하여 새로운 Access/Refresh Token 쌍을 발급합니다. (토큰 로테이션)", tags = {"Auth"})
+	@Operation(summary = "토큰 재발급", description = "Refresh Token과 Device ID를 사용하여 새로운 Access/Refresh Token 쌍을 발급합니다. (토큰 로테이션)", tags = {
+		"Auth"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (Token 또는 Device ID 누락)", content = @Content(mediaType = "application/json")),
@@ -67,7 +68,8 @@ public class AuthController {
 	}
 
 	// 3. 카카오 로그인 API
-	@Operation(summary = "Kakao 소셜 로그인", description = "Access Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {"Auth"})
+	@Operation(summary = "Kakao 소셜 로그인", description = "Access Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
+		"Auth"})
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "최초 토큰 발급 성공"),
 		@ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (Access Token 또는 Device ID 누락)", content = @Content(mediaType = "application/json")),
@@ -79,6 +81,7 @@ public class AuthController {
 		// 카카오는 idToken 대신 Access Token을 받으므로 request.idToken() -> accessToken 개념임
 		return userLoginFacade.kakaoLogin(request.idToken(), request.deviceId());
 	}
+
 	@GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
 	public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
 		String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
