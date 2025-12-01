@@ -88,6 +88,7 @@ jobs:
             echo "🚀 Run new container"
             sudo docker run -d -p 8080:8080 \
               --name pawkey-dev-container \
+              --network pawkey-net \
               -e SPRING_PROFILES_ACTIVE=aws \
               -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
               -e DOKI_GOOGLE_CLIENT_ID=${{ secrets.DOKI_GOOGLE_CLIENT_ID }} \
