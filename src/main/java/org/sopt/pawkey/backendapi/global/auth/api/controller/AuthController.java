@@ -85,7 +85,8 @@ public class AuthController {
 	@GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
 	public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
 		String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
-		TokenResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, "KAKAO");
+		String testDeviceId = "WEB_KAKAO_LOGIN";
+		TokenResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, testDeviceId);
 		return ResponseEntity.ok(tokens);
 
 	}
