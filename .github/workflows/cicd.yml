@@ -93,7 +93,7 @@ jobs:
               -e DOKI_GOOGLE_CLIENT_ID=${{ secrets.DOKI_GOOGLE_CLIENT_ID }} \
               -e DOKI_APPLE_CLIENT_ID=${{ secrets.DOKI_APPLE_CLIENT_ID }} \
               -e DOKI_KAKAO_CLIENT_ID=${{ secrets.DOKI_KAKAO_CLIENT_ID }} \
-              -e SOCIAL_KAKAO_CLIENT_SECRET=${{ secrets.DOKI_KAKAO_CLIENT_SECRET }} \
+              -e DOKI_KAKAO_CLIENT_SECRET=${{ secrets.DOKI_KAKAO_CLIENT_SECRET }} \
               -e DOKI_KAKAO_REDIRECT_URI=${{ secrets.DOKI_KAKAO_REDIRECT_URI }} \
               ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
 
