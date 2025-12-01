@@ -28,77 +28,75 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Generate application.yml
-        shell: bash
         run: |
-          mkdir -p ./src/main/resources
-          cat <<'EOF' > ./src/main/resources/application.yml
-          ${{ secrets.CD_APPLICATION }}
-          EOF
+          mkdir -p src/main/resources
+          cat > src/main/resources/application.yml << 'EOF'
+  ${{ secrets.CD_APPLICATION }}
+  EOF
 
-      - name: Generate application-aws.yml
-        shell: bash
-        run: |
-          mkdir -p ./src/main/resources
-          cat <<'EOF' > ./src/main/resources/application-aws.yml
-          ${{ secrets.CD_APPLICATION_AWS }}
-          EOF
+- name: Generate application-aws.yml
+  run: |
+    mkdir -p src/main/resources
+    cat > src/main/resources/application-aws.yml << 'EOF'
+  ${{ secrets.CD_APPLICATION_AWS }}
+  EOF
 
-      - name: Generate application-oauth.yml
-        shell: bash
-        run: |
-          mkdir -p ./src/main/resources
-          cat <<'EOF' > ./src/main/resources/application-oauth.yml
-          ${{ secrets.CD_APPLICATION_OAUTH }}
-          EOF
+- name: Generate application-oauth.yml
+  run: |
+    mkdir -p src/main/resources
+    cat > src/main/resources/application-oauth.yml << 'EOF'
+  ${{ secrets.CD_APPLICATION_OAUTH }}
+  EOF
 
-      - name: Build Project (skip tests)
-        run: ./gradlew clean build -x test
+- name: Build Project (skip tests)
+  run: ./gradlew clean build -x test
 
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+- name: Login to Docker Hub
+  run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build Docker Image
-        run: docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest" .
+- name: Build Docker Image
+  run: docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest" .
 
-      - name: Push Docker Image
-        run: docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest"
+- name: Push Docker Image
+  run: docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest"
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Install SSH Client
-        run: sudo apt-get update && sudo apt-get install -y openssh-client
+deploy:
+  needs: build
+  runs-on: ubuntu-latest
 
-      - name: Create SSH Key File
-        run: |
-          echo "${{ secrets.DEV_EC2_SSH_KEY }}" > ssh_key.pem
-          chmod 600 ssh_key.pem
+  steps:
+    - name: Install SSH Client
+      run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@${{ secrets.DEV_EC2_PUBLIC_IP }} << EOF
-            echo "📦 Pull latest image"
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
+    - name: Create SSH Key File
+      run: |
+        echo "${{ secrets.DEV_EC2_SSH_KEY }}" > ssh_key.pem
+        chmod 600 ssh_key.pem
 
-            echo "🗑 Remove old container"
-            sudo docker rm -f pawkey-dev-container || true
-
-            echo "🚀 Run new container"
-            sudo docker run -d -p 8080:8080 \
-              --name pawkey-dev-container \
-              -e SPRING_PROFILES_ACTIVE=aws \
-              -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
-              -e DOKI_GOOGLE_CLIENT_ID=${{ secrets.DOKI_GOOGLE_CLIENT_ID }} \
-              -e DOKI_APPLE_CLIENT_ID=${{ secrets.DOKI_APPLE_CLIENT_ID }} \
-              -e DOKI_KAKAO_CLIENT_ID=${{ secrets.DOKI_KAKAO_CLIENT_ID }} \
-              -e DOKI_KAKAO_CLIENT_SECRET=${{ secrets.DOKI_KAKAO_CLIENT_SECRET }} \
-              -e DOKI_KAKAO_REDIRECT_URI=${{ secrets.DOKI_KAKAO_REDIRECT_URI }} \
-              ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
-
-            echo "🔄 Reload nginx"
-            sudo nginx -t && sudo systemctl reload nginx
-
-            echo "✅ Deployment complete"
-          EOF
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@${{ secrets.DEV_EC2_PUBLIC_IP }} << 'EOF'
+          echo "📦 Pull latest image"
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
+        
+          echo "🗑 Remove old container"
+          sudo docker rm -f pawkey-dev-container || true
+        
+          echo "🚀 Run new container"
+          sudo docker run -d -p 8080:8080 \
+            --name pawkey-dev-container \
+            -e SPRING_PROFILES_ACTIVE=aws \
+            -e DOKI_JWT_SECRET_VALUE="${{ secrets.DOKI_JWT_SECRET_VALUE }}" \
+            -e DOKI_GOOGLE_CLIENT_ID="${{ secrets.DOKI_GOOGLE_CLIENT_ID }}" \
+            -e DOKI_APPLE_CLIENT_ID="${{ secrets.DOKI_APPLE_CLIENT_ID }}" \
+            -e DOKI_KAKAO_CLIENT_ID="${{ secrets.DOKI_KAKAO_CLIENT_ID }}" \
+            -e DOKI_KAKAO_CLIENT_SECRET="${{ secrets.DOKI_KAKAO_CLIENT_SECRET }}" \
+            -e DOKI_KAKAO_REDIRECT_URI="${{ secrets.DOKI_KAKAO_REDIRECT_URI }}" \
+            ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
+        
+          echo "🔄 Reload nginx"
+          sudo nginx -t && sudo systemctl reload nginx
+        
+          echo "✅ Deployment complete"
+  EOF
