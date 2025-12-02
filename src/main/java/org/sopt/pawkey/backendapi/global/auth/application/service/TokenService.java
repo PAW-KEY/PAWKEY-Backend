@@ -89,7 +89,13 @@ public class TokenService {
 	 */
 	public TokenResponseDTO rotate(String oldRefreshToken, String deviceId) {
 		Jws<Claims> claimsJws = validateAndParseToken(oldRefreshToken);
-		Long userId = claimsJws.getBody().get(USER_ID_CLAIM, Long.class);
+
+		Number userIdNumber = claimsJws.getBody().get(USER_ID_CLAIM, Number.class);
+		if (userIdNumber == null) {
+			throw new AuthBusinessException(AuthErrorCode.REFRESH_TOKEN_INVALID);
+		}
+		Long userId = userIdNumber.longValue();
+		//Long userId = claimsJws.getBody().get(USER_ID_CLAIM, Long.class);
 		String savedDeviceId = claimsJws.getBody().get(DEVICE_ID_CLAIM, String.class);
 
 		// 1. JWT 내부의 Device ID가 요청된 Device ID와 일치하는지 확인
