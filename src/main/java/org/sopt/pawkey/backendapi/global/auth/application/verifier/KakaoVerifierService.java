@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,15 @@ public class KakaoVerifierService {
 	 * 카카오 AccessToken을 검증한 후, 사용자 정보를 조회하는 과정
 	 */
 
-	public Map<String, String> verifyKakaoToken(String accessToken) {
+	public Map<String, String> verifyKakaoToken(String rawAccessToken) {
+		String accessToken = rawAccessToken.trim();
+		log.info("[Kakao Verifier] 요청 토큰 길이: {}", accessToken.length());
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(accessToken);
 		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		log.info("[Kakao Verifier] Authorization 헤더: {}", headers.getFirst(HttpHeaders.AUTHORIZATION));
 
 		try {
 			ResponseEntity<Map> response =
@@ -69,9 +75,12 @@ public class KakaoVerifierService {
 			userInfo.put("platform", "KAKAO");
 
 			return userInfo;
+		}catch (HttpClientErrorException e) { // 🚨 HTTP 응답 코드를 잡기 위한 예외 처리 수정
+			log.error("카카오 API 통신 실패 (HTTP 상태 코드: {}): {}", e.getStatusCode(), e.getResponseBodyAsString());
+			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
 		} catch (Exception e) {
+			log.error("카카오 API 통신 중 예기치 않은 오류 발생: {}", e.getMessage(), e);
 			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
 		}
 	}
-
 }
