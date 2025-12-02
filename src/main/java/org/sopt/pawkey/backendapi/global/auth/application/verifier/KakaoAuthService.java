@@ -64,6 +64,8 @@ public class KakaoAuthService {
 		}
 
 		String accessToken = (String)body.get("access_token");
+
+		log.warn("[KAKAO RAW ACCESS TOKEN]: {}", accessToken);
 		return accessToken;
 
 	}
