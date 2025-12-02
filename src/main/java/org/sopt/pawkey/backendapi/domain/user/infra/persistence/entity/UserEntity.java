@@ -49,7 +49,7 @@ public class UserEntity extends BaseEntity {
 	private int age;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "region_id")
+	@JoinColumn(name = "region_id", nullable = true)
 	private RegionEntity region;
 
 	@BatchSize(size = 100)

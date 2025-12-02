@@ -64,12 +64,13 @@ public class UserService {
 			// 3-1. 새로운 User 엔티티 생성 (최소 정보만으로 생성)
 			UserEntity newUser = userRepository.save(UserEntity.builder()
 				.loginId(platform.toLowerCase() + "_" + platformUserId)
+				.password("social-login-default-password") // 소셜 사용자는 비밀번호가 없지만, NOT NULL일 경우 빈 문자열 또는 임시값 지정
 				.name(platform + " User")
 				// 💡 추가 설정이 필요한 최소 필드:
-				.password("") // 소셜 사용자는 비밀번호가 없지만, NOT NULL일 경우 빈 문자열 또는 임시값 지정
-				.gender("UNKNOWN") // NOT NULL일 경우 임시값 설정
-				.age(0) // NOT NULL일 경우 기본값 0 설정
+				.gender("MALE") // NOT NULL일 경우 임시값 설정
+				.age(1) // NOT NULL일 경우 기본값 0 설정
 				// RegionEntity는 ManyToOne이므로, 초기 가입 시에는 NULL을 유지하는 것이 맞음.
+				.region(null)
 				.build());
 
 			// 3-2. SocialAccount 엔티티 생성 및 User와 연결
