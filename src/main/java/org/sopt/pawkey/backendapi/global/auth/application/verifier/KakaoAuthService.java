@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class KakaoAuthService {
+public class KakaoAuthService { //web 환경에서만 사용됨(/kakao/callback)
 	private final RestTemplate restTemplate = new RestTemplate();
 
 	@Value("${social.kakao.token-uri}")
