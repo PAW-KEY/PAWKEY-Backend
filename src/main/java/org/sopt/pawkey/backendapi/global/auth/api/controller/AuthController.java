@@ -91,6 +91,19 @@ public class AuthController {
 
 	}
 
-
+	// Apple 소셜로그인
+	@Operation(summary = "Apple 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
+		"Auth"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "최초 토큰 발급 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (ID Token 또는 Device ID 누락)", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "소셜 토큰 검증 실패 (A40106)", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
+	})
+	@PostMapping("/apple/login")
+	public TokenResponseDTO appleLogin(@RequestBody @Valid LoginRequestDTO request) {
+		// Apple 로그인 로직을 UserLoginFacade로 위임
+		return userLoginFacade.appleLogin(request.idToken(), request.deviceId());
+	}
 
 }
