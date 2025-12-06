@@ -6,28 +6,41 @@ package org.sopt.pawkey.backendapi.global.auth.application.verifier;
  Apple 로그인 요청 시 이 Client Secret을 사용해 Apple 서버와 통신
  */
 
+import java.io.IOException;
+import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.sopt.pawkey.backendapi.global.auth.exception.AuthBusinessException;
 import org.sopt.pawkey.backendapi.global.auth.exception.AuthErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AppleAuthKeyService {
 
+	private final RestTemplate restTemplate;
+	private final ObjectMapper objectMapper;
 
 	@Value("${social.apple.team-id}")
 	private String teamId;
@@ -44,10 +57,13 @@ public class AppleAuthKeyService {
 	@Value("${social.apple.secret-exp-minutes}")
 	private long secretExpMinutes;
 
-	//매 요청마다 복잡한 파싱과정을 반복하지 않도록,최초 파싱 후 캐싱 변수에 저장
-	private PrivateKey cachedPrivateKey;
+	@Value("${social.apple.jwks-uri}")
+	private String jwksUri; // Apple 공개 키를 조회할 엔드포인트
 
-	private PrivateKey getPrivateKey() {
+	private PrivateKey cachedPrivateKey;
+	private final Map<String, PublicKey> cachedPublicKeys = new ConcurrentHashMap<>();
+
+	private PrivateKey getPrivateKey() { //Client Secret 서명을 위해 개인 키를 파싱하고 캐싱
 		if (cachedPrivateKey != null) { //이미 캐시 변수에 정보 저장되어 있다면
 			return cachedPrivateKey;
 		}
@@ -69,34 +85,97 @@ public class AppleAuthKeyService {
 			return cachedPrivateKey;
 
 		} catch (Exception e) {
-			log.error("Apple Private Key 파싱 중 오류 발생: {}", e.getMessage());
+			log.error("❌ Apple Private Key 파싱 중 오류 발생: {}", e.getMessage());
 			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
 		}
 	}
-		/*
-		 - Apple Developer Key를 사용해 JWT Client Secret 생성
-		 - 이 Secret은 Apple 인증 API 요청 시 'client_secret' 파라미터로 사용됩니다.
-		 * JWT 형태의(String) Client Secret 반환
-		 */
-		public String createClientSecret() {
-			Date now = new Date();
-			Date expiration = Date.from(Instant.now().plusSeconds(secretExpMinutes*60));
 
-			Map<String,Object> headerParams = new HashMap<>();
-			headerParams.put("kid", keyId);
+	public String createClientSecret() { // 서버의 개인 키로 서명된 JWT를 생성
+		Date now = new Date();
+		Date expiration = Date.from(Instant.now().plusSeconds(secretExpMinutes * 60));
 
-			String clientSecret = Jwts.builder()
-				.setHeaderParams(headerParams)
-				.setIssuer(teamId)
-				.setIssuedAt(now)
-				.setExpiration(expiration)
-				.setAudience("https://appleid.apple.com")
-				.setSubject(clientId)
-				.signWith(getPrivateKey(), SignatureAlgorithm.ES256)
-				.compact();
+		Map<String, Object> headerParams = new HashMap<>();
+		headerParams.put("kid", keyId);
 
-			log.debug("Apple JWT Client Secret 생성 완료. 만료: {}", expiration);
-			return clientSecret;
+		String clientSecret = Jwts.builder()
+			.setHeaderParams(headerParams)
+			.setIssuer(teamId)
+			.setIssuedAt(now)
+			.setExpiration(expiration)
+			.setAudience("https://appleid.apple.com")
+			.setSubject(clientId)
+			.signWith(getPrivateKey(), SignatureAlgorithm.ES256)
+			.compact();
+
+		log.debug("Apple JWT Client Secret 생성 완료. 만료: {}", expiration);
+		return clientSecret;
+	}
+
+	//Apple 공개 키 획득
+	public PublicKey getPublicKey(String kid) {
+		// 이미 키를 가지고 있으면 Apple 서버에 재요청하지 않고 캐시된 키를 반환
+		if (cachedPublicKeys.containsKey(kid)) {
+			log.debug("Apple Public Key (kid: {}) 캐시에서 로드됨.", kid);
+			return cachedPublicKeys.get(kid);
+		}
+
+		//캐시에 공개키 없다면
+		log.info("Apple JWKS URI ({})에서 공개 키 조회 시작.", jwksUri);
+		String jsonKeys;
+		try {
+			jsonKeys = restTemplate.getForObject(jwksUri, String.class); //JWKS URI에서 공개 키 JSON 목록 가져옴
+			if (jsonKeys == null || jsonKeys.isEmpty()) {
+				log.error("❌ Apple JWKS 응답이 비어있습니다.");
+				throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
+			}
+		} catch (Exception e) {
+			log.error("❌ Apple JWKS URI에서 공개 키를 가져오는 중 오류 발생: {}", e.getMessage());
+			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
+		}
+
+		//JWKS JSON(공개키 JSON목록) 파싱 & 키 추출
+		try {
+			Map<String, Object> keyset = objectMapper.readValue(jsonKeys, new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
+			List<Map<String, String>> keys = (List<Map<String, String>>) keyset.get("keys");
+			Map<String, String> requiredKey = keys.stream()
+				.filter(key -> kid.equals(key.get("kid")))
+				.findFirst()
+				.orElseThrow(() -> {
+					log.warn("⚠️ 요청 kid({})에 일치하는 Apple 공개 키가 JWKS에 없습니다. 캐시 갱신 필요.", kid);
+					return new AuthBusinessException(AuthErrorCode.TOKEN_SIGNATURE_INVALID);
+				});
+
+
+			//찾은 키 정보 (n, e)를 사용하여 PublicKey 객체 생성 (RSA 알고리즘 사용)
+			String n = requiredKey.get("n"); // modulus
+			String e = requiredKey.get("e"); // exponent
+
+			byte[] decodedN = Base64.getUrlDecoder().decode(n);
+			byte[] decodedE = Base64.getUrlDecoder().decode(e);
+
+			BigInteger modulus = new BigInteger(1, decodedN);
+			BigInteger exponent = new BigInteger(1, decodedE);
+
+			RSAPublicKeySpec keySpec = new RSAPublicKeySpec(modulus, exponent);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+
+			PublicKey publicKey = keyFactory.generatePublic(keySpec);
+
+
+			cachedPublicKeys.put(kid, publicKey);
+			log.info("✅ Apple Public Key (kid: {}) 조회 및 캐싱 완료.", kid);
+			return publicKey;
+		} catch (IOException e) {
+			log.error("❌ Apple JWKS JSON 파싱 오류: {}", e.getMessage());
+			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
+
+		} catch (Exception e) {
+			log.error("❌ Apple 공개 키 생성 오류: {}", e.getMessage());
+			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
+
 		}
 	}
+
+	}
+
 
