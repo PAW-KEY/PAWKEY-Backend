@@ -57,7 +57,7 @@ public class AppleAuthKeyService {
 	@Value("${social.apple.secret-exp-minutes}")
 	private long secretExpMinutes;
 
-	@Value("${social.apple.jwks-uri}")
+	@Value("${social.apple.jwks-uri:https://appleid.apple.com/auth/keys}")
 	private String jwksUri; // Apple 공개 키를 조회할 엔드포인트
 
 	private PrivateKey cachedPrivateKey;

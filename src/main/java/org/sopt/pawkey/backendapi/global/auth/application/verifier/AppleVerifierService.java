@@ -39,10 +39,10 @@ public class AppleVerifierService {
 	@Value("${social.apple.client-id}")
 	private String clientId;
 
-	@Value("${social.apple.token-uri}")
+	@Value("${social.apple.token-uri:https://appleid.apple.com/auth/token}")
 	private String appleTokenUri;
 
-	@Value("${social.apple.redirect-uri}")
+	@Value("${social.apple.redirect-uri:https://www.pawkey.o-r.kr/api/v1/auth/apple/callback}")
 	private String redirectUri;
 
 	//클라이언트가 로그인 후 서버로 보낸 ID Token 검증
