@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.user.application.service;
 import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.result.UserCreationResult;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.CreateUserCommand;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.SocialAccountRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserRepository;
@@ -50,14 +51,17 @@ public class UserService {
 	}
 
 	@Transactional
-	public Long findOrCreateUserBySocialId(String platform, String platformUserId, String primaryEmail) {
+	public UserCreationResult findOrCreateUserBySocialId(String platform, String platformUserId, String primaryEmail) {
 		// 1. SocialAccount가 이미 존재하는지 확인 (로그인 시도)
 		Optional<SocialAccountEntity> existingAccount = socialAccountRepository.findByPlatformAndPlatformUserId(
 			platform, platformUserId);
 
 		if (existingAccount.isPresent()) {
-			// 2. 존재하면, 연결된 User ID 반환 (로그인)
-			return existingAccount.get().getUser().getUserId();
+			// 2. 존재하면, 연결된 User ID 반환
+			return UserCreationResult.builder()
+				.userId(existingAccount.get().getUser().getUserId())
+				.isNewUser(false)
+				.build();
 		} else {
 			// 3. 존재하지 않으면, 신규 가입 트랜잭션 수행
 
@@ -66,10 +70,8 @@ public class UserService {
 				.loginId(platform.toLowerCase() + "_" + platformUserId)
 				.password("social-login-default-password") // 소셜 사용자는 비밀번호가 없지만, NOT NULL일 경우 빈 문자열 또는 임시값 지정
 				.name(platform + " User")
-				// 💡 추가 설정이 필요한 최소 필드:
-				.gender("MALE") // NOT NULL일 경우 임시값 설정
-				.age(1) // NOT NULL일 경우 기본값 0 설정
-				// RegionEntity는 ManyToOne이므로, 초기 가입 시에는 NULL을 유지하는 것이 맞음.
+				.gender("MALE")
+				.age(1)
 				.region(null)
 				.build());
 
@@ -83,7 +85,10 @@ public class UserService {
 			socialAccountRepository.save(socialAccount);
 
 			// 3-3. 신규 User ID 반환
-			return newUser.getUserId();
+			return UserCreationResult.builder()
+				.userId(newUser.getUserId())
+				.isNewUser(true)
+				.build();
 		}
 	}
 

@@ -5,6 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.LoginRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.RefreshTokenRequestDTO;
+import org.sopt.pawkey.backendapi.global.auth.api.dto.response.SocialLoginResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
 import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoAuthService;
@@ -42,7 +43,7 @@ public class AuthController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/google/login")
-	public TokenResponseDTO googleLogin(@RequestBody @Valid LoginRequestDTO request) {
+	public SocialLoginResponseDTO googleLogin(@RequestBody @Valid LoginRequestDTO request) {
 		// Facade로 ID Token과 Device ID를 전달하여 모든 인증 및 토큰 발급 로직을 처리
 		return userLoginFacade.googleLogin(request.idToken(), request.deviceId());
 	}
@@ -77,7 +78,7 @@ public class AuthController {
 		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/kakao/login")
-	public TokenResponseDTO kakaoLogin(@RequestBody @Valid LoginRequestDTO request) {
+	public SocialLoginResponseDTO kakaoLogin(@RequestBody @Valid LoginRequestDTO request) {
 		// 카카오는 idToken 대신 Access Token을 받으므로 request.idToken() -> accessToken 개념임
 		return userLoginFacade.kakaoLogin(request.idToken(), request.deviceId());
 	}
@@ -86,7 +87,7 @@ public class AuthController {
 	public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
 		String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
 		String testDeviceId = "WEB_KAKAO_LOGIN";
-		TokenResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, testDeviceId);
+		SocialLoginResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, testDeviceId);
 		return ResponseEntity.ok(tokens);
 
 	}
@@ -101,7 +102,7 @@ public class AuthController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/apple/login")
-	public TokenResponseDTO appleLogin(@RequestBody @Valid LoginRequestDTO request) {
+	public SocialLoginResponseDTO appleLogin(@RequestBody @Valid LoginRequestDTO request) {
 		// Apple 로그인 로직을 UserLoginFacade로 위임
 		return userLoginFacade.appleLogin(request.idToken(), request.deviceId());
 	}
