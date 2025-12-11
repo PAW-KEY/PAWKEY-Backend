@@ -27,6 +27,7 @@ public class TokenService {
 
 	private final StringRedisTemplate redisTemplate;
 
+
 	@Value("${security.jwt.secret}")
 	private String secret;
 	@Value("${security.jwt.issuer}")
@@ -43,7 +44,6 @@ public class TokenService {
 
 	@PostConstruct
 	public void init() {
-
 		// HMAC SHA-256 알고리즘에 사용할 SecretKey 초기화
 		this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
@@ -115,7 +115,14 @@ public class TokenService {
 	 */
 	public void revoke(Long userId, String deviceId) {
 		String key = REFRESH_PREFIX + userId + ":" + deviceId;
-		redisTemplate.delete(key);
+
+		Boolean isDeleted = redisTemplate.delete(key);
+		if (Boolean.TRUE.equals(isDeleted)) {
+			System.out.println("로그아웃 성공: Refresh Token 삭제됨. Key: " + key);
+		} else {
+			// 토큰이 이미 만료되었거나 존재하지 않아아도 => 로그아웃 자체는 성공.
+			System.out.println("로그아웃 처리됨: Refresh Token이 Redis에 존재하지 않음. Key: " + key);
+		}
 	}
 
 	/**
@@ -128,7 +135,7 @@ public class TokenService {
 				.build()
 				.parseSignedClaims(token);
 		} catch (Exception e) {
-			throw new AuthBusinessException(AuthErrorCode.REFRESH_TOKEN_INVALID);
+			throw new AuthBusinessException(AuthErrorCode.ACCESS_TOKEN_INVALID);
 		}
 	}
 
