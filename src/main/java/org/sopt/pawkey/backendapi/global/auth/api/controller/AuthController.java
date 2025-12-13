@@ -3,7 +3,9 @@ package org.sopt.pawkey.backendapi.global.auth.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
+import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.LoginRequestDTO;
+import org.sopt.pawkey.backendapi.global.auth.api.dto.request.LogoutRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.RefreshTokenRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.SocialLoginResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
@@ -48,25 +50,8 @@ public class AuthController {
 		return userLoginFacade.googleLogin(request.idToken(), request.deviceId());
 	}
 
-	// 2. 토큰 갱신 API
-	@Operation(summary = "토큰 재발급", description = "Refresh Token과 Device ID를 사용하여 새로운 Access/Refresh Token 쌍을 발급합니다. (토큰 로테이션)", tags = {
-		"Auth"})
-	@ApiResponses({
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (Token 또는 Device ID 누락)", content = @Content(mediaType = "application/json")),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "토큰 무효 (A40102: 만료/유효하지 않음, A40107: 기기 불일치)", content = @Content(mediaType = "application/json")),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
-	})
-	@PostMapping("/refresh")
 
-	public ResponseEntity<TokenResponseDTO> refreshToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
-		// TokenService.rotate 호출 시, RefreshTokenRequestDTO의 필드명에 맞게 호출해야 합니다.
-		// RefreshTokenRequestDTO가 record이므로 필드 접근은 메서드 형태로 (request.refreshToken(), request.deviceId())
-		TokenResponseDTO response = tokenService.rotate(request.refreshToken(), request.deviceId());
-		// ApiResponse 유틸리티를 사용한다고 가정하고 코드를 작성합니다.
-		// return ResponseEntity.ok(ApiResponse.success(response));
-		return ResponseEntity.ok(response);
-	}
+
 
 	// 3. 카카오 로그인 API
 	@Operation(summary = "Kakao 소셜 로그인", description = "Access Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
@@ -106,5 +91,37 @@ public class AuthController {
 		// Apple 로그인 로직을 UserLoginFacade로 위임
 		return userLoginFacade.appleLogin(request.idToken(), request.deviceId());
 	}
+
+
+	@Operation(summary = "토큰 재발급", description = "Refresh Token과 Device ID를 사용하여 새로운 Access/Refresh Token 쌍을 발급합니다. (토큰 로테이션)", tags = {
+		"Auth"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (Token 또는 Device ID 누락)", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "토큰 무효 (A40102: 만료/유효하지 않음, A40107: 기기 불일치)", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
+	})
+	@PostMapping("/refresh")
+
+	public ResponseEntity<TokenResponseDTO> refreshToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
+		TokenResponseDTO response = tokenService.rotate(request.refreshToken(), request.deviceId());
+		return ResponseEntity.ok(response);
+	}
+
+	@Operation(summary = "로그아웃", description = "Access Token에서 사용자 ID를 추출하고, Refresh Token을 Redis에서 삭제하여 현재 기기의 세션을 무효화합니다. 성공 시 204 No Content를 반환합니다.", tags = {
+		"Auth"})
+	@ApiResponses({
+		@ApiResponse(responseCode = "204", description = "로그아웃 성공 (No Content)"),
+		@ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (Device ID 누락)", content = @Content(mediaType = "application/json")),
+		@ApiResponse(responseCode = "401", description = "Access Token 무효/만료", content = @Content(mediaType = "application/json")),
+		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
+	})
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(@UserId Long userId,@RequestBody @Valid LogoutRequestDTO request){
+		tokenService.revoke(userId, request.deviceId());
+		return ResponseEntity.noContent().build();
+	}
+
+
 
 }
