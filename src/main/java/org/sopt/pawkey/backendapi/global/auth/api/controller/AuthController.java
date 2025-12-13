@@ -7,11 +7,13 @@ import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.LoginRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.LogoutRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.RefreshTokenRequestDTO;
+import org.sopt.pawkey.backendapi.global.auth.api.dto.request.WithdrawRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.SocialLoginResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
 import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoAuthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -102,7 +104,6 @@ public class AuthController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/refresh")
-
 	public ResponseEntity<TokenResponseDTO> refreshToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
 		TokenResponseDTO response = tokenService.rotate(request.refreshToken(), request.deviceId());
 		return ResponseEntity.ok(response);
@@ -122,6 +123,12 @@ public class AuthController {
 		return ResponseEntity.noContent().build();
 	}
 
+
+	@DeleteMapping("/withdraw")
+	public ResponseEntity<Void> withdraw(@UserId Long userId, @RequestBody @Valid WithdrawRequestDTO request){
+		authService.withdrawUser(userId, request);
+		return ResponseEntity.noContent().build();
+	}
 
 
 }

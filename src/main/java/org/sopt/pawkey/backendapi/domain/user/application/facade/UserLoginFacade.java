@@ -11,6 +11,7 @@ import org.sopt.pawkey.backendapi.global.auth.application.verifier.AppleVerifier
 import org.sopt.pawkey.backendapi.global.auth.application.verifier.GoogleVerifierService;
 import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoVerifierService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,5 +67,6 @@ public class UserLoginFacade {
 		log.info("✅ Apple ID Token 검증 & JWT 발급 성공. 테스트용 User ID: {}", creationResult.userId());
 		return SocialLoginResponseDTO.of(tokens, creationResult.isNewUser());
 	}
+
 
 }
