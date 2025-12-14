@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.global.auth.application.verifier;
+package org.sopt.pawkey.backendapi.global.auth.application.service.login.verifier.apple;
 
 
 /*

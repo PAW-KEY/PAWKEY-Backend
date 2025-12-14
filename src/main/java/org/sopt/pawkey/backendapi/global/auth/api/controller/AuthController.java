@@ -10,15 +10,14 @@ import org.sopt.pawkey.backendapi.global.auth.api.dto.request.RefreshTokenReques
 import org.sopt.pawkey.backendapi.global.auth.api.dto.request.WithdrawRequestDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.SocialLoginResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
-import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
-import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoAuthService;
+import org.sopt.pawkey.backendapi.global.auth.application.service.token.TokenService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +34,7 @@ public class AuthController {
 
 	private final UserLoginFacade userLoginFacade;
 	private final TokenService tokenService;
-	private final KakaoAuthService kakaoAuthService;
+
 
 	// 1. 소셜 로그인 API
 	@Operation(summary = "Google 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
@@ -70,14 +69,14 @@ public class AuthController {
 		return userLoginFacade.kakaoLogin(request.idToken(), request.deviceId());
 	}
 
-	@GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
-	public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
-		String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
-		String testDeviceId = "WEB_KAKAO_LOGIN";
-		SocialLoginResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, testDeviceId);
-		return ResponseEntity.ok(tokens);
-
-	}
+	// @GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
+	// public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
+	// 	String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
+	// 	String testDeviceId = "WEB_KAKAO_LOGIN";
+	// 	SocialLoginResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, testDeviceId);
+	// 	return ResponseEntity.ok(tokens);
+	//
+	// }
 
 	// Apple 소셜로그인
 	@Operation(summary = "Apple 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {

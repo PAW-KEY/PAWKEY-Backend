@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.global.auth.application.verifier;
+package org.sopt.pawkey.backendapi.global.auth.application.service.login.verifier.apple;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -9,6 +9,7 @@ import io.jsonwebtoken.SignatureException; // io.jsonwebtoken.SignatureException
 import io.jsonwebtoken.io.Decoders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -23,15 +24,13 @@ import org.sopt.pawkey.backendapi.global.auth.exception.AuthBusinessException;
 import org.sopt.pawkey.backendapi.global.auth.exception.AuthErrorCode;
 // 의존성 서비스 (AppleAuthKeyService)
 
-
-import java.security.Key;
 import java.security.PublicKey; // 명확성을 위해 PublicKey를 명시적으로 import합니다.
 import java.util.Map;
 import java.util.HashMap;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AppleVerifierService {
+public class AppleTokenVerifier {
 	private final RestTemplate restTemplate;
 	private final ObjectMapper objectMapper;
 	private final AppleAuthKeyService appleAuthKeyService;

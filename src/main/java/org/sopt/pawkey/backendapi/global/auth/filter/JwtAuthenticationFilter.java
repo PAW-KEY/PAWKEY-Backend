@@ -2,7 +2,7 @@ package org.sopt.pawkey.backendapi.global.auth.filter;
 
 import java.io.IOException;
 
-import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
+import org.sopt.pawkey.backendapi.global.auth.application.service.token.TokenService;
 import org.sopt.pawkey.backendapi.global.auth.constants.AuthConstant;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

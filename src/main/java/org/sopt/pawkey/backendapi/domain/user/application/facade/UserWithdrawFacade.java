@@ -1,7 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.user.application.facade;
 
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
-import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
+import org.sopt.pawkey.backendapi.global.auth.application.service.token.TokenService;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

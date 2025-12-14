@@ -6,12 +6,11 @@ import org.sopt.pawkey.backendapi.domain.user.api.dto.result.UserCreationResult;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.SocialLoginResponseDTO;
 import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
-import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
-import org.sopt.pawkey.backendapi.global.auth.application.verifier.AppleVerifierService;
-import org.sopt.pawkey.backendapi.global.auth.application.verifier.GoogleVerifierService;
-import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoVerifierService;
+import org.sopt.pawkey.backendapi.global.auth.application.service.token.TokenService;
+import org.sopt.pawkey.backendapi.global.auth.application.service.login.verifier.apple.AppleTokenVerifier;
+import org.sopt.pawkey.backendapi.global.auth.application.service.login.verifier.google.GoogleTokenVerifier;
+import org.sopt.pawkey.backendapi.global.auth.application.service.login.verifier.kakao.KakaoTokenVerifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +22,9 @@ public class UserLoginFacade {
 
 	private final UserService userService;
 	private final TokenService tokenService;
-	private final GoogleVerifierService googleVerifierService;
-	private final KakaoVerifierService kakaoVerifierService;
-	private final AppleVerifierService appleVerifierService;
+	private final GoogleTokenVerifier googleVerifierService;
+	private final KakaoTokenVerifier kakaoVerifierService;
+	private final AppleTokenVerifier appleVerifierService;
 	public SocialLoginResponseDTO googleLogin(String idToken, String deviceId) {
 		Map<String, String> socialUserInfo = googleVerifierService.verifyGoogleToken(idToken);
 
