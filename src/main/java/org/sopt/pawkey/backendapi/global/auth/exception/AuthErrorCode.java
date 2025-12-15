@@ -19,8 +19,8 @@ public enum AuthErrorCode implements ErrorCode {
 
 	// 소셜 로그인 관련 오류
 	SOCIAL_LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "A40106", "소셜 로그인 인증에 실패했습니다. (외부 서버 오류 등)"),
-	SOCIAL_ID_INVALID(HttpStatus.BAD_REQUEST, "A40001", "소셜 프로바이더로부터 유효한 ID를 얻지 못했습니다.");
-
+	SOCIAL_ID_INVALID(HttpStatus.BAD_REQUEST, "A40001", "소셜 프로바이더로부터 유효한 ID를 얻지 못했습니다."),
+	SOCIAL_WITHDRAW_FAIL(HttpStatus.BAD_REQUEST, "A40001", "소셜 로그인 탈퇴 실패");
 	private final HttpStatus status;
 	private final String code;
 	private final String message;
