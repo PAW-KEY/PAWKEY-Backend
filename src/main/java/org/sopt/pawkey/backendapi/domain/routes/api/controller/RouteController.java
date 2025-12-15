@@ -14,7 +14,7 @@ import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.RouteRegi
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.RouteRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteInfoForPostFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetSharedRouteMapDataFacade;
-import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -18,7 +18,7 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLiked
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserPetQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
-import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

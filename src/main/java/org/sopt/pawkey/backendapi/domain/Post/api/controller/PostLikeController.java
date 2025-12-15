@@ -3,7 +3,7 @@ package org.sopt.pawkey.backendapi.domain.post.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostLikeFacade;
-import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

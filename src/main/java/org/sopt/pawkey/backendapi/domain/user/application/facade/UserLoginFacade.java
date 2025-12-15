@@ -2,15 +2,20 @@ package org.sopt.pawkey.backendapi.domain.user.application.facade;
 
 import java.util.Map;
 
+import org.sopt.pawkey.backendapi.domain.auth.application.service.token.AppleRefreshTokenService;
+import org.sopt.pawkey.backendapi.domain.auth.domain.Provider;
+import org.sopt.pawkey.backendapi.domain.auth.exception.AuthBusinessException;
+import org.sopt.pawkey.backendapi.domain.auth.exception.AuthErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.result.UserCreationResult;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
-import org.sopt.pawkey.backendapi.global.auth.api.dto.response.SocialLoginResponseDTO;
-import org.sopt.pawkey.backendapi.global.auth.api.dto.response.TokenResponseDTO;
-import org.sopt.pawkey.backendapi.global.auth.application.service.TokenService;
-import org.sopt.pawkey.backendapi.global.auth.application.verifier.AppleVerifierService;
-import org.sopt.pawkey.backendapi.global.auth.application.verifier.GoogleVerifierService;
-import org.sopt.pawkey.backendapi.global.auth.application.verifier.KakaoVerifierService;
+import org.sopt.pawkey.backendapi.domain.auth.api.dto.response.SocialLoginResponseDTO;
+import org.sopt.pawkey.backendapi.domain.auth.api.dto.response.TokenResponseDTO;
+import org.sopt.pawkey.backendapi.domain.auth.application.service.token.TokenService;
+import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.apple.AppleTokenVerifier;
+import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.google.GoogleTokenVerifier;
+import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.kakao.KakaoTokenVerifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,16 +27,17 @@ public class UserLoginFacade {
 
 	private final UserService userService;
 	private final TokenService tokenService;
-	private final GoogleVerifierService googleVerifierService;
-	private final KakaoVerifierService kakaoVerifierService;
-	private final AppleVerifierService appleVerifierService;
+	private final GoogleTokenVerifier googleVerifierService;
+	private final KakaoTokenVerifier kakaoVerifierService;
+	private final AppleTokenVerifier appleVerifierService;
+	private final AppleRefreshTokenService appleRefreshTokenService;
 	public SocialLoginResponseDTO googleLogin(String idToken, String deviceId) {
 		Map<String, String> socialUserInfo = googleVerifierService.verifyGoogleToken(idToken);
 
 		String platformUserId = socialUserInfo.get("platformUserId");
 		String primaryEmail = socialUserInfo.get("primaryEmail");
 
-		UserCreationResult creationResult = userService.findOrCreateUserBySocialId("GOOGLE", platformUserId, primaryEmail);
+		UserCreationResult creationResult = userService.findOrCreateUserBySocialId(Provider.GOOGLE, platformUserId, primaryEmail);
 		TokenResponseDTO tokens = tokenService.issueTokens(creationResult.userId(), deviceId);
 		return SocialLoginResponseDTO.of(tokens, creationResult.isNewUser());
 	}
@@ -40,7 +46,7 @@ public class UserLoginFacade {
 		Map<String, String> socialUserInfo = kakaoVerifierService.verifyKakaoToken(accessToken);
 
 		UserCreationResult creationResult = userService.findOrCreateUserBySocialId(
-			socialUserInfo.get("platform"),
+			Provider.KAKAO,
 			socialUserInfo.get("platformUserId"),
 			socialUserInfo.get("primaryEmail")
 		);
@@ -50,21 +56,40 @@ public class UserLoginFacade {
 
 	}
 
-	public SocialLoginResponseDTO appleLogin(String idToken, String deviceId) {
-		// 1. Apple ID Token 검증 & 사용자 정보 추출
-		Map<String, String> socialUserInfo = appleVerifierService.verifyAppleIdToken(idToken);
+	@Transactional
+	public SocialLoginResponseDTO appleLoginWithCode(String authorizationCode, String deviceId) { //변경
+		//code → Apple token
+		Map<String, Object> tokenResponse =
+			appleVerifierService.exchangeCodeForTokens(authorizationCode);
 
-		// 2. 사용자 ID,이메일 추출
-		String platformUserId = socialUserInfo.get("platformUserId");
-		String primaryEmail = socialUserInfo.get("primaryEmail");
+		String idToken = (String) tokenResponse.get("id_token");
+		String refreshToken = (String) tokenResponse.get("refresh_token");
 
-		// 3. 소셜 ID 기반 사용자 조회 or 생성
-		UserCreationResult creationResult = userService.findOrCreateUserBySocialId("APPLE", platformUserId, primaryEmail);
-		TokenResponseDTO tokens = tokenService.issueTokens(creationResult.userId(), deviceId);
+		if (idToken == null) {
+			throw new AuthBusinessException(AuthErrorCode.SOCIAL_LOGIN_FAIL);
+		}
 
-		// 4. JWT (Access/Refresh Token) 발급
-		log.info("✅ Apple ID Token 검증 & JWT 발급 성공. 테스트용 User ID: {}", creationResult.userId());
-		return SocialLoginResponseDTO.of(tokens, creationResult.isNewUser());
+		// idToken 검증
+		Map<String, String> info =
+			appleVerifierService.verifyAppleIdToken(idToken);
+
+		UserCreationResult result =
+			userService.findOrCreateUserBySocialId(
+				Provider.APPLE,
+				info.get("platformUserId"),
+				info.get("primaryEmail")
+			);
+
+		// refresh_token 저장 (탈퇴 대비)
+		if (refreshToken != null) {
+			appleRefreshTokenService.saveOrUpdate(result.userId(), refreshToken);
+		}
+
+		//JWT 발급
+		return SocialLoginResponseDTO.of(
+			tokenService.issueTokens(result.userId(), deviceId),
+			result.isNewUser()
+		);
 	}
 
 }

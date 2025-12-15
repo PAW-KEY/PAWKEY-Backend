@@ -2,7 +2,7 @@ package org.sopt.pawkey.backendapi.global.config;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.global.auth.resolver.UserIdArgumentResolver;
+import org.sopt.pawkey.backendapi.domain.auth.resolver.UserIdArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;

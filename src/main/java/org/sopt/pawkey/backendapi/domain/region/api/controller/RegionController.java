@@ -13,7 +13,7 @@ import org.sopt.pawkey.backendapi.domain.region.application.dto.result.GetRegion
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionCoordinatesFacade;
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionFacade;
 import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegionListFacade;
-import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.exception.BusinessException;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;

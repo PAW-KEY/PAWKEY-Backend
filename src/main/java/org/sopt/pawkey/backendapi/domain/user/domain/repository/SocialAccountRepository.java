@@ -9,4 +9,6 @@ public interface SocialAccountRepository {
 	Optional<SocialAccountEntity> findByPlatformAndPlatformUserId(String platform, String platformUserId);
 
 	SocialAccountEntity save(SocialAccountEntity socialAccount);
+
+	Optional<SocialAccountEntity> findByUserIdAndPlatform(Long userId, String platform);
 }
