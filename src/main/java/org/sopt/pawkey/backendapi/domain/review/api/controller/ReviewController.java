@@ -5,7 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.request.ReviewCreateRequestDto;
 import org.sopt.pawkey.backendapi.domain.review.application.dto.command.ReviewRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.review.application.facade.ReviewRegisterFacade;
-import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

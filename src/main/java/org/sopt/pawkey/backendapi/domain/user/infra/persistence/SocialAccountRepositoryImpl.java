@@ -22,4 +22,9 @@ public class SocialAccountRepositoryImpl implements SocialAccountRepository {
 	public SocialAccountEntity save(SocialAccountEntity socialAccount) {
 		return jpaRepository.save(socialAccount);
 	}
+
+	@Override
+	public Optional<SocialAccountEntity> findByUserIdAndPlatform(Long userId, String platform) {
+		return jpaRepository.findByUser_IdAndPlatform(userId, platform);
+	}
 }

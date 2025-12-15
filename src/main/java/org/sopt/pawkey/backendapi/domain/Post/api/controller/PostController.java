@@ -12,7 +12,7 @@ import org.sopt.pawkey.backendapi.domain.post.application.dto.result.PostRegiste
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.response.ReviewResponseDto;
-import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

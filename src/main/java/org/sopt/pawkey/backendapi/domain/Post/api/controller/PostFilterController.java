@@ -7,7 +7,7 @@ import org.sopt.pawkey.backendapi.domain.category.application.facade.query.Categ
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
-import org.sopt.pawkey.backendapi.global.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.user.application.service;
 
 import java.util.Optional;
 
+import org.sopt.pawkey.backendapi.domain.auth.domain.Provider;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.result.UserCreationResult;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.CreateUserCommand;
@@ -51,8 +52,10 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserCreationResult findOrCreateUserBySocialId(String platform, String platformUserId, String primaryEmail) {
+	public UserCreationResult findOrCreateUserBySocialId(Provider provider, String platformUserId, String primaryEmail) {
 		// 1. SocialAccount가 이미 존재하는지 확인 (로그인 시도)
+
+		String platform = provider.name();
 		Optional<SocialAccountEntity> existingAccount = socialAccountRepository.findByPlatformAndPlatformUserId(
 			platform, platformUserId);
 
