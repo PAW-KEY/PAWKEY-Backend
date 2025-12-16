@@ -38,7 +38,6 @@ public class AuthController {
 	private final UserWithdrawFacade userWithdrawFacade;
 	private final TokenService tokenService;
 
-
 	// 1. 소셜 로그인 API
 	@Operation(summary = "Google 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
 		"Auth"})
@@ -127,13 +126,17 @@ public class AuthController {
 		return ResponseEntity.noContent().build();
 	}
 
-
+	@Operation(summary = "회원 탈퇴", description = "사용자 계정을 탈퇴 처리합니다.(Refresh Token 무효화 및 유저 데이터 삭제)", tags = {
+		"Auth"})
+	@ApiResponses({
+		@ApiResponse(responseCode = "204", description = "회원 탈퇴 성공 (No Content)"),
+		@ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터 (Validation 실패)", content = @Content()),
+		@ApiResponse(responseCode = "401", description = "인증 실패 (유효하지 않거나 만료된 Access Token)", content = @Content()),
+		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content())
+	})
 	@DeleteMapping("/withdraw")
 	public ResponseEntity<Void> withdraw(@UserId Long userId, @RequestBody @Valid WithdrawRequestDTO request){
 		userWithdrawFacade.withdraw(userId, request.provider());
 		return ResponseEntity.noContent().build();
 	}
-
-
-
 }
