@@ -2,7 +2,6 @@ package org.sopt.pawkey.backendapi.domain.user.application.service;
 
 import org.sopt.pawkey.backendapi.domain.auth.domain.repository.AppleRefreshTokenRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.SocialAccountRepository;
-import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.SocialAccountEntity;
 import org.springframework.stereotype.Service;
 import org.sopt.pawkey.backendapi.domain.auth.domain.Provider;
 
@@ -25,7 +24,7 @@ public class SocialAccountService {
 		}
 
 		// KAKAO / GOOGLE
-		socialAccountRepository.findByUserIdAndPlatform(
+		socialAccountRepository.findByUser_UserIdAndPlatform(
 			userId, provider.name()
 		).orElseThrow(() ->
 			new IllegalStateException("소셜 계정 정보 없음")

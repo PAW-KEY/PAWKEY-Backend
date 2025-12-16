@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SpringDataSocialAccountRepository extends JpaRepository<SocialAccountEntity, Long> {
 
 	Optional<SocialAccountEntity> findByPlatformAndPlatformUserId(String platform, String platformUserId);
-	Optional<SocialAccountEntity> findByUser_IdAndPlatform(Long userId, String platform);
+	Optional<SocialAccountEntity> findByUser_UserIdAndPlatform(Long userId, String platform);
 }

@@ -10,5 +10,5 @@ public interface SocialAccountRepository {
 
 	SocialAccountEntity save(SocialAccountEntity socialAccount);
 
-	Optional<SocialAccountEntity> findByUserIdAndPlatform(Long userId, String platform);
+	Optional<SocialAccountEntity> findByUser_UserIdAndPlatform(Long userId, String platform);
 }
