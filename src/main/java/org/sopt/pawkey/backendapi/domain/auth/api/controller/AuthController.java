@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.auth.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.AppleLoginRequestDTO;
+import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.test.KakaoAuthService;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.LoginRequestDTO;
@@ -17,9 +18,11 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.UserWithdrawFac
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(API_PREFIX + "/auth")
 public class AuthController {
 
+	private final KakaoAuthService kakaoAuthService;
 	private final UserLoginFacade userLoginFacade;
 	private final UserWithdrawFacade userWithdrawFacade;
 	private final TokenService tokenService;
@@ -71,14 +75,14 @@ public class AuthController {
 		return userLoginFacade.kakaoLogin(request.idToken(), request.deviceId());
 	}
 
-	// @GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
-	// public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
-	// 	String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
-	// 	String testDeviceId = "WEB_KAKAO_LOGIN";
-	// 	SocialLoginResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, testDeviceId);
-	// 	return ResponseEntity.ok(tokens);
-	//
-	// }
+	@GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
+	public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
+		String accessToken = kakaoAuthService.exchangeCodeForAccessToken(code);
+		String testDeviceId = "WEB_KAKAO_LOGIN";
+		SocialLoginResponseDTO tokens = userLoginFacade.kakaoLogin(accessToken, testDeviceId);
+		return ResponseEntity.ok(tokens);
+
+	}
 
 	// Apple 소셜로그인
 	@Operation(summary = "Apple 소셜 로그인", description = "ID Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
