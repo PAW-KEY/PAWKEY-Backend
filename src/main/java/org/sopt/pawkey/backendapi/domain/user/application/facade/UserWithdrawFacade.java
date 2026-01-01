@@ -25,12 +25,9 @@ public class UserWithdrawFacade {
 
 		//revoke 토큰 조회
 		String revokeToken = socialAccountService.getRevokeToken(userId, provider);
-
 		//외부 소셜 연동 해제
 		try {
-			withdrawServiceFactory
-				.get(provider)
-				.withdraw(revokeToken);
+			withdrawServiceFactory.get(provider).withdraw(revokeToken);
 		} catch (Exception e) {
 			log.warn("소셜 연동 해제 실패 => 내부 탈퇴 진행", e);
 		}

@@ -20,17 +20,13 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter parameter,
-		ModelAndViewContainer mavContainer,
-		NativeWebRequest webRequest,
-		WebDataBinderFactory binderFactory) {
-
+	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null || authentication.getPrincipal() == null) {
 			return null; // 인증 안 된 경우 → 컨트롤러 단에서 예외 처리 해줘야함
 		}
-
 		return (Long)authentication.getPrincipal();
 	}
 }
