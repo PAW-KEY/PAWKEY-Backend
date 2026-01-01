@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotNull;
@@ -35,7 +36,8 @@ public class PostLikeController {
 	@PostMapping("/{postId}")
 	public ResponseEntity<ApiResponse<Void>> like(
 		@PathVariable Long postId,
-		@NotNull @UserId Long userId
+		@Parameter(hidden = true)
+		@UserId Long userId
 	) {
 		postLikeFacade.like(postId, userId.longValue());
 		return ResponseEntity.ok(ApiResponse.success(null));
@@ -52,7 +54,7 @@ public class PostLikeController {
 	@DeleteMapping("/{postId}")
 	public ResponseEntity<ApiResponse<Void>> cancelLike(
 		@PathVariable Long postId,
-		@NotNull @UserId Long userId) {
+		@Parameter(hidden = true) @UserId Long userId) {
 
 		postLikeFacade.cancelLike(postId, userId.longValue());
 		return ResponseEntity.ok(ApiResponse.success(null));
