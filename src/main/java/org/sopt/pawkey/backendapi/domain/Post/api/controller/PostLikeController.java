@@ -39,7 +39,7 @@ public class PostLikeController {
 		@Parameter(hidden = true)
 		@UserId Long userId
 	) {
-		postLikeFacade.like(postId, userId.longValue());
+		postLikeFacade.like(postId, userId);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
 
@@ -56,7 +56,7 @@ public class PostLikeController {
 		@PathVariable Long postId,
 		@Parameter(hidden = true) @UserId Long userId) {
 
-		postLikeFacade.cancelLike(postId, userId.longValue());
+		postLikeFacade.cancelLike(postId, userId);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
 }
