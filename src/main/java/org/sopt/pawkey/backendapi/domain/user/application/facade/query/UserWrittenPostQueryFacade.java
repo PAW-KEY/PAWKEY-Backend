@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeRepository;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
@@ -31,29 +32,11 @@ public class UserWrittenPostQueryFacade {
 		UserEntity user = userQueryRepository.getUserByUserId(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		List<PostEntity> posts = userWrittenPostQueryService.findMyPosts(user);
 		List<Long> likedPostIds = userWrittenPostQueryService.getLikedPostIds(userId);
+		List<GetPostCardResult> results = userWrittenPostQueryService.findMyPostResults(user, likedPostIds);
 
-		return posts.stream()
-			.map(post -> {
-				String regionName = post.getRoute().getRegion().getParent().getRegionName() + " " +
-					post.getRoute().getRegion().getRegionName();
-
-				int durationMinutes = (int)(post.getRoute().getDuration() / 60);
-
-				boolean isLiked = likedPostIds.contains(post.getPostId());
-
-				return new PostCardResponseDto(
-					post.getPostId(),
-					regionName,
-					post.getTitle(),
-					post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
-					durationMinutes,
-					isLiked,
-					post.getRoute().getTrackingImage().getImageUrl()
-				);
-			})
+		return results.stream()
+			.map(PostCardResponseDto::from)
 			.toList();
 	}
-
 }
