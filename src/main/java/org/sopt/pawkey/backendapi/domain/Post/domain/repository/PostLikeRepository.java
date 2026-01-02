@@ -12,5 +12,5 @@ public interface PostLikeRepository {
 
 	List<PostLikeEntity> findAllByUserWithPostAndImages(Long userId);
 
-	void deleteByUserIdAndPostId(Long userId, Long postId);
+	int deleteByUserIdAndPostId(Long userId, Long postId);
 }

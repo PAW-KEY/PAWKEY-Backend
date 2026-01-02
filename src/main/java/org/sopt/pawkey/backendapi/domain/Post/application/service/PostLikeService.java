@@ -32,11 +32,11 @@ public class PostLikeService {
 	public void cancelLike(UserEntity user, PostEntity post) {
 		validateNotSelfLike(user, post);
 
-		if (!postLikeRepository.existsByUserIdAndPostId(user.getUserId(), post.getPostId())) {
+		long deletedCount = postLikeRepository.deleteByUserIdAndPostId(user.getUserId(), post.getPostId());
+
+		if (deletedCount == 0) {
 			throw new PostLikeBusinessException(PostLikeErrorCode.LIKE_NOT_FOUND);
 		}
-
-		postLikeRepository.deleteByUserIdAndPostId(user.getUserId(), post.getPostId());
 	}
 
 	private void validateNotSelfLike(UserEntity user, PostEntity post) {

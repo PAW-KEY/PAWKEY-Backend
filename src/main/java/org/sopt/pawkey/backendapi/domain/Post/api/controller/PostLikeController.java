@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -36,8 +35,7 @@ public class PostLikeController {
 	@PostMapping("/{postId}")
 	public ResponseEntity<ApiResponse<Void>> like(
 		@PathVariable Long postId,
-		@Parameter(hidden = true)
-		@UserId Long userId
+		@Parameter(hidden = true) @UserId Long userId
 	) {
 		postLikeFacade.like(postId, userId);
 		return ResponseEntity.ok(ApiResponse.success(null));
