@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -79,7 +80,7 @@ public class UserController {
 	})
 	@GetMapping("/me/likes")
 	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyLikedPosts(
-		@UserId Long userId
+		@Parameter(hidden = true) @UserId Long userId
 	) {
 		List<PostCardResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(likedPosts)));
@@ -107,7 +108,7 @@ public class UserController {
 	})
 	@GetMapping("/me/posts")
 	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyPosts(
-		@UserId Long userId
+		@Parameter(hidden = true) @UserId Long userId
 	) {
 		List<PostCardResponseDto> myPosts = userWrittenPostQueryFacade.getMyPosts(userId);
 		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(myPosts)));
