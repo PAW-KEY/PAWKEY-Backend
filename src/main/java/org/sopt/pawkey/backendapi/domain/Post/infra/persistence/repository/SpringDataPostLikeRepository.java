@@ -30,4 +30,7 @@ public interface SpringDataPostLikeRepository extends JpaRepository<PostLikeEnti
 	@Modifying
 	@Query("DELETE FROM PostLikeEntity pl WHERE pl.user.userId = :userId AND pl.post.postId = :postId")
 	void deleteByUserIdAndPostIdQuery(@Param("userId") Long userId, @Param("postId") Long postId);
+
+	@Query("SELECT pl.post.postId FROM PostLikeEntity pl WHERE pl.user.userId = :userId")
+	List<Long> findLikedPostIdsByUserId(@Param("userId") Long userId);
 }
