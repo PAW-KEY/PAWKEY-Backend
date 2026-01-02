@@ -8,6 +8,7 @@ import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeReposito
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
+import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,19 @@ public class UserWrittenPostQueryService {
 		return postRepository.findAllByUser(user).stream()
 			.sorted(Comparator.comparing(PostEntity::getPostId).reversed())
 			.map(post -> {
-				String regionName = post.getRoute().getRegion().getParent().getRegionName() + " " +
-					post.getRoute().getRegion().getRegionName();
+				var route = post.getRoute();
+				
+				RegionEntity region = route.getRegion();
 
-				int durationMinutes = (int)(post.getRoute().getDuration() / 60);
+				String regionName = route.getRegion().getParent() != null
+					? region.getParent().getRegionName() + " " + region.getRegionName()
+					: region.getRegionName();
+
+				int durationMinutes = (route != null) ? (int)(route.getDuration() / 60) : 0;
+
+				String routeMapImageUrl = (route != null && route.getTrackingImage() != null)
+					? route.getTrackingImage().getImageUrl()
+					: null;
 
 				return GetPostCardResult.builder()
 					.postId(post.getPostId())
@@ -38,7 +48,7 @@ public class UserWrittenPostQueryService {
 					.createdAt(post.getCreatedAt())
 					.durationMinutes(durationMinutes)
 					.isLike(likedPostIds.contains(post.getPostId()))
-					.routeMapImageUrl(post.getRoute().getTrackingImage().getImageUrl())
+					.routeMapImageUrl(routeMapImageUrl)
 					.build();
 			})
 			.toList();
