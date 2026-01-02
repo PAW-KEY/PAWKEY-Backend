@@ -42,38 +42,22 @@ public class UserLikedPostQueryFacade {
 			.map(postLike -> {
 				var post = postLike.getPost();
 
-				String repImageUrl = post.getRoute().getTrackingImage().getImageUrl();
+				String regionName = post.getRoute().getRegion().getParent().getRegionName() + " " +
+					post.getRoute().getRegion().getRegionName();
 
-				var writer = post.getUser();
-				var pet = writer.getPetEntityList().stream().findFirst().orElse(null);
-
-				PostCardResponseDto.WriterDto writerDto = new PostCardResponseDto.WriterDto(
-					writer.getUserId(),
-					pet != null ? pet.getName() : null,
-					(pet != null && pet.getProfileImage() != null) ? pet.getProfileImage().getImageUrl() : null
-				);
-
-				List<String> descriptionTags = post.getPostSelectedCategoryOptionEntityList()
-					.stream()
-					.map(selectedOption -> selectedOption.getCategoryOption().getOptionSummary())
-					.toList();
+				int durationMinutes = (int)(post.getRoute().getDuration() / 60);
 
 				return new PostCardResponseDto(
 					post.getPostId(),
-					post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
-					true, // 좋아요한 게시글
+					regionName,
 					post.getTitle(),
-					repImageUrl,
-					post.getRoute().getRouteId(),
-					writerDto,
-					descriptionTags,
+					post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+					durationMinutes,
 					true,
-					false
-
+					post.getRoute().getTrackingImage().getImageUrl()
 				);
 			})
 			.toList();
-
 	}
 }
 

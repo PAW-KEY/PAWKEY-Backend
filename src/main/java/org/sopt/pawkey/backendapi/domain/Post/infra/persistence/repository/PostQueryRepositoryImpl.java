@@ -121,22 +121,19 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		return posts.stream().map(p -> {
 			Long postId = p.getPostId();
 
+			String regionName = p.getRoute().getRegion().getParent().getRegionName() + " " +
+				p.getRoute().getRegion().getRegionName();
+
+			int durationMinutes = (int)(p.getRoute().getDuration() / 60);
+
 			return GetPostCardResult.builder()
 				.postId(postId)
+				.regionName(regionName)
 				.title(p.getTitle())
-				.isLike(likedPostIds.contains(postId))
-				.isPublic(p.isPublic())
-				.author(new AuthorDto(
-					p.getUser().getUserId(),
-					p.getPet().getPetId(),
-					p.getPet().getName(),
-					p.getPet().getProfileImage().getImageUrl()
-				))
-				.categoryTags(postIdToCategoryTags.getOrDefault(postId, List.of()))
 				.createdAt(p.getCreatedAt())
+				.durationMinutes(durationMinutes)
+				.isLike(likedPostIds.contains(postId))
 				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
-				.routeId(p.getRoute().getRouteId())
-				.isMine(p.getUser().getUserId().equals(userId))
 				.build();
 		}).toList();
 	}
