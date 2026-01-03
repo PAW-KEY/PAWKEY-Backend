@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
-import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetTraitCategoryEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -13,18 +12,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PetRepositoryImpl implements PetRepository {
 
-	private final SpringDataPetTraitCategoryRepository springDataPetTraitCategoryRepository;
 
 	private final SpringDataPetRepository springDataPetRepository;
 
 	private final SpringDataPetRepository petRepository;
-
-	@Override
-	public List<PetTraitCategoryEntity> findAllPetTraitCategoriesWithOptions() {
-
-		return springDataPetTraitCategoryRepository.findAllWithOptions();
-
-	}
 
 	@Override
 	public PetEntity save(PetEntity pet) {
