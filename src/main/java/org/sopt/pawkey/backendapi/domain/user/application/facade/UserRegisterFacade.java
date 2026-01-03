@@ -22,26 +22,15 @@ import lombok.RequiredArgsConstructor;
 public class UserRegisterFacade {
 
 	private final UserService userService;
-	private final ImageService imageService;
 	private final PetService petService;
 	private final RegionService regionService;
 
-	public UserRegisterResponseDto execute(UserRegisterCommand command, MultipartFile petProfileImage) {
-		ImageEntity imageEntity = null;
-		try {
-			RegionEntity region = regionService.getDongTypeRegionByIdOrThrow(command.userCommand().regionId());
-			UserEntity user = userService.saveUser(command.userCommand(), region);
+	public UserRegisterResponseDto execute(Long currentUserId, UserRegisterCommand command) {
+		RegionEntity region = regionService.getDongTypeRegionByIdOrThrow(command.userCommand().regionId());
+		UserEntity user = userService.saveUser(currentUserId, command.userCommand(), region);
 
-			imageEntity = imageService.storePetProfileImage(petProfileImage);
-			PetEntity pet = petService.savePet(command.petCommand(), user, imageEntity);
+		PetEntity pet = petService.savePet(command.petCommand(), user);
 
-			return UserRegisterResponseDto.from(user, pet);
-		} catch (Exception e) {
-			if (imageEntity != null) {
-				imageService.deleteImage(imageEntity);
-			}
-			throw e;
-		}
-
+		return UserRegisterResponseDto.from(user, pet);
 	}
 }

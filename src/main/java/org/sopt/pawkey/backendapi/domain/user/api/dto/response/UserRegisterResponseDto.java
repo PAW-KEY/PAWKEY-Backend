@@ -5,19 +5,13 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public record UserRegisterResponseDto(
 	Long userId,
-	String userName,
-	String loginId,
-	Long petId,
-	String petName
+	Long petId
 ) {
 
 	public static UserRegisterResponseDto from(UserEntity user, PetEntity pet) {
 		return new UserRegisterResponseDto(
 			user.getUserId(),
-			user.getName(),
-			user.getLoginId(),
-			pet.getPetId(),
-			pet.getName()
+			pet.getPetId()
 		);
 	}
 }

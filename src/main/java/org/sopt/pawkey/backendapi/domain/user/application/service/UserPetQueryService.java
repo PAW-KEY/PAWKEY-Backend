@@ -26,17 +26,9 @@ public class UserPetQueryService {
 				pet.getName(),
 				pet.getGender(),
 				pet.isNeutered(),
-				pet.getAge(),
-				pet.isAgeKnown(),
+				pet.getBirth(),
 				pet.getBreed(),
 				pet.getProfileImage() != null ? pet.getProfileImage().getImageUrl() : null,
-				pet.getPetTraitSelectedEntityList().stream()
-					.map(PetTraitSelectedEntity::getPetTraitOption)
-					.map(option -> new PetProfileResponseDto.TraitDto(
-						option.getPetTraitCategory().getCategoryName(),
-						option.getOptionText()
-					))
-					.toList(),
 				pet.getWalkCount()
 			))
 			.toList();

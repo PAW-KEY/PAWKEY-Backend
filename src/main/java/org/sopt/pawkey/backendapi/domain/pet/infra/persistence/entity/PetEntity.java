@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +42,8 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "gender", nullable = false, length = 10)
 	private String gender;
 
-	@Column(name = "age")
-	private int age;
-
-	@Column(name = "is_age_known", nullable = false)
-	private boolean isAgeKnown;
+	@Column(name = "birth", nullable = false)
+	private LocalDate birth;
 
 	//Image 연관관계 추가
 	@OneToOne
@@ -64,33 +62,25 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "walk_count", nullable = false)
 	private int walkCount;
 
-	@OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PetTraitSelectedEntity> petTraitSelectedEntityList = new ArrayList<>();
-
 	@Builder
 	public PetEntity(Long petId,
 		String name,
 		String gender,
-		int age,
-		boolean isAgeKnown,
+		LocalDate birth,
 		ImageEntity profileImage,
 		UserEntity user,
 		boolean isNeutered,
 		String breed,
-		int walkCount,
-		List<PetTraitSelectedEntity> petTraitSelectedEntityList) {
+		int walkCount) {
 		this.petId = petId;
 		this.name = name;
 		this.gender = gender;
-		this.age = age;
-		this.isAgeKnown = isAgeKnown;
+		this.birth = birth;
 		this.profileImage = profileImage;
 		this.user = user;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
 		this.walkCount = walkCount;
-		this.petTraitSelectedEntityList =
-			petTraitSelectedEntityList != null ? petTraitSelectedEntityList : new ArrayList<>();
 	}
 
 	public void incrementWalkCount() {

@@ -22,6 +22,7 @@ import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -58,17 +59,15 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 강아지 성향 카테고리 선택입니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "강아지 프로필 이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
-
-	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping
 	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
-		@RequestPart("data") @Validated CreateUserRequestDto requestDto,
-		@RequestPart("pet_profile") MultipartFile image) {
+		@AuthenticationPrincipal Long userId,
+		@RequestBody @Valid CreateUserRequestDto requestDto) {
 
 		UserRegisterCommand command = requestDto.toCommand();
-		UserRegisterResponseDto response = userRegisterFacade.execute(command, image);
+		UserRegisterResponseDto response = userRegisterFacade.execute(userId, command);
 
 		return ResponseEntity.ok(ApiResponse.success(response));
-
 	}
 
 	@Operation(summary = "내가 좋아요한 게시물 조회", description = "사용자가 좋아요를 누른 게시물 목록을 반환합니다.", tags = {"Users"})

@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.auth.domain.Provider;
@@ -29,22 +30,20 @@ public class UserService {
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 	}
 
-	public UserEntity saveUser(CreateUserCommand command, RegionEntity region) {
+	@Transactional
+	public UserEntity saveUser(Long userId, CreateUserCommand command, RegionEntity region) {
 
-		if (userRepository.existsByLoginId(command.loginId())) {
-			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_LOGIN_ID);
-		}
+		UserEntity user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		UserEntity user = UserEntity.builder()
-			.loginId(command.loginId())
-			.password(command.password())
-			.name(command.name())
-			.gender(command.gender())
-			.age(command.age())
-			.region(region)
-			.build();
+		user.updateOnboardingInfo(
+			command.name(),
+			command.gender(),
+			command.birth(),
+			region
+		);
 
-		return userRepository.save(user);
+		return user;
 	}
 
 	public void updateUserRegion(UserEntity user, RegionEntity region) {
@@ -70,11 +69,9 @@ public class UserService {
 
 			// 3-1. 새로운 User 엔티티 생성 (최소 정보만으로 생성)
 			UserEntity newUser = userRepository.save(UserEntity.builder()
-				.loginId(platform.toLowerCase() + "_" + platformUserId)
-				.password("social-login-default-password") // 소셜 사용자는 비밀번호가 없지만, NOT NULL일 경우 빈 문자열 또는 임시값 지정
 				.name(platform + " User")
-				.gender("MALE")
-				.age(1)
+				.gender("F")
+				.birth(LocalDate.of(1900, 1, 1))
 				.region(null)
 				.build());
 
