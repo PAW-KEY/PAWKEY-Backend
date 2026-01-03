@@ -5,7 +5,6 @@ import java.util.List;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
-import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetTraitSelectedEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 

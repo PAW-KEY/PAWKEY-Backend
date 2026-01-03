@@ -1,7 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;

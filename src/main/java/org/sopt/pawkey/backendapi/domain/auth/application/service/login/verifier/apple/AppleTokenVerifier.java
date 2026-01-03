@@ -1,32 +1,34 @@
 package org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.apple;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException; // io.jsonwebtoken.SignatureException을 import합니다.
-import io.jsonwebtoken.io.Decoders;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.security.PublicKey;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.sopt.pawkey.backendapi.domain.auth.exception.AuthBusinessException;
+import org.sopt.pawkey.backendapi.domain.auth.exception.AuthErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-// 커스텀 예외 및 오류 코드
-import org.sopt.pawkey.backendapi.domain.auth.exception.AuthBusinessException;
-import org.sopt.pawkey.backendapi.domain.auth.exception.AuthErrorCode;
-// 의존성 서비스 (AppleAuthKeyService)
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.security.PublicKey; // 명확성을 위해 PublicKey를 명시적으로 import합니다.
-import java.util.Map;
-import java.util.HashMap;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.io.Decoders;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor

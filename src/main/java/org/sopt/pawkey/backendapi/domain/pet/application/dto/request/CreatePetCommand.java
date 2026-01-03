@@ -1,9 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.pet.application.dto.request;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import org.sopt.pawkey.backendapi.domain.pet.application.dto.SelectedOptionForPetTraitCategory;
 
 public record CreatePetCommand(
 	String name,

@@ -4,6 +4,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.CreateUserRequestDto;
@@ -18,20 +19,15 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLiked
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserPetQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
-import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
