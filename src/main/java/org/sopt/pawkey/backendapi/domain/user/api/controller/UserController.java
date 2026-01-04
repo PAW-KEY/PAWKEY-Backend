@@ -116,7 +116,7 @@ public class UserController {
 	})
 	@GetMapping("/me/pets")
 	public ResponseEntity<ApiResponse<List<PetProfileResponseDto>>> getMyPets(
-		@UserId Long userId
+		@Parameter(hidden = true) @UserId Long userId
 	) {
 		List<PetProfileResponseDto> petDtos = userPetQueryFacade.getUserPets(userId);
 		return ResponseEntity.ok(ApiResponse.success(petDtos));

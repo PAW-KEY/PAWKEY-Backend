@@ -20,16 +20,7 @@ public class UserPetQueryService {
 		List<PetEntity> petEntityList = petRepository.findAllPetsByUserId(user.getUserId());
 
 		return petEntityList.stream()
-			.map(pet -> new PetProfileResponseDto(
-				pet.getPetId(),
-				pet.getName(),
-				pet.getGender(),
-				pet.isNeutered(),
-				pet.getBirth(),
-				pet.getBreed(),
-				pet.getProfileImage() != null ? pet.getProfileImage().getImageUrl() : null,
-				pet.getWalkCount()
-			))
+			.map(PetProfileResponseDto::from)
 			.toList();
 	}
 }
