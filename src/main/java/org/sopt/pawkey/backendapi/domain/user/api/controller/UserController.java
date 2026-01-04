@@ -88,7 +88,7 @@ public class UserController {
 	})
 	@GetMapping("/me/userInfo")
 	public ResponseEntity<ApiResponse<UserInfoResponseDto>> getUserProfile(
-		@UserId Long userId
+		@Parameter(hidden = true) @UserId Long userId
 	) {
 		UserInfoResponseDto response = userQueryFacade.getUserInfo(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
