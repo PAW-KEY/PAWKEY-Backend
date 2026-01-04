@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SpringDataPetRepository extends JpaRepository<PetEntity, Long> {
 
 	@EntityGraph(attributePaths = {
-		"profileImage",
-		"petTraitSelectedEntityList.petTraitOption.petTraitCategory"
+		"profileImage"
 	})
 	List<PetEntity> findAllByUser_UserId(Long userId);
 }

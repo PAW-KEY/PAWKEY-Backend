@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(API_PREFIX + "/pets/traits")
+@RequestMapping(API_PREFIX + "/pets")
 public class PetController {
 
 	private final PetQueryService petQueryService;
