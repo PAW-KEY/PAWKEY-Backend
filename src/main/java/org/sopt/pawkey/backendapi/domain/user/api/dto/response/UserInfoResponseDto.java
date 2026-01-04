@@ -7,7 +7,7 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 public record UserInfoResponseDto(
 	String name,
 	String gender,
-	LocalDate age,
+	LocalDate birth,
 	String activeRegion
 ) {
 	public static UserInfoResponseDto from(UserEntity user) {

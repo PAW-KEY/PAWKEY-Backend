@@ -21,7 +21,6 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQuery
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -57,7 +57,7 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping
 	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
-		@AuthenticationPrincipal Long userId,
+		@Parameter(hidden = true) @UserId Long userId,
 		@RequestBody @Valid CreateUserRequestDto requestDto) {
 
 		UserRegisterCommand command = requestDto.toCommand();

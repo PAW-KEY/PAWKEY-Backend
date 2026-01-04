@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class PetEntity extends BaseEntity {
 	private String gender;
 
 	@Column(name = "birth", nullable = false)
+	@PastOrPresent(message = "생년월일은 현재 또는 과거 날짜여야 합니다")
 	private LocalDate birth;
 
 	//Image 연관관계 추가
