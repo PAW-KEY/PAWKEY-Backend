@@ -25,6 +25,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final SocialAccountRepository socialAccountRepository;
 
+	@Transactional(readOnly = true)
 	public UserEntity findById(final Long id) {
 		return userRepository.findById(id)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
