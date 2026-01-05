@@ -39,7 +39,12 @@ public record PetProfileResponseDto(
 	}
 
 	private static String convertGender(String gender) {
-		return "M".equals(gender) ? "남아" : "여아";
+		if ("M".equals(gender)) {
+			return "남아";
+		} else if ("F".equals(gender)) {
+			return "여아";
+		}
+		throw new IllegalArgumentException("올바르지 않은 성별 값입니다: " + gender);
 	}
 
 	private static String parseDbti(String dbti) {
