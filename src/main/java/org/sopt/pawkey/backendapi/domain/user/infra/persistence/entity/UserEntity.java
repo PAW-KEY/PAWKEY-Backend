@@ -116,11 +116,10 @@ public class UserEntity extends BaseEntity {
 		this.region = region;
 	}
 
-	public void updateOnboardingInfo(String name, String gender, LocalDate birth, RegionEntity region) {
+	public void updateProfile(String name, String gender, LocalDate birth) {
 		this.name = name;
 		this.gender = gender;
 		this.birth = birth;
-		this.region = region;
 	}
 }
 

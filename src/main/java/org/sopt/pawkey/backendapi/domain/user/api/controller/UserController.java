@@ -7,12 +7,14 @@ import java.util.List;
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserInfoRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.CreateUserRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapper;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.user.application.facade.UpdateUserInfoFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserRegionFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLikedPostQueryFacade;
@@ -42,6 +44,7 @@ public class UserController {
 
 	private final UserPetQueryFacade userPetQueryFacade;
 	private final UpdateUserRegionFacade updateUserRegionFacade;
+	private final UpdateUserInfoFacade updateUserInfoFacade;
 	private final UserLikedPostQueryFacade userLikedPostQueryFacade;
 	private final UserWrittenPostQueryFacade userWrittenPostQueryFacade;
 	private final UserRegisterFacade userRegisterFacade;
@@ -63,6 +66,21 @@ public class UserController {
 		UserRegisterCommand command = requestDto.toCommand();
 		UserRegisterResponseDto response = userRegisterFacade.execute(userId, command);
 
+		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	@PatchMapping("/me/userInfo")
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	@Operation(summary = "마이페이지 유저 정보 수정", description = "이름, 성별, 생년월일을 수정합니다.", tags = {"Users"})
+	public ResponseEntity<ApiResponse<UserInfoResponseDto>> updateUserInfo(
+		@Parameter(hidden = true) @UserId Long userId,
+		@Valid @RequestBody UpdateUserInfoRequestDto requestDto
+	) {
+		UserInfoResponseDto response = updateUserInfoFacade.execute(userId, requestDto.toCommand());
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
