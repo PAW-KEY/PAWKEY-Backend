@@ -90,7 +90,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserEntity updateUserInfo(Long userId, UpdateUserInfoCommand command) {
+	public void updateUserInfo(Long userId, UpdateUserInfoCommand command) {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
@@ -99,8 +99,6 @@ public class UserService {
 			command.gender(),
 			command.birth()
 		);
-
-		return user;
 	}
 }
 
