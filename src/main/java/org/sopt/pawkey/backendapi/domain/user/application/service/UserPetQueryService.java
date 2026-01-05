@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
+import org.sopt.pawkey.backendapi.domain.pet.exception.PetBusinessException;
+import org.sopt.pawkey.backendapi.domain.pet.exception.PetErrorCode;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -22,5 +24,12 @@ public class UserPetQueryService {
 		return petEntityList.stream()
 			.map(PetProfileResponseDto::from)
 			.toList();
+	}
+
+	public PetProfileResponseDto getPetProfile(Long petId) {
+		PetEntity pet = petRepository.findById(petId)
+			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
+
+		return PetProfileResponseDto.from(pet);
 	}
 }

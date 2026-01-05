@@ -5,6 +5,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.pet.api.dto.request.UpdatePetRequestDto;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserInfoRequestDto;
@@ -17,6 +18,7 @@ import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegist
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UpdateUserInfoFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserRegionFacade;
+import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UserPetCommandFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLikedPostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserPetQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
@@ -25,6 +27,7 @@ import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +46,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserPetQueryFacade userPetQueryFacade;
+	private final UserPetCommandFacade userPetCommandFacade;
 	private final UpdateUserRegionFacade updateUserRegionFacade;
 	private final UpdateUserInfoFacade updateUserInfoFacade;
 	private final UserLikedPostQueryFacade userLikedPostQueryFacade;
@@ -138,6 +142,22 @@ public class UserController {
 	) {
 		List<PetProfileResponseDto> petDtos = userPetQueryFacade.getUserPets(userId);
 		return ResponseEntity.ok(ApiResponse.success(petDtos));
+	}
+
+	@PatchMapping("/me/pets/{petId}")
+	@Operation(summary = "반려견 정보 수정", description = "특정 반려견의 프로필 정보를 수정합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "해당 반려견에 대한 수정 권한이 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "반려견 정보를 찾을 수 없음")
+	})
+	public ResponseEntity<ApiResponse<PetProfileResponseDto>> updatePetInfo(
+		@Parameter(hidden = true) @UserId Long userId,
+		@PathVariable Long petId,
+		@Valid @RequestBody UpdatePetRequestDto requestDto
+	) {
+		PetProfileResponseDto response = userPetCommandFacade.updatePetInfo(userId, petId, requestDto.toCommand());
+		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
 	@PatchMapping("/me/regions")

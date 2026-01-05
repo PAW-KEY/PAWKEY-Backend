@@ -89,4 +89,12 @@ public class PetEntity extends BaseEntity {
 	public void incrementWalkCount() {
 		this.walkCount++;
 	}
+
+	public void updateProfile(String name, LocalDate birth, String gender, boolean isNeutered, String breed) {
+		this.name = name;
+		this.birth = birth;
+		this.gender = gender;
+		this.isNeutered = isNeutered;
+		this.breed = breed;
+	}
 }
