@@ -55,7 +55,7 @@ public class UserEntity extends BaseEntity {
 	private LocalDate birth;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "region_id")
+	@JoinColumn(name = "region_id", nullable = true)
 	private RegionEntity region;
 
 	@BatchSize(size = 100)
