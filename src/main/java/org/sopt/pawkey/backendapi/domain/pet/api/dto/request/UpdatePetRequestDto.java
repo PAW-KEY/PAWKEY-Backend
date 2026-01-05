@@ -3,7 +3,6 @@ package org.sopt.pawkey.backendapi.domain.pet.api.dto.request;
 import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.UpdatePetCommand;
-import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UpdateUserInfoCommand;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

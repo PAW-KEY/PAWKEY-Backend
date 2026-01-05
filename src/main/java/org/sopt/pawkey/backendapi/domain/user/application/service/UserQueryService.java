@@ -1,7 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
-import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UpdateUserInfoCommand;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.SocialAccountRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
