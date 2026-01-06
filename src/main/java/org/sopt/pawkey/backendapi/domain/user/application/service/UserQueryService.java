@@ -20,6 +20,10 @@ public class UserQueryService {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 		return UserInfoResponseDto.from(user);
+	}
 
+	public UserEntity getUser(Long userId) {
+		return userRepository.findById(userId)
+			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 	}
 }

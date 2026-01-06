@@ -9,9 +9,30 @@ public record WeatherResponse(
 	List<Weather> weather,
 	@JsonProperty("dt") long timestamp,
 	Rain rain,
-	@JsonProperty("pop") Double pop // 강수 확률 (0~1 사이 값)
+	@JsonProperty("pop") Double pop
 ) {
-	public record Main(double temp) {} // 기온 (섭씨)
-	public record Weather(int id) {} // 날씨 상태 코드 (800: 맑음 등)
-	public record Rain(@JsonProperty("1h") Double amount) {} // 1시간당 강수량
+	public record Main(double temp) {
+	}
+
+	public record Weather(int id) {
+	}
+
+	public record Rain(@JsonProperty("1h") Double amount) {
+	}
+
+	public Integer getConvertedTemp() {
+		return (int)main.temp(); // 소수점 절사
+	}
+
+	public Integer getConvertedRain() {
+		return (rain != null && rain.amount() != null) ? rain.amount().intValue() : 0;
+	}
+
+	public Integer getConvertedPop() {
+		return (pop != null) ? (int)(pop * 100) : 0; // 0.1 -> 10%
+	}
+
+	public Integer getWeatherCode() {
+		return weather.isEmpty() ? 800 : weather.get(0).id();
+	}
 }

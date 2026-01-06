@@ -50,6 +50,12 @@ public class RegionEntity extends BaseEntity {
 	@Column(name = "region_name", nullable = false)
 	private String regionName;
 
+	@Column(name = "latitude")
+	private Double latitude;
+
+	@Column(name = "longitude")
+	private Double longitude;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	private RegionEntity parent;

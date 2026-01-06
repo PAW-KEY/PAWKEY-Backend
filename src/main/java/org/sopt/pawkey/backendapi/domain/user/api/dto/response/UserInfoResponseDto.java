@@ -14,7 +14,6 @@ public record UserInfoResponseDto(
 			user.getGender(),
 			user.getAge(),
 			user.getRegion().getFullRegionName()
-
 		);
 	}
 }
