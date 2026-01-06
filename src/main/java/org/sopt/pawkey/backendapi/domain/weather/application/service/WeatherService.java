@@ -1,5 +1,8 @@
 package org.sopt.pawkey.backendapi.domain.weather.application.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
@@ -48,9 +51,22 @@ public class WeatherService {
 			fetchAndUpdateWeather(weather, region);
 		}
 
-		redisTemplate.opsForValue().set(cacheKey, WeatherCache.from(weather), 1, TimeUnit.HOURS);
+		long secondsToNextHour = getSecondsToNextHour();
+
+		redisTemplate.opsForValue().set(
+			cacheKey,
+			WeatherCache.from(weather),
+			secondsToNextHour,
+			TimeUnit.SECONDS
+		);
 
 		return weather;
+	}
+
+	private long getSecondsToNextHour() {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime nextHour = now.plusHours(1).truncatedTo(ChronoUnit.HOURS);
+		return Duration.between(now, nextHour).getSeconds();
 	}
 
 	private void fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
