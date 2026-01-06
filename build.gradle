@@ -25,6 +25,7 @@ repositories {
 
 ext {
     queryDslVersion = "6.10.1"
+    set('springCloudVersion', "2024.0.0")
 }
 
 
@@ -58,8 +59,6 @@ dependencies {
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
 
-
-
     // s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
@@ -86,12 +85,21 @@ dependencies {
     // 소셜 로그인 토큰 검증(JWT 파싱/JWK 서명 검증)
     implementation 'com.nimbusds:nimbus-jose-jwt:9.37'
 
-
     // JWT (JJWT) - 내부 토큰 관리용
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
+    // OpenFeign (날씨 연동)
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+}
+
+dependencyManagement {
+    imports {
+        // 프로젝트 내 모든 Cloud 관련 라이브러리의 버전을 일관되게 관리함
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile;
