@@ -11,6 +11,7 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 import org.sopt.pawkey.backendapi.global.util.GeoJsonUtil;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,6 +65,7 @@ public class RegionEntity extends BaseEntity {
 	private List<RegionEntity> childrenRegionList = new ArrayList<>();
 
 	@Column(name = "area_geometry", columnDefinition = "geometry(MultiPolygon, 4326)")
+	@Basic(fetch = FetchType.LAZY)
 	private MultiPolygon areaGeometry;
 
 	@OneToMany(mappedBy = "region", cascade = {CascadeType.PERSIST, CascadeType.MERGE})

@@ -28,7 +28,6 @@ public class TokenService {
 
 	private final StringRedisTemplate redisTemplate;
 
-
 	@Value("${security.jwt.secret}")
 	private String secret;
 	@Value("${security.jwt.issuer}")
