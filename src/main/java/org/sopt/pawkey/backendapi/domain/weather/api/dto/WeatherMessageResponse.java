@@ -4,13 +4,13 @@ import lombok.Builder;
 
 @Builder
 public record WeatherMessageResponse(
-	String mainWriting,
-	String subWriting
+	String mainMessage,
+	String subMessage
 ) {
 	public static WeatherMessageResponse of(String main, String sub) {
 		return WeatherMessageResponse.builder()
-			.mainWriting(main)
-			.subWriting(sub)
+			.mainMessage(main)
+			.subMessage(sub)
 			.build();
 	}
 }

@@ -15,7 +15,7 @@ public class RouteStartFacade {
 	private final UserService userService;
 	private final WeatherService weatherService;
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public WeatherMessageResponse getReadyData(Long userId) {
 		UserEntity user = userService.findById(userId);
 		return weatherService.getWeatherMessage(user.getRegion());

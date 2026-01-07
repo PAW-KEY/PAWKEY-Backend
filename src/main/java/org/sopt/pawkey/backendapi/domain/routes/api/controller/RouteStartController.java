@@ -24,8 +24,8 @@ public class RouteStartController {
 	private final RouteStartFacade routeStartFacade;
 
 	@Operation(
-		summary = "[산책 시작] 준비 멘트 조회",
-		description = "산책 시작 전, 현재 날씨에 딱 맞는 맞춤형 가이드 멘트를 제공합니다.",
+		summary = "산책 안내 메시지",
+		description = "산책 시작 전, 현재 날씨에 맞는 멘트를 제공합니다.",
 		tags = {"RouteStart"}
 	)
 	@ApiResponses({
