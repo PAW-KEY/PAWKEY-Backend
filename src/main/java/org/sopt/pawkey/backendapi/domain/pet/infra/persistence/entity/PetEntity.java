@@ -57,9 +57,6 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "breed", length = 50)
 	private String breed;
 
-	@Column(name = "walk_count", nullable = false)
-	private int walkCount;
-
 	@Column(name = "dbti")
 	private String dbti;
 
@@ -72,8 +69,7 @@ public class PetEntity extends BaseEntity {
 		UserEntity user,
 		boolean isNeutered,
 		String breed,
-		String dbti,
-		int walkCount) {
+		String dbti) {
 		this.petId = petId;
 		this.name = name;
 		this.gender = gender;
@@ -82,12 +78,7 @@ public class PetEntity extends BaseEntity {
 		this.user = user;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
-		this.walkCount = walkCount;
 		this.dbti = dbti;
-	}
-
-	public void incrementWalkCount() {
-		this.walkCount++;
 	}
 
 	public void updateProfile(String name, LocalDate birth, String gender, boolean isNeutered, String breed) {

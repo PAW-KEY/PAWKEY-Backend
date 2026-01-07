@@ -56,7 +56,6 @@ public class PostService {
 
 			post.getPostImageEntityList().add(postImage);
 		}
-		pet.incrementWalkCount();
 		postRepository.save(post);
 		return post;
 	}

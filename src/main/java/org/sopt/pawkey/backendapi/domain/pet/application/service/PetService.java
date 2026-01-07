@@ -28,7 +28,6 @@ public class PetService {
 			.isNeutered(command.isNeutered())
 			.breed(command.breed())
 			.user(user)
-			.walkCount(0)
 			.build();
 
 		return petRepository.save(pet);
