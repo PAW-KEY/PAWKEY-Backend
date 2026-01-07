@@ -6,8 +6,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponse;
 import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherCache;
+import org.sopt.pawkey.backendapi.domain.weather.domain.model.WeatherMessage;
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
+import org.sopt.pawkey.backendapi.domain.weather.domain.service.WeatherCommentaryGenerator;
 import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 import org.sopt.pawkey.backendapi.global.infra.external.weather.WeatherClient;
 import org.sopt.pawkey.backendapi.global.infra.external.weather.dto.WeatherResponse;
@@ -117,5 +120,19 @@ public class WeatherService {
 
 	private WeatherEntity createNewWeather(Long regionId) {
 		return weatherRepository.save(WeatherEntity.builder().regionId(regionId).build());
+	}
+
+	private final WeatherCommentaryGenerator commentaryGenerator;
+
+	@Transactional
+	public WeatherMessageResponse getWeatherMessage(RegionEntity region) {
+		WeatherEntity weather = getOrFetchWeather(region);
+
+		WeatherMessage message = commentaryGenerator.generate(weather.getTemperature(), weather.getRainyProb());
+
+		return WeatherMessageResponse.of(
+			message.mainMessage(),
+			message.subMessage()
+		);
 	}
 }
