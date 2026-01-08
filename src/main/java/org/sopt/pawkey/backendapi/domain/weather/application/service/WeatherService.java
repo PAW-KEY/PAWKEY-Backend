@@ -57,7 +57,8 @@ public class WeatherService {
 			.orElseGet(() -> createNewWeather(region.getRegionId()));
 
 		boolean isUpdateSuccess = true;
-		if (weather.isStale() || weather.getTemperature() == null) {
+		if (weather.isStale() || weather.getTemperature() == null || weather.getRainyMm() == null
+			|| weather.getRainyProb() == null) {
 			isUpdateSuccess = fetchAndUpdateWeather(weather, region);
 		}
 
@@ -94,10 +95,13 @@ public class WeatherService {
 				return false;
 			}
 
+			Integer rainyMm = response.getConvertedRain() != null ? response.getConvertedRain() : 0;
+			Integer rainyProb = response.getConvertedPop() != null ? response.getConvertedPop() : 0;
+
 			weather.updateWeather(
 				response.getConvertedTemp(),
-				response.getConvertedRain(),
-				response.getConvertedPop(),
+				rainyMm,
+				rainyProb,
 				response.getWeatherCode()
 			);
 			return true;
