@@ -28,14 +28,14 @@ public record WeatherResponse(
 	}
 
 	public Integer getConvertedRain() {
-		return (rain != null && rain.amount() != null) ? rain.amount().intValue() : 0;
+		return (rain != null && rain.amount() != null) ? rain.amount().intValue() : null;
 	}
 
 	public Integer getConvertedPop() {
-		return (pop != null) ? (int)(pop * 100) : 0; // 0.1 -> 10%
+		return (pop != null) ? (int)(pop * 100) : null; // 0.1 -> 10%
 	}
 
 	public Integer getWeatherCode() {
-		return (weather == null || weather.isEmpty()) ? 800 : weather.get(0).id();
+		return (weather == null || weather.isEmpty()) ? null : weather.get(0).id();
 	}
 }

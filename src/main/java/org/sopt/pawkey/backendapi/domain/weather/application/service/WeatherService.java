@@ -56,18 +56,23 @@ public class WeatherService {
 		WeatherEntity weather = weatherRepository.findByRegionId(region.getRegionId())
 			.orElseGet(() -> createNewWeather(region.getRegionId()));
 
+		boolean isUpdateSuccess = true;
 		if (weather.isStale() || weather.getTemperature() == null) {
-			fetchAndUpdateWeather(weather, region);
+			isUpdateSuccess = fetchAndUpdateWeather(weather, region);
 		}
 
-		long secondsToNextHour = getSecondsToNextHour();
-
-		redisTemplate.opsForValue().set(
-			cacheKey,
-			WeatherCache.from(weather),
-			secondsToNextHour,
-			TimeUnit.SECONDS
-		);
+		// API 호출이 성공했고, 필수 데이터(기온)가 있는 경우에만 캐싱
+		if (isUpdateSuccess && weather.getTemperature() != null) {
+			long secondsToNextHour = getSecondsToNextHour();
+			redisTemplate.opsForValue().set(
+				cacheKey,
+				WeatherCache.from(weather),
+				secondsToNextHour,
+				TimeUnit.SECONDS
+			);
+		} else {
+			log.warn(">>>> [Cache Skip] 불완전한 데이터이거나 API 실패로 캐싱을 건너뜁니다. (regionId: {})", region.getRegionId());
+		}
 
 		return weather;
 	}
@@ -78,11 +83,16 @@ public class WeatherService {
 		return Duration.between(now, nextHour).getSeconds();
 	}
 
-	private void fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
+	private boolean fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
 		try {
 			WeatherResponse response = weatherClient.getCurrentWeather(
 				region.getLatitude(), region.getLongitude(), apiKey, "metric"
 			);
+
+			// 실패로 간주
+			if (response.getConvertedTemp() == null) {
+				return false;
+			}
 
 			weather.updateWeather(
 				response.getConvertedTemp(),
@@ -90,8 +100,10 @@ public class WeatherService {
 				response.getConvertedPop(),
 				response.getWeatherCode()
 			);
+			return true;
 		} catch (Exception e) {
 			log.warn("외부 날씨 API 호출 실패. regionId: {}, error: {}", region.getRegionId(), e.getMessage());
+			return false;
 		}
 	}
 
