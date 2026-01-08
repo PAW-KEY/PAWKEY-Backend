@@ -65,7 +65,6 @@ public class RegionEntity extends BaseEntity {
 	private List<RegionEntity> childrenRegionList = new ArrayList<>();
 
 	@Column(name = "area_geometry", columnDefinition = "geometry(MultiPolygon, 4326)")
-	@Basic(fetch = FetchType.LAZY)
 	private MultiPolygon areaGeometry;
 
 	@OneToMany(mappedBy = "region", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -74,17 +73,8 @@ public class RegionEntity extends BaseEntity {
 	@OneToMany(mappedBy = "region", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private List<RouteEntity> routeEntityList = new ArrayList<>();
 
-	@Builder
-	public RegionEntity(Long regionId, String regionName, RegionType regionType, RegionEntity parent) {
-		this.regionId = regionId;
-		this.regionName = regionName;
-		this.regionType = regionType;
-		this.parent = parent;
-	}
-
 	public String getFullRegionName() {
 		String parentText = parent == null ? "" : parent.getRegionName() + " ";
-
 		return parentText + regionName;
 	}
 
