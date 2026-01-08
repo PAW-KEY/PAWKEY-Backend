@@ -31,7 +31,10 @@ public class RedisConfig {
 			.registerModule(new JavaTimeModule());
 
 		PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
-			.allowIfBaseType(Object.class)
+			.allowIfBaseType("org.sopt.pawkey.backendapi")
+			.allowIfSubType("java.util.ArrayList")
+			.allowIfSubType("java.util.HashMap")
+			.allowIfSubType("java.time.")
 			.build();
 
 		objectMapper.activateDefaultTyping(
