@@ -28,13 +28,10 @@ public class RedisConfig {
 
 	private GenericJackson2JsonRedisSerializer customSerializer() {
 		ObjectMapper objectMapper = new ObjectMapper()
-			.registerModule(new JavaTimeModule())
-			.deactivateDefaultTyping();
+			.registerModule(new JavaTimeModule());
 
-		// 허용된 패키지만 역직렬화 가능하도록 Validator 설정
 		PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
-			.allowIfBaseType("org.sopt.pawkey.backendapi")
-			.allowIfSubType("org.sopt.pawkey.backendapi")
+			.allowIfBaseType(Object.class)
 			.build();
 
 		objectMapper.activateDefaultTyping(

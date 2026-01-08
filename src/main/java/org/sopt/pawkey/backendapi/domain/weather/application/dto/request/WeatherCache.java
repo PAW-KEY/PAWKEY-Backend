@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import lombok.Builder;
 
 @Builder
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public record WeatherCache(
 	Integer temperature,
 	Integer rainyMm,
