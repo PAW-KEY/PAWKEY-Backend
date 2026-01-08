@@ -35,7 +35,6 @@ public class WeatherService {
 	@Value("${weather.api-key}")
 	private String apiKey;
 
-	@Transactional
 	public WeatherEntity getOrFetchWeather(RegionEntity region) {
 		String cacheKey = "weather:" + region.getRegionId();
 		WeatherCache cachedData = null;
@@ -56,8 +55,7 @@ public class WeatherService {
 		}
 
 		log.info(">>>> [Redis Cache Miss] DB 조회를 시작합니다. regionId: {}", region.getRegionId());
-		WeatherEntity weather = weatherRepository.findByRegionId(region.getRegionId())
-			.orElseGet(() -> createNewWeather(region.getRegionId()));
+		WeatherEntity weather = findOrCreateWeather(region.getRegionId());
 
 		boolean isIncomplete = (weather.getTemperature() == null || weather.getRainyMm() == null
 			|| weather.getRainyProb() == null);
@@ -66,23 +64,16 @@ public class WeatherService {
 			fetchAndUpdateWeather(weather, region);
 		}
 
-		long ttl;
-		if (weather.getTemperature() == null || weather.getRainyMm() == null || weather.getRainyProb() == null) {
-			ttl = 60;
-			log.warn(">>>> [Short Cache] 데이터 누락으로 인해 1분간 임시 캐싱합니다. regionId: {}", region.getRegionId());
-		} else {
-			ttl = getSecondsToNextHour();
-			log.info(">>>> [Full Cache] 정상 데이터를 정각까지 캐싱합니다. regionId: {}", region.getRegionId());
-		}
-
-		redisTemplate.opsForValue().set(
-			cacheKey,
-			WeatherCache.from(weather),
-			ttl,
-			TimeUnit.SECONDS
-		);
+		long ttl = (weather.getTemperature() == null) ? 60 : getSecondsToNextHour();
+		redisTemplate.opsForValue().set(cacheKey, WeatherCache.from(weather), ttl, TimeUnit.SECONDS);
 
 		return weather;
+	}
+
+	@Transactional
+	public WeatherEntity findOrCreateWeather(Long regionId) {
+		return weatherRepository.findByRegionId(regionId)
+			.orElseGet(() -> weatherRepository.save(WeatherEntity.builder().regionId(regionId).build()));
 	}
 
 	private long getSecondsToNextHour() {
@@ -91,40 +82,36 @@ public class WeatherService {
 		return Duration.between(now, nextHour).getSeconds();
 	}
 
-	private boolean fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
+	public void fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
 		try {
 			WeatherResponse response = weatherClient.getCurrentWeather(
 				region.getLatitude(), region.getLongitude(), apiKey, "metric"
 			);
 
-			// 실패로 간주
-			if (response.getConvertedTemp() == null) {
-				return false;
-			}
+			if (response == null || response.getConvertedTemp() == null)
+				return;
 
-			Integer rainyMm = response.getConvertedRain() != null ? response.getConvertedRain() : 0;
-			Integer rainyProb = response.getConvertedPop() != null ? response.getConvertedPop() : 0;
+			updateWeatherDetails(weather.getRegionId(), response);
 
-			weather.updateWeather(
-				response.getConvertedTemp(),
-				rainyMm,
-				rainyProb,
-				response.getWeatherCode()
-			);
-			return true;
 		} catch (Exception e) {
 			log.warn("외부 날씨 API 호출 실패. regionId: {}, error: {}", region.getRegionId(), e.getMessage());
-			return false;
 		}
 	}
 
-	private WeatherEntity createNewWeather(Long regionId) {
-		return weatherRepository.save(WeatherEntity.builder().regionId(regionId).build());
+	@Transactional
+	public void updateWeatherDetails(Long regionId, WeatherResponse response) {
+		weatherRepository.findByRegionId(regionId).ifPresent(weather -> {
+			weather.updateWeather(
+				response.getConvertedTemp(),
+				response.getConvertedRain() != null ? response.getConvertedRain() : 0,
+				response.getConvertedPop() != null ? response.getConvertedPop() : 0,
+				response.getWeatherCode()
+			);
+		});
 	}
 
 	private final WeatherCommentaryGenerator commentaryGenerator;
 
-	@Transactional
 	public WeatherMessageResponse getWeatherMessage(RegionEntity region) {
 		WeatherEntity weather = getOrFetchWeather(region);
 
