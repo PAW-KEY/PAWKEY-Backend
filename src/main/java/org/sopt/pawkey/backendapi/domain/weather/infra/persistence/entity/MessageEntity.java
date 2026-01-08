@@ -17,15 +17,12 @@ public class MessageEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long messageId;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "temp_id")
 	private TempRangeEntity tempRange;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rainy_id")
 	private RainyRangeEntity rainyRange;
-
 	private String mainMessage;
 	private String subMessage;
 }
