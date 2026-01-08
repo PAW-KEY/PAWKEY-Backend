@@ -36,7 +36,8 @@ public class WeatherService {
 	public WeatherEntity getOrFetchWeather(RegionEntity region) {
 		String cacheKey = "weather:" + region.getRegionId();
 
-		WeatherCache cachedData = (WeatherCache)redisTemplate.opsForValue().get(cacheKey);
+		Object cached = redisTemplate.opsForValue().get(cacheKey);
+		WeatherCache cachedData = (cached instanceof WeatherCache) ? (WeatherCache)cached : null;
 
 		if (cachedData != null) {
 			log.info(">>>> [Redis Cache Hit] regionId: {}", region.getRegionId());
@@ -70,16 +71,20 @@ public class WeatherService {
 	}
 
 	private void fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
-		WeatherResponse response = weatherClient.getCurrentWeather(
-			region.getLatitude(), region.getLongitude(), apiKey, "metric"
-		);
+		try {
+			WeatherResponse response = weatherClient.getCurrentWeather(
+				region.getLatitude(), region.getLongitude(), apiKey, "metric"
+			);
 
-		weather.updateWeather(
-			response.getConvertedTemp(),
-			response.getConvertedRain(),
-			response.getConvertedPop(),
-			response.getWeatherCode()
-		);
+			weather.updateWeather(
+				response.getConvertedTemp(),
+				response.getConvertedRain(),
+				response.getConvertedPop(),
+				response.getWeatherCode()
+			);
+		} catch (Exception e) {
+			log.warn("외부 날씨 API 호출 실패. regionId: {}, error: {}", region.getRegionId(), e.getMessage());
+		}
 	}
 
 	private WeatherEntity createNewWeather(Long regionId) {

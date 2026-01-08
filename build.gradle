@@ -25,7 +25,7 @@ repositories {
 
 ext {
     queryDslVersion = "6.10.1"
-    set('springCloudVersion', "2024.0.0")
+    set('springCloudVersion', "2025.0.0")
 }
 
 

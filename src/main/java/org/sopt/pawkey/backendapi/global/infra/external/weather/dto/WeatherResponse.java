@@ -21,6 +21,9 @@ public record WeatherResponse(
 	}
 
 	public Integer getConvertedTemp() {
+		if (main == null) {
+			return null;
+		}
 		return (int)main.temp(); // 소수점 절사
 	}
 
@@ -33,6 +36,6 @@ public record WeatherResponse(
 	}
 
 	public Integer getWeatherCode() {
-		return weather.isEmpty() ? 800 : weather.get(0).id();
+		return (weather == null || weather.isEmpty()) ? 800 : weather.get(0).id();
 	}
 }
