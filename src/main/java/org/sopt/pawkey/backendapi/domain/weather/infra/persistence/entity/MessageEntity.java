@@ -8,21 +8,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "message")
+@Table(
+	name = "message",
+	uniqueConstraints = {
+		@UniqueConstraint(
+			name = "uk_message_temp_rainy",
+			columnNames = {"temp_id", "rainy_id"}
+		)
+	}
+)
 public class MessageEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long messageId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "temp_id")
 	private TempRangeEntity tempRange;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rainy_id")
 	private RainyRangeEntity rainyRange;
+
 	private String mainMessage;
+
 	private String subMessage;
 }
