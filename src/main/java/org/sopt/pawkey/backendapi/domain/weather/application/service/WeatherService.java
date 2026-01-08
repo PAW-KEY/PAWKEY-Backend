@@ -56,24 +56,28 @@ public class WeatherService {
 		WeatherEntity weather = weatherRepository.findByRegionId(region.getRegionId())
 			.orElseGet(() -> createNewWeather(region.getRegionId()));
 
-		boolean isUpdateSuccess = true;
-		if (weather.isStale() || weather.getTemperature() == null || weather.getRainyMm() == null
-			|| weather.getRainyProb() == null) {
-			isUpdateSuccess = fetchAndUpdateWeather(weather, region);
+		boolean isIncomplete = (weather.getTemperature() == null || weather.getRainyMm() == null
+			|| weather.getRainyProb() == null);
+
+		if (weather.isStale() || isIncomplete) {
+			fetchAndUpdateWeather(weather, region);
 		}
 
-		// API 호출이 성공했고, 필수 데이터(기온)가 있는 경우에만 캐싱
-		if (isUpdateSuccess && weather.getTemperature() != null) {
-			long secondsToNextHour = getSecondsToNextHour();
-			redisTemplate.opsForValue().set(
-				cacheKey,
-				WeatherCache.from(weather),
-				secondsToNextHour,
-				TimeUnit.SECONDS
-			);
+		long ttl;
+		if (weather.getTemperature() == null || weather.getRainyMm() == null || weather.getRainyProb() == null) {
+			ttl = 60;
+			log.warn(">>>> [Short Cache] 데이터 누락으로 인해 1분간 임시 캐싱합니다. regionId: {}", region.getRegionId());
 		} else {
-			log.warn(">>>> [Cache Skip] 불완전한 데이터이거나 API 실패로 캐싱을 건너뜁니다. (regionId: {})", region.getRegionId());
+			ttl = getSecondsToNextHour();
+			log.info(">>>> [Full Cache] 정상 데이터를 정각까지 캐싱합니다. regionId: {}", region.getRegionId());
 		}
+
+		redisTemplate.opsForValue().set(
+			cacheKey,
+			WeatherCache.from(weather),
+			ttl,
+			TimeUnit.SECONDS
+		);
 
 		return weather;
 	}
