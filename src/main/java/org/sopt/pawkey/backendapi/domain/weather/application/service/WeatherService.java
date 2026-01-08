@@ -35,9 +35,17 @@ public class WeatherService {
 	@Transactional
 	public WeatherEntity getOrFetchWeather(RegionEntity region) {
 		String cacheKey = "weather:" + region.getRegionId();
+		WeatherCache cachedData = null;
 
-		Object cached = redisTemplate.opsForValue().get(cacheKey);
-		WeatherCache cachedData = (cached instanceof WeatherCache) ? (WeatherCache)cached : null;
+		try {
+			Object cached = redisTemplate.opsForValue().get(cacheKey);
+			if (cached instanceof WeatherCache) {
+				cachedData = (WeatherCache)cached;
+			}
+		} catch (Exception e) {
+			log.warn(">>>> [Redis Cache Error] 캐시 역직렬화 실패 (regionId: {}): {}", region.getRegionId(), e.getMessage());
+			redisTemplate.delete(cacheKey);
+		}
 
 		if (cachedData != null) {
 			log.info(">>>> [Redis Cache Hit] regionId: {}", region.getRegionId());
