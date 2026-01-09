@@ -25,5 +25,6 @@ public class DbtiQuestionEntity {
 	private Integer sequence; // 질문 노출 순서
 
 	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+	@OrderBy("id ASC")
 	private List<DbtiOptionEntity> options;
 }
