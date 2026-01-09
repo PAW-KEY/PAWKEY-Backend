@@ -12,6 +12,7 @@ public interface PetRepository {
 
 	List<PetEntity> findAllPetsByUserId(Long userId);
 
+	List<String> findAllBreeds();
 }
 
 

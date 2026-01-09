@@ -22,4 +22,8 @@ public class PetQueryService {
 			.map(PetTraitCategoryResult::fromEntity) // static fromDomain() 메서드 있다고 가정
 			.toList();
 	}
+
+	public List<String> getAllBreeds() {
+		return petRepository.findAllBreeds();
+	}
 }
