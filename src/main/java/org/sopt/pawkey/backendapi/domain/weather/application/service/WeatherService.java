@@ -11,6 +11,8 @@ import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.Weather
 import org.sopt.pawkey.backendapi.domain.weather.domain.model.WeatherMessage;
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
 import org.sopt.pawkey.backendapi.domain.weather.domain.service.WeatherCommentaryGenerator;
+import org.sopt.pawkey.backendapi.domain.weather.exception.WeatherBusinessException;
+import org.sopt.pawkey.backendapi.domain.weather.exception.WeatherErrorCode;
 import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 import org.sopt.pawkey.backendapi.global.infra.external.weather.WeatherClient;
 import org.sopt.pawkey.backendapi.global.infra.external.weather.dto.WeatherResponse;
@@ -61,7 +63,7 @@ public class WeatherService {
 			|| weather.getRainyProb() == null);
 
 		if (weather.isStale() || isIncomplete) {
-			fetchAndUpdateWeather(weather, region);
+			weather = fetchAndUpdateWeather(weather, region);
 		}
 
 		long ttl = (weather.getTemperature() == null) ? 60 : getSecondsToNextHour();
@@ -82,32 +84,34 @@ public class WeatherService {
 		return Duration.between(now, nextHour).getSeconds();
 	}
 
-	public void fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
+	public WeatherEntity fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
 		try {
 			WeatherResponse response = weatherClient.getCurrentWeather(
 				region.getLatitude(), region.getLongitude(), apiKey, "metric"
 			);
 
 			if (response == null || response.getConvertedTemp() == null)
-				return;
+				return weather;
 
-			updateWeatherDetails(weather.getRegionId(), response);
+			return updateWeatherDetails(weather.getRegionId(), response);
 
 		} catch (Exception e) {
 			log.warn("외부 날씨 API 호출 실패. regionId: {}, error: {}", region.getRegionId(), e.getMessage());
+			return weather;
 		}
 	}
 
 	@Transactional
-	public void updateWeatherDetails(Long regionId, WeatherResponse response) {
-		weatherRepository.findByRegionId(regionId).ifPresent(weather -> {
+	public WeatherEntity updateWeatherDetails(Long regionId, WeatherResponse response) {
+		return weatherRepository.findByRegionId(regionId).map(weather -> {
 			weather.updateWeather(
 				response.getConvertedTemp(),
 				response.getConvertedRain() != null ? response.getConvertedRain() : 0,
 				response.getConvertedPop() != null ? response.getConvertedPop() : 0,
 				response.getWeatherCode()
 			);
-		});
+			return weather;
+		}).orElseThrow(() -> new WeatherBusinessException(WeatherErrorCode.WEATHER_FETCH_FAILED));
 	}
 
 	private final WeatherCommentaryGenerator commentaryGenerator;
