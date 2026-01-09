@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SpringDataDbtiQuestionRepository extends JpaRepository<DbtiQuestionEntity, Long> {
 	@EntityGraph(attributePaths = {"dbtiType", "options"})
-	@Query("SELECT q FROM DbtiQuestionEntity q ORDER BY q.sequence ASC")
+	@Query("SELECT DISTINCT q FROM DbtiQuestionEntity q ORDER BY q.sequence ASC")
 	List<DbtiQuestionEntity> findAllWithDetails();
 }

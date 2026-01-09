@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum DbtiErrorCode implements ErrorCode {
 
 	DBTI_ERROR_CODE(HttpStatus.BAD_REQUEST, "C40001", "잘못된 요청입니다.");
