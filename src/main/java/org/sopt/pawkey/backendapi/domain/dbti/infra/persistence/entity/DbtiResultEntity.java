@@ -29,13 +29,14 @@ public class DbtiResultEntity {
 
 	private int eiScore;
 	private int psScore;
-	private int rtScore;
+	private int rfScore;
+
 	@Builder
-	public DbtiResultEntity(Long petId, String dbtiType, int eiScore, int psScore, int rtScore) {
+	public DbtiResultEntity(Long petId, String dbtiType, int eiScore, int psScore, int rfScore) {
 		this.petId = petId;
 		this.dbtiType = dbtiType;
 		this.eiScore = eiScore;
 		this.psScore = psScore;
-		this.rtScore = rtScore;
+		this.rfScore = rfScore;
 	}
 }

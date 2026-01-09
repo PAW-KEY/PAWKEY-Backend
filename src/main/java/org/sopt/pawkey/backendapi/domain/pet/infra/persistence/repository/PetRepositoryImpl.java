@@ -35,4 +35,8 @@ public class PetRepositoryImpl implements PetRepository {
 		return petRepository.findAllByUser_UserId(userId);
 	}
 
+	@Override
+	public boolean existsById(Long petId) {
+		return springDataPetRepository.existsById(petId);
+	}
 }
