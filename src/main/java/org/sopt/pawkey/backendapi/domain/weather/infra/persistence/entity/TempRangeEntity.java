@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +20,9 @@ public class TempRangeEntity {
 	private Long tempId;
 	private String code;
 
+	@Column(nullable = false)
 	private Integer minTemp;
+	@Column(nullable = false)
 	private Integer maxTemp;
 	private String judgment;
 	private String icon;

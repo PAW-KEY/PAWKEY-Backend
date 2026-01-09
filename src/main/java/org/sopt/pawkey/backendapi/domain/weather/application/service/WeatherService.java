@@ -119,6 +119,10 @@ public class WeatherService {
 	public WeatherMessageResponse getWeatherMessage(RegionEntity region) {
 		WeatherEntity weather = getOrFetchWeather(region);
 
+		if (weather.getTemperature() == null || weather.getRainyProb() == null) {
+			throw new WeatherBusinessException(WeatherErrorCode.WEATHER_DATA_INCOMPLETE);
+		}
+
 		WeatherMessage message = commentaryGenerator.generate(weather.getTemperature(), weather.getRainyProb());
 
 		return WeatherMessageResponse.of(
