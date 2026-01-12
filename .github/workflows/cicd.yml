@@ -97,7 +97,8 @@ jobs:
               -e DOKI_APPLE_CLIENT_ID=${{ secrets.DOKI_APPLE_CLIENT_ID }} \
               -e DOKI_APPLE_TEAM_ID=${{ secrets.DOKI_APPLE_TEAM_ID }} \
               -e DOKI_APPLE_KEY_ID=${{ secrets.DOKI_APPLE_KEY_ID }} \
-              -e DOKI_APPLE_CLIENT_ID=${{ secrets.APPLE_REFRESH_TOKEN_SECRET }} \
+              -e DOKI_APPLE_REDIRECT_URI=${{ secrets.DOKI_APPLE_REDIRECT_URI }} \
+              -e APPLE_REFRESH_TOKEN_SECRET=${{ secrets.APPLE_REFRESH_TOKEN_SECRET }} \
               -e DOKI_APPLE_PRIVATE_KEY=${{ secrets.DOKI_APPLE_PRIVATE_KEY }} \
               -e DOKI_KAKAO_CLIENT_ID=${{ secrets.DOKI_KAKAO_CLIENT_ID }} \
               -e DOKI_KAKAO_CLIENT_SECRET=${{ secrets.DOKI_KAKAO_CLIENT_SECRET }} \
