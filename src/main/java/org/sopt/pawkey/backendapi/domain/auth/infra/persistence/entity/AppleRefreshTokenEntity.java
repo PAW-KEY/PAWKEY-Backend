@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "apple_refresh_token")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

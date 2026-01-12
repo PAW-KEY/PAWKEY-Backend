@@ -44,6 +44,7 @@ public class WalkStreamRedisRepository {
 	}
 
 	public void markSessionEnded(String routeId) {
-		redisTemplate.opsForHash().put("walk:session:" + routeId, "status", "END");
+		redisTemplate.opsForHash()
+			         .put("walk:session:" + routeId,"status","END");
 	}
 }

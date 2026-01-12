@@ -26,13 +26,16 @@ public class WalkStreamService {
 	}
 
 	public void appendPoint(WalkPointRequest req) {
+
+		// (routeId, timestamp) 조합으로 중복 여부 확인
 		boolean duplicated = redisRepository.isDuplicated(req.routeId(), req.timestamp());
 
 		if (duplicated) {
 			log.info("[Sync:skip] routeId={}, ts={} (duplicate)", req.routeId(), req.timestamp());
-			return;
+			return; // 중복 요청은 저장하지 않고 스킵
 		}
 
+		// 중복이 아닌 경우에만 Redis에 좌표 저장
 		redisRepository.saveLatestPoint(req.routeId(), req);
 
 		log.info("[Sync:append] routeId={}, lat={}, lng={}, ts={}",
@@ -40,7 +43,6 @@ public class WalkStreamService {
 	}
 
 	public void endSession(String routeId) {
-		// 이후 Polygon 계산을 위한 예약 작업 혹은 Flush 준비
 		redisRepository.markSessionEnded(routeId);
 		log.info("[WalkEnd] routeId={} session ended", routeId);
 	}
