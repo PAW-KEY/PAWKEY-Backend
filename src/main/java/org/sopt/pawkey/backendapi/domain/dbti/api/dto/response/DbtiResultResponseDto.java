@@ -3,11 +3,12 @@ package org.sopt.pawkey.backendapi.domain.dbti.api.dto.response;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 
 public record DbtiResultResponseDto(
-	String type,
+	DbtiType type,
 	String name,
 	String image,
 	List<String> keyword,
