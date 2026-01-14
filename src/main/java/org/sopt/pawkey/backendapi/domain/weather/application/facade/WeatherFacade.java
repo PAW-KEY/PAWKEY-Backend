@@ -6,7 +6,7 @@ import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionE
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserQueryService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.domain.weather.api.dto.RegionWeatherResponseDTO;
-import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherResult;
+import org.sopt.pawkey.backendapi.domain.weather.application.dto.result.WeatherResult;
 import org.sopt.pawkey.backendapi.domain.weather.application.service.WeatherService;
 import org.springframework.stereotype.Component;
 

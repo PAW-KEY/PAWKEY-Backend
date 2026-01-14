@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
-import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherResult;
+import org.sopt.pawkey.backendapi.domain.weather.application.dto.result.WeatherResult;
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
 import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 import org.sopt.pawkey.backendapi.global.infra.external.weather.WeatherClient;

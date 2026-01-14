@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.weather.application.dto.request;
+package org.sopt.pawkey.backendapi.domain.weather.application.dto.result;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public record WeatherResult(
 ) implements Serializable {
 
 	/**
-	 * WeatherEntity를 WeatherCache DTO로 변환합니다. (저장 시 사용)
+	 * WeatherEntity를 WeatherResult DTO로 변환합니다. (저장 시 사용)
 	 */
 	public static WeatherResult from(WeatherEntity entity) {
 		return WeatherResult.builder()
