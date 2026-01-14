@@ -29,13 +29,23 @@ public class DbtiCommandService {
 
 	private final PetRepository petRepository;
 
+	private static final int EXPECTED_OPTION_COUNT = 9;
+
 	public DbtiResultDetailVo calculateSaveAndGetDetail(Long petId, DbtiSubmitRequestDto request) {
 
 		if (!petRepository.existsById(petId)) {
 			throw new PetBusinessException(PetErrorCode.PET_NOT_FOUND);
 		}
 
+		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
+			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_COUNT);
+		}
+
 		List<DbtiOptionEntity> selectedOptions = dbtiRepository.findAllOptionsByIds(request.optionIds());
+
+		if (selectedOptions.size() != request.optionIds().size()) {
+			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_IDS);
+		}
 
 		int eiScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("E")).count();
 		int psScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("P")).count();
