@@ -19,18 +19,18 @@ import lombok.NoArgsConstructor;
 public class DbtiEntity {
 	@Id
 	@Enumerated(EnumType.STRING)
-	@Column(length = 3)
+	@Column(name = "type", length = 3)
 	private DbtiType type;
 
-	@Column(nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(nullable = false)
+	@Column(name = "image_url", nullable = false)
 	private String imageUrl;
 
-	@Column(nullable = false, columnDefinition = "TEXT")
+	@Column(name = "description", nullable = false, columnDefinition = "TEXT")
 	private String description;
 
-	@Column(nullable = false)
+	@Column(name = "keywords", nullable = false)
 	private String keywords;
 }
