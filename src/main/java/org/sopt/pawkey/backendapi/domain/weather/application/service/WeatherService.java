@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponseDTO;
 import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherCache;
+import org.sopt.pawkey.backendapi.domain.weather.application.dto.result.WeatherMessageResult;
 import org.sopt.pawkey.backendapi.domain.weather.domain.model.WeatherMessage;
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
 import org.sopt.pawkey.backendapi.domain.weather.domain.service.WeatherCommentaryGenerator;
@@ -116,18 +117,25 @@ public class WeatherService {
 
 	private final WeatherCommentaryGenerator commentaryGenerator;
 
-	public WeatherMessageResponseDTO getWeatherMessage(RegionEntity region) {
-		WeatherEntity weather = getOrFetchWeather(region);
+	public WeatherMessageResult getWeatherMessage(RegionEntity region) {
+		try {
+			if (region == null)
+				return WeatherMessageResult.defaultMessage();
 
-		if (weather.getTemperature() == null || weather.getRainyProb() == null) {
-			throw new WeatherBusinessException(WeatherErrorCode.WEATHER_DATA_INCOMPLETE);
+			WeatherEntity weather = getOrFetchWeather(region);
+
+			if (weather.getTemperature() == null || weather.getRainyProb() == null) {
+				log.warn("날씨 데이터 불완전 (regionId: {})", region.getRegionId());
+				return WeatherMessageResult.defaultMessage();
+			}
+
+			WeatherMessage message = commentaryGenerator.generate(weather.getTemperature(), weather.getRainyProb());
+
+			return new WeatherMessageResult(message.mainMessage(), message.subMessage());
+
+		} catch (Exception e) {
+			log.error("날씨 메시지 생성 실패: {}", e.getMessage());
+			return WeatherMessageResult.defaultMessage();
 		}
-
-		WeatherMessage message = commentaryGenerator.generate(weather.getTemperature(), weather.getRainyProb());
-
-		return WeatherMessageResponseDTO.of(
-			message.mainMessage(),
-			message.subMessage()
-		);
 	}
 }

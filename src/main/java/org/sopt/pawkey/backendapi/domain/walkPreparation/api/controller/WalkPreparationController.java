@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(API_PREFIX + "/walk/preparaion")
+@RequestMapping(API_PREFIX + "/walk/preparation")
 public class WalkPreparationController {
 
 	private final RouteStartFacade routeStartFacade;

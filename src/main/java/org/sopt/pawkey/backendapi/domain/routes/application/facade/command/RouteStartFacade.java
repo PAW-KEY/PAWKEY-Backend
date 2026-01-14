@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.routes.application.facade.command;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponseDTO;
+import org.sopt.pawkey.backendapi.domain.weather.application.dto.result.WeatherMessageResult;
 import org.sopt.pawkey.backendapi.domain.weather.application.service.WeatherService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ public class RouteStartFacade {
 	@Transactional
 	public WeatherMessageResponseDTO getReadyData(Long userId) {
 		UserEntity user = userService.findById(userId);
-		return weatherService.getWeatherMessage(user.getRegion());
+		WeatherMessageResult result = weatherService.getWeatherMessage(user.getRegion());
+		return WeatherMessageResponseDTO.of(result.mainMessage(), result.subMessage());
 	}
 }
