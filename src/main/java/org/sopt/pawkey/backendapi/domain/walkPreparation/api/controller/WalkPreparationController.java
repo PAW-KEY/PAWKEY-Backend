@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.routes.api.controller;
+package org.sopt.pawkey.backendapi.domain.walkPreparation.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
@@ -18,15 +18,15 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(API_PREFIX + "/routes/start")
-public class RouteStartController {
+@RequestMapping(API_PREFIX + "/walk/preparaion")
+public class WalkPreparationController {
 
 	private final RouteStartFacade routeStartFacade;
 
 	@Operation(
 		summary = "산책 안내 메시지",
 		description = "산책 시작 전, 현재 날씨에 맞는 멘트를 제공합니다.",
-		tags = {"RouteStart"}
+		tags = {"WalkPreparation"}
 	)
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "멘트 조회 성공"),
