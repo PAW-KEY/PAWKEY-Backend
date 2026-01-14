@@ -10,7 +10,7 @@ import lombok.Builder;
 
 @Builder
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public record WeatherCache(
+public record WeatherResult(
 	Integer temperature,
 	Integer rainyMm,
 	Integer rainyProb,
@@ -20,8 +20,8 @@ public record WeatherCache(
 	/**
 	 * WeatherEntity를 WeatherCache DTO로 변환합니다. (저장 시 사용)
 	 */
-	public static WeatherCache from(WeatherEntity entity) {
-		return WeatherCache.builder()
+	public static WeatherResult from(WeatherEntity entity) {
+		return WeatherResult.builder()
 			.temperature(entity.getTemperature())
 			.rainyMm(entity.getRainyMm())
 			.rainyProb(entity.getRainyProb())

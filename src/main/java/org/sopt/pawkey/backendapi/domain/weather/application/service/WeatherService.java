@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
-import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherCache;
+import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherResult;
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
 import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 import org.sopt.pawkey.backendapi.global.infra.external.weather.WeatherClient;
@@ -33,12 +33,12 @@ public class WeatherService {
 	private String apiKey;
 
 	@Transactional
-	public WeatherCache getOrFetchWeather(RegionEntity region) {
+	public WeatherResult getOrFetchWeather(RegionEntity region) {
 		String cacheKey = "weather:" + region.getRegionId();
 
 		try {
 			Object cached = redisTemplate.opsForValue().get(cacheKey);
-			if (cached instanceof WeatherCache cachedData) {
+			if (cached instanceof WeatherResult cachedData) {
 				log.info(">>>> [Redis Cache Hit] regionId: {}", region.getRegionId());
 				return cachedData;
 			}
@@ -56,7 +56,7 @@ public class WeatherService {
 			fetchAndUpdateWeather(weather, region);
 		}
 
-		WeatherCache result = WeatherCache.from(weather);
+		WeatherResult result = WeatherResult.from(weather);
 		long ttl = isIncomplete(weather) ? 60 : getSecondsToNextHour();
 		redisTemplate.opsForValue().set(cacheKey, result, ttl, TimeUnit.SECONDS);
 

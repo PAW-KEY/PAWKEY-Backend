@@ -3,7 +3,7 @@ package org.sopt.pawkey.backendapi.domain.weather.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
-import org.sopt.pawkey.backendapi.domain.weather.api.dto.RegionWeatherResponse;
+import org.sopt.pawkey.backendapi.domain.weather.api.dto.RegionWeatherResponseDTO;
 import org.sopt.pawkey.backendapi.domain.weather.application.facade.WeatherFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +30,10 @@ public class HomeController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류")
 	})
 	@GetMapping("/weather")
-	public ResponseEntity<ApiResponse<RegionWeatherResponse>> getHomeWeather(
+	public ResponseEntity<ApiResponse<RegionWeatherResponseDTO>> getHomeWeather(
 		@Parameter(hidden = true) @UserId Long userId
 	) {
-		RegionWeatherResponse response = weatherFacade.getWeatherByUserRegion(userId);
+		RegionWeatherResponseDTO response = weatherFacade.getWeatherByUserRegion(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
