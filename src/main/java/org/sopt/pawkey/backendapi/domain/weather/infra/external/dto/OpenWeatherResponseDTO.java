@@ -1,10 +1,10 @@
-package org.sopt.pawkey.backendapi.global.infra.external.weather.dto;
+package org.sopt.pawkey.backendapi.domain.weather.infra.external.dto;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record OpenWeatherResponse(
+public record OpenWeatherResponseDTO(
 	Main main,
 	List<Weather> weather,
 	@JsonProperty("dt") long timestamp,
