@@ -33,26 +33,20 @@ public class WeatherService {
 	private String apiKey;
 
 	@Transactional
-	public WeatherEntity getOrFetchWeather(RegionEntity region) {
+	public WeatherCache getOrFetchWeather(RegionEntity region) {
 		String cacheKey = "weather:" + region.getRegionId();
-		WeatherCache cachedData = null;
 
 		try {
 			Object cached = redisTemplate.opsForValue().get(cacheKey);
-			if (cached instanceof WeatherCache) {
-				cachedData = (WeatherCache)cached;
+			if (cached instanceof WeatherCache cachedData) {
+				log.info(">>>> [Redis Cache Hit] regionId: {}", region.getRegionId());
+				return cachedData;
 			}
 		} catch (Exception e) {
 			log.warn(">>>> [Redis Cache Error] 캐시 역직렬화 실패 (regionId: {}): {}", region.getRegionId(), e.getMessage());
 			redisTemplate.delete(cacheKey);
 		}
 
-		if (cachedData != null) {
-			log.info(">>>> [Redis Cache Hit] regionId: {}", region.getRegionId());
-			return cachedData.toEntity(region.getRegionId());
-		}
-
-		log.info(">>>> [Redis Cache Miss] DB 조회를 시작합니다. regionId: {}", region.getRegionId());
 		WeatherEntity weather = weatherRepository.findByRegionId(region.getRegionId())
 			.orElseGet(() -> createNewWeather(region.getRegionId()));
 
@@ -63,23 +57,12 @@ public class WeatherService {
 			fetchAndUpdateWeather(weather, region);
 		}
 
-		long ttl;
-		if (weather.getTemperature() == null || weather.getRainyMm() == null || weather.getRainyProb() == null) {
-			ttl = 60;
-			log.warn(">>>> [Short Cache] 데이터 누락으로 인해 1분간 임시 캐싱합니다. regionId: {}", region.getRegionId());
-		} else {
-			ttl = getSecondsToNextHour();
-			log.info(">>>> [Full Cache] 정상 데이터를 정각까지 캐싱합니다. regionId: {}", region.getRegionId());
-		}
+		WeatherCache result = WeatherCache.from(weather);
 
-		redisTemplate.opsForValue().set(
-			cacheKey,
-			WeatherCache.from(weather),
-			ttl,
-			TimeUnit.SECONDS
-		);
+		long ttl = (isIncomplete) ? 60 : getSecondsToNextHour();
+		redisTemplate.opsForValue().set(cacheKey, result, ttl, TimeUnit.SECONDS);
 
-		return weather;
+		return result;
 	}
 
 	private long getSecondsToNextHour() {

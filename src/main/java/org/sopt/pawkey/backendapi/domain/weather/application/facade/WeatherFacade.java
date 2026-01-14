@@ -6,8 +6,8 @@ import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionE
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserQueryService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.domain.weather.api.dto.RegionWeatherResponse;
+import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherCache;
 import org.sopt.pawkey.backendapi.domain.weather.application.service.WeatherService;
-import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -26,11 +26,10 @@ public class WeatherFacade {
 		if (region == null) {
 			throw new RegionBusinessException(RegionErrorCode.REGION_NOT_FOUND);
 		}
-		WeatherEntity weather = weatherService.getOrFetchWeather(region);
-
+		WeatherCache weather = weatherService.getOrFetchWeather(region);
 		return RegionWeatherResponse.of(
-			weather.getTemperature(),
-			weather.getRainyMm(),
+			weather.temperature(),
+			weather.rainyMm(),
 			region.getRegionName()
 		);
 	}
