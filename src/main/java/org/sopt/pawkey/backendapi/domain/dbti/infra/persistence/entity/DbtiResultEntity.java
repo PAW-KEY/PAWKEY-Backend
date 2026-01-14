@@ -1,7 +1,11 @@
 package org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity;
 
+import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,15 +28,16 @@ public class DbtiResultEntity {
 	@Column(nullable = false)
 	private Long petId;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 3)
-	private String dbtiType;
+	private DbtiType dbtiType;
 
 	private int eiScore;
 	private int psScore;
 	private int rfScore;
 
 	@Builder
-	public DbtiResultEntity(Long petId, String dbtiType, int eiScore, int psScore, int rfScore) {
+	public DbtiResultEntity(Long petId, DbtiType dbtiType, int eiScore, int psScore, int rfScore) {
 		this.petId = petId;
 		this.dbtiType = dbtiType;
 		this.eiScore = eiScore;

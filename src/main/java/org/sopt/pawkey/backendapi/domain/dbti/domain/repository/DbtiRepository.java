@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.dbti.domain.repository;
 
+import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiOptionEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiQuestionEntity;
@@ -12,5 +13,5 @@ public interface DbtiRepository {
 
 	List<DbtiOptionEntity> findAllOptionsByIds(List<Long> optionIds);
 
-	Optional<DbtiEntity> findDbtiByType(String type);
+	Optional<DbtiEntity> findDbtiByType(DbtiType type);
 }

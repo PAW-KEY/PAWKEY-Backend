@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.repository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
 import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiRepository;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiOptionEntity;
@@ -30,7 +31,7 @@ public class DbtiRepositoryImpl implements DbtiRepository {
 	}
 
 	@Override
-	public Optional<DbtiEntity> findDbtiByType(String type) {
+	public Optional<DbtiEntity> findDbtiByType(DbtiType type) {
 		return dbtiRepository.findById(type);
 	}
 

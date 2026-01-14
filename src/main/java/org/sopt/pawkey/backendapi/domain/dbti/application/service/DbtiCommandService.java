@@ -55,7 +55,7 @@ public class DbtiCommandService {
 		int psScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("P")).count();
 		int rfScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("R")).count();
 
-		String dbtiType = DbtiType.determine(eiScore, psScore, rfScore);
+		DbtiType dbtiType = DbtiType.determine(eiScore, psScore, rfScore);
 
 		DbtiResultEntity result = resultRepository.save(DbtiResultEntity.builder()
 			.petId(petId)
