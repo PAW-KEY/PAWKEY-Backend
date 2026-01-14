@@ -15,19 +15,23 @@ import org.sopt.pawkey.backendapi.domain.weather.application.dto.result.WeatherR
 public class WeatherCacheManager {
 	private final RedisTemplate<String, Object> redisTemplate;
 
+	private static final String CACHE_PREFIX = "weather:region:";
+
 	public WeatherResult get(Long regionId) {
+		String cacheKey = CACHE_PREFIX + regionId;
 		try {
-			Object cached = redisTemplate.opsForValue().get("weather:" + regionId);
+			Object cached = redisTemplate.opsForValue().get(cacheKey);
 			return (cached instanceof WeatherResult) ? (WeatherResult)cached : null;
 		} catch (Exception e) {
-			redisTemplate.delete("weather:" + regionId);
+			redisTemplate.delete(cacheKey);
 			return null;
 		}
 	}
 
 	public void save(Long regionId, WeatherResult result, boolean isIncomplete) {
+		String cacheKey = CACHE_PREFIX + regionId;
 		long ttl = isIncomplete ? 60 : getSecondsToNextHour();
-		redisTemplate.opsForValue().set("weather:" + regionId, result, ttl, TimeUnit.SECONDS);
+		redisTemplate.opsForValue().set(cacheKey, result, ttl, TimeUnit.SECONDS);
 	}
 
 	private long getSecondsToNextHour() {
