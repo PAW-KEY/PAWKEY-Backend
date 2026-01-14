@@ -4,7 +4,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.RouteStartFacade;
-import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponse;
+import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponseDTO;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +34,10 @@ public class RouteStartController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류")
 	})
 	@GetMapping("/message")
-	public ResponseEntity<ApiResponse<WeatherMessageResponse>> getStartMessage(
+	public ResponseEntity<ApiResponse<WeatherMessageResponseDTO>> getStartMessage(
 		@Parameter(hidden = true) @UserId Long userId
 	) {
-		WeatherMessageResponse response = routeStartFacade.getReadyData(userId);
+		WeatherMessageResponseDTO response = routeStartFacade.getReadyData(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }

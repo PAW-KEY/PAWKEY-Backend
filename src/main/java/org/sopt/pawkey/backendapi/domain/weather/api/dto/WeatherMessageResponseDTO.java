@@ -3,12 +3,12 @@ package org.sopt.pawkey.backendapi.domain.weather.api.dto;
 import lombok.Builder;
 
 @Builder
-public record WeatherMessageResponse(
+public record WeatherMessageResponseDTO(
 	String mainMessage,
 	String subMessage
 ) {
-	public static WeatherMessageResponse of(String main, String sub) {
-		return WeatherMessageResponse.builder()
+	public static WeatherMessageResponseDTO of(String main, String sub) {
+		return WeatherMessageResponseDTO.builder()
 			.mainMessage(main)
 			.subMessage(sub)
 			.build();

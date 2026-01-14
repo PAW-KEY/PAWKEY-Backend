@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
-import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponse;
+import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponseDTO;
 import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.WeatherCache;
 import org.sopt.pawkey.backendapi.domain.weather.domain.model.WeatherMessage;
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
@@ -116,7 +116,7 @@ public class WeatherService {
 
 	private final WeatherCommentaryGenerator commentaryGenerator;
 
-	public WeatherMessageResponse getWeatherMessage(RegionEntity region) {
+	public WeatherMessageResponseDTO getWeatherMessage(RegionEntity region) {
 		WeatherEntity weather = getOrFetchWeather(region);
 
 		if (weather.getTemperature() == null || weather.getRainyProb() == null) {
@@ -125,7 +125,7 @@ public class WeatherService {
 
 		WeatherMessage message = commentaryGenerator.generate(weather.getTemperature(), weather.getRainyProb());
 
-		return WeatherMessageResponse.of(
+		return WeatherMessageResponseDTO.of(
 			message.mainMessage(),
 			message.subMessage()
 		);
