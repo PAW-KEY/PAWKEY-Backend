@@ -1,5 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.repository;
 
+import java.util.Optional;
+
 import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiResultRepository;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 import org.springframework.stereotype.Repository;
@@ -14,5 +16,10 @@ public class DbtiResultRepositoryImpl implements DbtiResultRepository {
 	@Override
 	public DbtiResultEntity save(DbtiResultEntity result) {
 		return springDataDbtiResultRepository.save(result);
+	}
+
+	@Override
+	public Optional<DbtiResultEntity> findByPetId(Long petId) {
+		return springDataDbtiResultRepository.findByPetId(petId);
 	}
 }

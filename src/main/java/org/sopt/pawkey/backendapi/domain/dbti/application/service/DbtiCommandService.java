@@ -37,6 +37,10 @@ public class DbtiCommandService {
 			throw new PetBusinessException(PetErrorCode.PET_NOT_FOUND);
 		}
 
+		if (resultRepository.findByPetId(petId).isPresent()) {
+			throw new DbtiBusinessException(DbtiErrorCode.DUPLICATE_DBTI_RESULT);
+		}
+
 		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
 			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_COUNT);
 		}
