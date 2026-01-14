@@ -5,7 +5,7 @@ import org.sopt.pawkey.backendapi.domain.region.exception.RegionErrorCode;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserQueryService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
-import org.sopt.pawkey.backendapi.domain.weather.api.dto.HomeWeatherResponse;
+import org.sopt.pawkey.backendapi.domain.weather.api.dto.RegionWeatherResponse;
 import org.sopt.pawkey.backendapi.domain.weather.application.service.WeatherService;
 import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 import org.springframework.stereotype.Component;
@@ -14,12 +14,12 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class HomeWeatherFacade {
+public class WeatherFacade {
 
 	private final WeatherService weatherService;
 	private final UserQueryService userQueryService;
 
-	public HomeWeatherResponse getHomeWeather(Long userId) {
+	public RegionWeatherResponse getWeatherByUserRegion(Long userId) {
 
 		UserEntity user = userQueryService.getUser(userId);
 		RegionEntity region = user.getRegion();
@@ -28,7 +28,7 @@ public class HomeWeatherFacade {
 		}
 		WeatherEntity weather = weatherService.getOrFetchWeather(region);
 
-		return HomeWeatherResponse.of(
+		return RegionWeatherResponse.of(
 			weather.getTemperature(),
 			weather.getRainyMm(),
 			region.getRegionName()

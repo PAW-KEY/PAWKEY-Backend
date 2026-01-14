@@ -10,7 +10,7 @@ import org.sopt.pawkey.backendapi.domain.weather.application.dto.request.Weather
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
 import org.sopt.pawkey.backendapi.domain.weather.infra.persistence.entity.WeatherEntity;
 import org.sopt.pawkey.backendapi.global.infra.external.weather.WeatherClient;
-import org.sopt.pawkey.backendapi.global.infra.external.weather.dto.WeatherResponse;
+import org.sopt.pawkey.backendapi.global.infra.external.weather.dto.OpenWeatherResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -90,7 +90,7 @@ public class WeatherService {
 
 	private boolean fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
 		try {
-			WeatherResponse response = weatherClient.getCurrentWeather(
+			OpenWeatherResponse response = weatherClient.getCurrentWeather(
 				region.getLatitude(), region.getLongitude(), apiKey, "metric"
 			);
 

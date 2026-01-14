@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record WeatherResponse(
+public record OpenWeatherResponse(
 	Main main,
 	List<Weather> weather,
 	@JsonProperty("dt") long timestamp,

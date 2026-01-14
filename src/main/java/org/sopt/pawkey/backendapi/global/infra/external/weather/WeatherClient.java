@@ -1,6 +1,6 @@
 package org.sopt.pawkey.backendapi.global.infra.external.weather;
 
-import org.sopt.pawkey.backendapi.global.infra.external.weather.dto.WeatherResponse;
+import org.sopt.pawkey.backendapi.global.infra.external.weather.dto.OpenWeatherResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface WeatherClient {
 
 	@GetMapping("/weather")
-	WeatherResponse getCurrentWeather(
+	OpenWeatherResponse getCurrentWeather(
 		@RequestParam("lat") double lat,
 		@RequestParam("lon") double lon,
 		@RequestParam("appid") String apiKey,
