@@ -43,26 +43,45 @@ public class WeatherService {
 				return cachedData;
 			}
 		} catch (Exception e) {
-			log.warn(">>>> [Redis Cache Error] 캐시 역직렬화 실패 (regionId: {}): {}", region.getRegionId(), e.getMessage());
+			log.warn(">>>> [Redis Cache Error] 역직렬화 실패: {}", e.getMessage());
 			redisTemplate.delete(cacheKey);
 		}
 
 		WeatherEntity weather = weatherRepository.findByRegionId(region.getRegionId())
-			.orElseGet(() -> createNewWeather(region.getRegionId()));
+			.orElse(null);
 
-		boolean isIncomplete = (weather.getTemperature() == null || weather.getRainyMm() == null
-			|| weather.getRainyProb() == null);
-
-		if (weather.isStale() || isIncomplete) {
+		if (weather == null) {
+			weather = fetchAndSaveNewWeather(region);
+		} else if (weather.isStale() || isIncomplete(weather)) {
 			fetchAndUpdateWeather(weather, region);
 		}
 
 		WeatherCache result = WeatherCache.from(weather);
-
-		long ttl = (isIncomplete) ? 60 : getSecondsToNextHour();
+		long ttl = isIncomplete(weather) ? 60 : getSecondsToNextHour();
 		redisTemplate.opsForValue().set(cacheKey, result, ttl, TimeUnit.SECONDS);
 
 		return result;
+	}
+
+	private WeatherEntity fetchAndSaveNewWeather(RegionEntity region) {
+		OpenWeatherResponse response = fetchFromApi(region);
+		return weatherRepository.save(WeatherEntity.create(
+			region.getRegionId(),
+			response.getConvertedTemp(),
+			response.getConvertedRain() != null ? response.getConvertedRain() : 0,
+			response.getConvertedPop() != null ? response.getConvertedPop() : 0,
+			response.getWeatherCode()
+		));
+	}
+
+	private OpenWeatherResponse fetchFromApi(RegionEntity region) {
+		return weatherClient.getCurrentWeather(
+			region.getLatitude(), region.getLongitude(), apiKey, "metric"
+		);
+	}
+
+	private boolean isIncomplete(WeatherEntity weather) {
+		return weather.getTemperature() == null || weather.getRainyMm() == null || weather.getRainyProb() == null;
 	}
 
 	private long getSecondsToNextHour() {
@@ -71,34 +90,19 @@ public class WeatherService {
 		return Duration.between(now, nextHour).getSeconds();
 	}
 
-	private boolean fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
+	private void fetchAndUpdateWeather(WeatherEntity weather, RegionEntity region) {
 		try {
-			OpenWeatherResponse response = weatherClient.getCurrentWeather(
-				region.getLatitude(), region.getLongitude(), apiKey, "metric"
-			);
-
-			// 실패로 간주
-			if (response.getConvertedTemp() == null) {
-				return false;
+			OpenWeatherResponse response = fetchFromApi(region);
+			if (response.getConvertedTemp() != null) {
+				weather.updateWeather(
+					response.getConvertedTemp(),
+					response.getConvertedRain() != null ? response.getConvertedRain() : 0,
+					response.getConvertedPop() != null ? response.getConvertedPop() : 0,
+					response.getWeatherCode()
+				);
 			}
-
-			Integer rainyMm = response.getConvertedRain() != null ? response.getConvertedRain() : 0;
-			Integer rainyProb = response.getConvertedPop() != null ? response.getConvertedPop() : 0;
-
-			weather.updateWeather(
-				response.getConvertedTemp(),
-				rainyMm,
-				rainyProb,
-				response.getWeatherCode()
-			);
-			return true;
 		} catch (Exception e) {
-			log.warn("외부 날씨 API 호출 실패. regionId: {}, error: {}", region.getRegionId(), e.getMessage());
-			return false;
+			log.warn("날씨 업데이트 실패: {}", e.getMessage());
 		}
-	}
-
-	private WeatherEntity createNewWeather(Long regionId) {
-		return weatherRepository.save(WeatherEntity.builder().regionId(regionId).build());
 	}
 }

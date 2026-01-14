@@ -55,6 +55,22 @@ public class WeatherEntity extends BaseEntity {
 		return this.getUpdatedAt().isBefore(LocalDateTime.now().minusHours(1));
 	}
 
+	public static WeatherEntity create(
+		Long regionId,
+		Integer temperature,
+		Integer rainyMm,
+		Integer rainyProb,
+		Integer weatherCode
+	) {
+		return WeatherEntity.builder()
+			.regionId(regionId)
+			.temperature(temperature)
+			.rainyMm(rainyMm)
+			.rainyProb(rainyProb)
+			.weatherCode(weatherCode)
+			.build();
+	}
+
 	/**
 	 * 외부 API로부터 받은 최신 날씨 정보로 데이터를 업데이트합니다.
 	 */
