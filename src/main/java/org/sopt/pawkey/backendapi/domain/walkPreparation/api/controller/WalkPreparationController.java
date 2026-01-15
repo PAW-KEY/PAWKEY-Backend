@@ -4,10 +4,15 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.RouteStartFacade;
+import org.sopt.pawkey.backendapi.domain.walkPreparation.api.dto.request.WalkPreparationRequestDto;
+import org.sopt.pawkey.backendapi.domain.walkPreparation.api.dto.response.WalkPreparationResponseDto;
+import org.sopt.pawkey.backendapi.domain.walkPreparation.application.facade.PreparationFacade;
 import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponseDTO;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,5 +44,30 @@ public class WalkPreparationController {
 	) {
 		WeatherMessageResponseDTO response = routeStartFacade.getReadyData(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	private final PreparationFacade preparationFacade;
+
+	@Operation(summary = "산책 준비물 조회", tags = {"WalkPreparation"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+	})
+	@GetMapping
+	public ResponseEntity<ApiResponse<WalkPreparationResponseDto>> getPreparation(
+		@Parameter(hidden = true) @UserId Long userId
+	) {
+		return ResponseEntity.ok(ApiResponse.success(preparationFacade.getPreparation(userId)));
+	}
+
+	@Operation(summary = "산책 준비물 저장(동기화)", tags = {"WalkPreparation"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+	})
+	@PatchMapping
+	public ResponseEntity<ApiResponse<WalkPreparationResponseDto>> updatePreparation(
+		@Parameter(hidden = true) @UserId Long userId,
+		@RequestBody WalkPreparationRequestDto request
+	) {
+		return ResponseEntity.ok(ApiResponse.success(preparationFacade.updatePreparation(userId, request)));
 	}
 }
