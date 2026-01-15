@@ -15,7 +15,7 @@ public class PetFacade {
 	private final PetQueryService petQueryService;
 
 	public BreedListResponseDto getBreedList() {
-		List<String> breeds = petQueryService.getAllBreeds();
+		List<BreedListResponseDto.BreedDto> breeds = petQueryService.getAllBreeds();
 		return BreedListResponseDto.from(breeds);
 	}
 }

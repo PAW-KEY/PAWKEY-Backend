@@ -2,7 +2,9 @@ package org.sopt.pawkey.backendapi.domain.pet.application.service;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.BreedListResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.response.PetTraitCategoryResult;
+import org.sopt.pawkey.backendapi.domain.pet.domain.repository.BreedRepository;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetTraitCategoryEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class PetQueryService {
 
 	private final PetRepository petRepository;
+	private final BreedRepository breedRepository;
 
 	public List<PetTraitCategoryResult> getAllPetTraitCategories() {
 		List<PetTraitCategoryEntity> petTraitCategoryEntityList = petRepository.findAllPetTraitCategoriesWithOptions();
@@ -23,7 +26,9 @@ public class PetQueryService {
 			.toList();
 	}
 
-	public List<String> getAllBreeds() {
-		return petRepository.findAllBreeds();
+	public List<BreedListResponseDto.BreedDto> getAllBreeds() {
+		return breedRepository.findAll().stream()
+			.map(breed -> new BreedListResponseDto.BreedDto(breed.getId(), breed.getName()))
+			.toList();
 	}
 }
