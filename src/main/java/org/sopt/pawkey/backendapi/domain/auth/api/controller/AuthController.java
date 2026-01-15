@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -125,7 +126,7 @@ public class AuthController {
 		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(@UserId Long userId,@RequestBody @Valid LogoutRequestDTO request){
+	public ResponseEntity<Void> logout(@Parameter(hidden = true) @UserId Long userId,@RequestBody @Valid LogoutRequestDTO request){
 		tokenService.revokeSession(userId, request.deviceId());
 		return ResponseEntity.noContent().build();
 	}
@@ -139,7 +140,7 @@ public class AuthController {
 		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content())
 	})
 	@DeleteMapping("/withdraw")
-	public ResponseEntity<Void> withdraw(@UserId Long userId, @RequestBody @Valid WithdrawRequestDTO request){
+	public ResponseEntity<Void> withdraw(@Parameter(hidden = true) @UserId Long userId, @RequestBody @Valid WithdrawRequestDTO request){
 		userWithdrawFacade.withdraw(userId, request.provider());
 		return ResponseEntity.noContent().build();
 	}
