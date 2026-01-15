@@ -25,7 +25,8 @@ public class PreparationService {
 
 	public List<String> syncPreparationItems(Long userId, List<String> newItems) {
 		PreparationEntity entity = preparationRepository.findByUserId(userId)
-			.orElseGet(() -> PreparationEntity.builder().userId(userId).build());
+			.orElseGet(() -> preparationRepository.save(
+				PreparationEntity.builder().userId(userId).items(new ArrayList<>(newItems)).build()));
 
 		entity.updateItems(newItems);
 		return entity.getItems();

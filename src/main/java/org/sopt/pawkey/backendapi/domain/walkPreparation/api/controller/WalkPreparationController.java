@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -61,12 +62,12 @@ public class WalkPreparationController {
 
 	@Operation(summary = "산책 준비물 저장(동기화)", tags = {"WalkPreparation"})
 	@ApiResponses({
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "저장 성공")
 	})
 	@PatchMapping
 	public ResponseEntity<ApiResponse<WalkPreparationResponseDto>> updatePreparation(
 		@Parameter(hidden = true) @UserId Long userId,
-		@RequestBody WalkPreparationRequestDto request
+		@RequestBody @Valid WalkPreparationRequestDto request
 	) {
 		return ResponseEntity.ok(ApiResponse.success(preparationFacade.updatePreparation(userId, request)));
 	}

@@ -112,7 +112,7 @@ public class WeatherService {
 				response.getWeatherCode()
 			);
 			return weather;
-		}).orElseThrow(() -> new WeatherBusinessException(WeatherErrorCode.WEATHER_FETCH_FAILED));
+		}).orElseThrow(() -> new WeatherBusinessException(WeatherErrorCode.WEATHER_NOT_FOUND));
 	}
 
 	private final WeatherCommentaryGenerator commentaryGenerator;
