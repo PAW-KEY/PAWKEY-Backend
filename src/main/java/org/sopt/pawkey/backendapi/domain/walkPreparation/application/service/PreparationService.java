@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.walkPreparation.application.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.walkPreparation.domain.repository.PreparationRepository;
@@ -19,7 +20,7 @@ public class PreparationService {
 	public List<String> getPreparationItems(Long userId) {
 		return preparationRepository.findByUserId(userId)
 			.map(PreparationEntity::getItems)
-			.orElse(List.of("배변 봉투", "리드 줄")); // 기본값
+			.orElseGet(() -> new ArrayList<>(List.of("배변 봉투", "리드 줄", "물", "간식"))); // 기본 값
 	}
 
 	public List<String> syncPreparationItems(Long userId, List<String> newItems) {
@@ -27,6 +28,6 @@ public class PreparationService {
 			.orElseGet(() -> PreparationEntity.builder().userId(userId).build());
 
 		entity.updateItems(newItems);
-		return preparationRepository.save(entity).getItems();
+		return entity.getItems();
 	}
 }
