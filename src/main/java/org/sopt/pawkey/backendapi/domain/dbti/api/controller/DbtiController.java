@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.dbti.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.dbti.api.dto.request.DbtiSubmitRequestDto;
 import org.sopt.pawkey.backendapi.domain.dbti.api.dto.response.DbtiQuestionListResponseDto;
 import org.sopt.pawkey.backendapi.domain.dbti.api.dto.response.DbtiResultResponseDto;
@@ -38,7 +39,9 @@ public class DbtiController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "질문지 조회 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@GetMapping("/questions")
-	public ResponseEntity<ApiResponse<DbtiQuestionListResponseDto>> getDbtiQuestions() {
+	public ResponseEntity<ApiResponse<DbtiQuestionListResponseDto>> getDbtiQuestions(
+		@Parameter(hidden = true) @UserId Long userId
+	) {
 		DbtiQuestionListResponseDto response = dbtiQueryFacade.getDbtiQuestions();
 
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
@@ -55,6 +58,7 @@ public class DbtiController {
 	})
 	@PostMapping("/{petId}")
 	public ResponseEntity<ApiResponse<DbtiResultResponseDto>> submitDbti(
+		@Parameter(hidden = true) @UserId Long userId,
 		@PathVariable Long petId,
 		@RequestBody @Valid DbtiSubmitRequestDto request
 	) {
