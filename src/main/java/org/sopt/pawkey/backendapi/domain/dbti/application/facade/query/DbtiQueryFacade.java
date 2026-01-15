@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.dbti.application.facade.query;
 
 import org.sopt.pawkey.backendapi.domain.dbti.api.dto.response.DbtiQuestionListResponseDto;
+import org.sopt.pawkey.backendapi.domain.dbti.api.dto.response.DbtiResultResponseDto;
 import org.sopt.pawkey.backendapi.domain.dbti.application.service.DbtiQueryService;
 import org.springframework.stereotype.Component;
 
@@ -27,5 +28,11 @@ public class DbtiQueryFacade {
 			)).toList();
 
 		return DbtiQuestionListResponseDto.from(questions);
+	}
+
+	public DbtiResultResponseDto getPetDbtiResult(Long petId) {
+		var detail = dbtiQueryService.getPetDbtiResultDetail(petId);
+
+		return DbtiResultResponseDto.of(detail.result(), detail.dbtiInfo());
 	}
 }
