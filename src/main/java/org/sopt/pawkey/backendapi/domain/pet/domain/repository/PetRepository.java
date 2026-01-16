@@ -10,8 +10,12 @@ public interface PetRepository {
 
 	List<PetEntity> findAllPetsByUserId(Long userId);
 
+<<<<<<< HEAD
 	boolean existsById(Long petId);
 
+=======
+	List<String> findAllBreeds();
+>>>>>>> origin/feat/#206
 }
 
 
