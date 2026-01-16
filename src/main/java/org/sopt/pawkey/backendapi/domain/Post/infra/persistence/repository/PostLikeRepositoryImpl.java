@@ -35,4 +35,9 @@ public class PostLikeRepositoryImpl implements PostLikeRepository {
 	public List<PostLikeEntity> findAllByUserWithPostAndImages(Long userId) {
 		return jpaRepository.findAllByUserWithPostAndImages(userId);
 	}
+
+	@Override
+	public List<Long> findLikedPostIdsByUserId(Long userId) {
+		return jpaRepository.findLikedPostIdsByUserId(userId);
+	}
 }

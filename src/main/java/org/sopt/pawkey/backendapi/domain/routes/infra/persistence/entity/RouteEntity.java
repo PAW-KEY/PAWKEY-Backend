@@ -87,4 +87,8 @@ public class RouteEntity extends BaseEntity {
 			throw new RouteBusinessException(RouteErrorCode.ROUTE_SHOW_FORBIDDEN);
 		}
 	}
+
+	public int getDurationMinutes() {
+		return (int)(this.duration / 60);
+	}
 }

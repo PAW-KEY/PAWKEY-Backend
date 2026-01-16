@@ -1,11 +1,15 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeRepository;
-import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
+import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,16 +18,17 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserLikedPostQueryService {
+public class UserWrittenPostQueryService {
 
+	private final PostRepository postRepository;
 	private final PostLikeRepository postLikeRepository;
 
-	public List<GetPostCardResult> findLikedPostResults(Long userId) {
-		return postLikeRepository.findAllByUserWithPostAndImages(userId).stream()
-			.sorted(Comparator.comparing(PostLikeEntity::getPostLikeId).reversed())
-			.filter(postLike -> postLike.getPost().isPublic())
-			.map(postLike -> {
-				var post = postLike.getPost();
+	public List<GetPostCardResult> findMyPostResults(UserEntity user, List<Long> likedPostIds) {
+		Set<Long> likedPostIdSet = new HashSet<>(likedPostIds);
+
+		return postRepository.findAllByUser(user).stream()
+			.sorted(Comparator.comparing(PostEntity::getPostId).reversed())
+			.map(post -> {
 				var route = post.getRoute();
 
 				String regionName = (route != null && route.getRegion() != null)
@@ -42,10 +47,14 @@ public class UserLikedPostQueryService {
 					.title(post.getTitle())
 					.createdAt(post.getCreatedAt())
 					.durationMinutes(durationMinutes)
-					.isLike(true)
+					.isLike(likedPostIdSet.contains(post.getPostId()))
 					.routeMapImageUrl(routeMapImageUrl)
 					.build();
 			})
 			.toList();
+	}
+
+	public List<Long> getLikedPostIds(Long userId) {
+		return postLikeRepository.findLikedPostIdsByUserId(userId);
 	}
 }
