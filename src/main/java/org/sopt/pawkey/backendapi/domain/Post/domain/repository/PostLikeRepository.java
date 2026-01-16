@@ -14,7 +14,11 @@ public interface PostLikeRepository {
 
 	List<PostLikeEntity> findAllByUserWithPostAndImages(Long userId);
 
+<<<<<<< HEAD
 	void deleteByUserIdAndPostId(Long userId, Long postId);
 
 	List<Long> findLikedPostIdsByUserId(Long userId);
+=======
+	int deleteByUserIdAndPostId(Long userId, Long postId);
+>>>>>>> origin/refactor/#193
 }
