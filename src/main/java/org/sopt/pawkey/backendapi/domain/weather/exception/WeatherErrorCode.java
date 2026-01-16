@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 public enum WeatherErrorCode implements ErrorCode {
 
 	WEATHER_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "W001", "해당 날씨 조건에 맞는 멘트가 존재하지 않습니다."),
+	WEATHER_NOT_FOUND(HttpStatus.NOT_FOUND, "W001", "해당 날씨에 대한 정보가 존재하지 않습니다."),
 	WEATHER_FETCH_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "W002", "날씨 정보를 가져오는 데 실패했습니다."),
 	WEATHER_DATA_INCOMPLETE(HttpStatus.INTERNAL_SERVER_ERROR, "W003", "날씨 정보가 불완전하여 메시지를 생성할 수 없습니다.");
 	private final HttpStatus status;
