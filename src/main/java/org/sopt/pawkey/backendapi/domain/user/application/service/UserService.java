@@ -71,8 +71,8 @@ public class UserService {
 			// 3-1. 새로운 User 엔티티 생성 (최소 정보만으로 생성)
 			UserEntity newUser = userRepository.save(UserEntity.builder()
 				.name(platform + " User")
-				.gender("F")
-				.birth(LocalDate.of(1900, 1, 1))
+				.gender(null)
+				.birth(null)
 				.region(null)
 				.build());
 

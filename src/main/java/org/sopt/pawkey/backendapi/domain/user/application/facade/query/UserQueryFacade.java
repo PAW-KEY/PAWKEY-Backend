@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserQueryFacade {
-	private final UserService userService;
 	private final UserQueryService userQueryService;
 
 	public UserInfoResponseDto getUserInfo(Long userId) {

@@ -6,17 +6,26 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 
 public record UserInfoResponseDto(
 	String name,
-	String gender,
+	String email,
 	LocalDate birth,
-	String activeRegion
+	String gender
 ) {
-	public static UserInfoResponseDto from(UserEntity user) {
+	public static UserInfoResponseDto of(UserEntity user, String email) {
 		return new UserInfoResponseDto(
 			user.getName(),
-			user.getGender(),
+			email,
 			user.getBirth(),
-			user.getRegion().getFullRegionName()
-
+			parseGender(user.getGender())
 		);
+	}
+
+	private static String parseGender(String gender) {
+		if (gender == null)
+			return "미선택";
+		return switch (gender.toUpperCase()) {
+			case "M" -> "남성";
+			case "F" -> "여성";
+			default -> gender;
+		};
 	}
 }
