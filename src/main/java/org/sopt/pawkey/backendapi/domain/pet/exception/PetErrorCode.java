@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 
 public enum PetErrorCode implements ErrorCode {
 
-	CATEGORY_OPTION_NOT_FOUND("P40401", "존재하지 않는 성향 옵션입니다.", HttpStatus.NOT_FOUND);
-
+	CATEGORY_OPTION_NOT_FOUND("P40401", "존재하지 않는 성향 옵션입니다.", HttpStatus.NOT_FOUND),
+	PET_NOT_FOUND("P40402", "존재하지 않는 반려견 정보입니다.", HttpStatus.NOT_FOUND);
 	private final String code;
 	private final String message;
 	private final HttpStatus status;
