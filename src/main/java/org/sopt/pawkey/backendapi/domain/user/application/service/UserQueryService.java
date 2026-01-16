@@ -24,12 +24,20 @@ public class UserQueryService {
 
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
+<<<<<<< HEAD
 
 		String email = socialAccountRepository.findByUser_UserId(userId)
 			.map(SocialAccountEntity::getPrimaryEmail)
 			.orElse("");
 
 		return UserInfoResponseDto.of(user, email);
+=======
+		return UserInfoResponseDto.from(user);
+	}
+>>>>>>> origin/feat/#202
 
+	public UserEntity getUser(Long userId) {
+		return userRepository.findById(userId)
+			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 	}
 }

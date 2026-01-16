@@ -1,6 +1,8 @@
 package org.sopt.pawkey.backendapi.domain.auth.resolver;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.exception.AuthBusinessException;
+import org.sopt.pawkey.backendapi.domain.auth.exception.AuthErrorCode;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +27,8 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null || authentication.getPrincipal() == null) {
-			return null; // 인증 안 된 경우 → 컨트롤러 단에서 예외 처리 해줘야함
+			throw new AuthBusinessException(
+				AuthErrorCode.TOKEN_NOT_FOUND); /* 기존 null 반환 시 파사드 NPE 유발 및 500 에러 위험이 있어, 공통 예외(401)로 변경하여 안정성을 확보 */
 		}
 		return (Long)authentication.getPrincipal();
 	}
