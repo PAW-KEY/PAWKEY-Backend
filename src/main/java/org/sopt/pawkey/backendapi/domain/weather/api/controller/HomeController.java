@@ -23,7 +23,7 @@ public class HomeController {
 
 	private final WeatherFacade weatherFacade;
 
-	@Operation(summary = "[홈] 날씨 정보 조회", description = "로그인한 유저의 지역을 기반으로 날씨 정보를 제공합니다.", tags = {"Home"})
+	@Operation(summary = "날씨 정보 조회", description = "로그인한 유저의 지역을 기반으로 날씨 정보를 제공합니다.", tags = {"Home"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "날씨 정보 조회 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "유저 또는 지역 정보를 찾을 수 없음"),
