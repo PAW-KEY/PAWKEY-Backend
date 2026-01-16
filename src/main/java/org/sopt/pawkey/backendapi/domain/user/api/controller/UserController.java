@@ -4,6 +4,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.CreateUserRequestDto;
@@ -18,19 +19,14 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLiked
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserPetQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
-import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -59,17 +55,15 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 강아지 성향 카테고리 선택입니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "강아지 프로필 이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
-
-	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping
 	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
-		@RequestPart("data") @Validated CreateUserRequestDto requestDto,
-		@RequestPart("pet_profile") MultipartFile image) {
+		@Parameter(hidden = true) @UserId Long userId,
+		@RequestBody @Valid CreateUserRequestDto requestDto) {
 
 		UserRegisterCommand command = requestDto.toCommand();
-		UserRegisterResponseDto response = userRegisterFacade.execute(command, image);
+		UserRegisterResponseDto response = userRegisterFacade.execute(userId, command);
 
 		return ResponseEntity.ok(ApiResponse.success(response));
-
 	}
 
 	@Operation(summary = "내가 좋아요한 게시물 조회", description = "사용자가 좋아요를 누른 게시물 목록을 반환합니다.", tags = {"Users"})

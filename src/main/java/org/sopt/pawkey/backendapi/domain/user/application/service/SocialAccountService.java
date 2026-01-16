@@ -1,9 +1,9 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
+import org.sopt.pawkey.backendapi.domain.auth.domain.Provider;
 import org.sopt.pawkey.backendapi.domain.auth.domain.repository.AppleRefreshTokenRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.SocialAccountRepository;
 import org.springframework.stereotype.Service;
-import org.sopt.pawkey.backendapi.domain.auth.domain.Provider;
 
 import lombok.RequiredArgsConstructor;
 

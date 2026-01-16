@@ -2,22 +2,20 @@ package org.sopt.pawkey.backendapi.domain.auth.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.AppleLoginRequestDTO;
-import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.test.KakaoAuthService;
-import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.AppleLoginRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.LoginRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.LogoutRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.RefreshTokenRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.WithdrawRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.response.SocialLoginResponseDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.response.TokenResponseDTO;
+import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.test.KakaoAuthService;
 import org.sopt.pawkey.backendapi.domain.auth.application.service.token.TokenService;
-
+import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserWithdrawFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

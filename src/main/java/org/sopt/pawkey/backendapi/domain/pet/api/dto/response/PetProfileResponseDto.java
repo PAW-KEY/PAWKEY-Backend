@@ -1,22 +1,16 @@
 package org.sopt.pawkey.backendapi.domain.pet.api.dto.response;
 
-import java.util.List;
+import java.time.LocalDate;
 
 public record PetProfileResponseDto(
 	Long petId,
 	String name,
 	String gender,
 	boolean isNeutered,
-	int age,
-	boolean isAgeKnown,
+	LocalDate birth,
 	String breed,
 	String imageUrl,
-	List<TraitDto> traits,
 	int walkCount
 ) {
-	public record TraitDto(
-		String category,
-		String option
-	) {
-	}
+
 }

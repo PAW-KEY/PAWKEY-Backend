@@ -1,10 +1,12 @@
 package org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.DynamicUpdate;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
@@ -14,6 +16,7 @@ import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,21 +38,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@DynamicUpdate
 public class UserEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
-	private String loginId;
-	private String password;
-
+	@Column(name = "name")
 	private String name;
-	private String gender;
-	private int age;
+
+	@Column(name = "gender", length = 1)
+	private String gender; // 'M' or 'F'
+
+	@Column(name = "birth")
+	private LocalDate birth;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "region_id", nullable = true)
+	@JoinColumn(name = "region_id")
 	private RegionEntity region;
 
 	@BatchSize(size = 100)
@@ -65,16 +71,12 @@ public class UserEntity extends BaseEntity {
 	private List<PostLikeEntity> postLikeEntityList = new ArrayList<>();
 
 	@Builder
-	public UserEntity(Long userId,
-		String name,
-		String gender,
-		int age,
-		RegionEntity region) {
+	public UserEntity(Long userId, String name, String gender, LocalDate birth, RegionEntity region) {
 		this.userId = userId;
 		this.name = name;
 		this.gender = gender;
-		this.age = age;
-
+		this.birth = birth;
+		this.region = region;
 	}
 
 	public PetEntity getPet() {
@@ -84,6 +86,7 @@ public class UserEntity extends BaseEntity {
 	}
 
 	public PetEntity getPetOrThrow() {
+
 		PetEntity pet = getPet();
 		if (pet == null) {
 			throw new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED);
@@ -110,6 +113,13 @@ public class UserEntity extends BaseEntity {
 	}
 
 	public void updateRegion(RegionEntity region) {
+		this.region = region;
+	}
+
+	public void updateOnboardingInfo(String name, String gender, LocalDate birth, RegionEntity region) {
+		this.name = name;
+		this.gender = gender;
+		this.birth = birth;
 		this.region = region;
 	}
 }
