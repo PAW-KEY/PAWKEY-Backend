@@ -1,8 +1,11 @@
 package org.sopt.pawkey.backendapi.domain.weather.application.service;
 
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
+import org.sopt.pawkey.backendapi.domain.weather.application.dto.result.WeatherMessageResult;
 import org.sopt.pawkey.backendapi.domain.weather.application.dto.result.WeatherResult;
+import org.sopt.pawkey.backendapi.domain.weather.domain.model.WeatherMessage;
 import org.sopt.pawkey.backendapi.domain.weather.domain.repository.WeatherRepository;
+import org.sopt.pawkey.backendapi.domain.weather.domain.service.WeatherCommentaryGenerator;
 import org.sopt.pawkey.backendapi.domain.weather.infra.cache.WeatherCacheManager;
 import org.sopt.pawkey.backendapi.domain.weather.infra.external.WeatherApiClient;
 import org.sopt.pawkey.backendapi.domain.weather.infra.external.dto.OpenWeatherResponseDTO;
@@ -70,5 +73,30 @@ public class WeatherService {
 
 	private boolean isIncomplete(WeatherEntity weather) {
 		return weather.getTemperature() == null || weather.getRainyMm() == null || weather.getRainyProb() == null;
+	}
+
+
+	private final WeatherCommentaryGenerator commentaryGenerator;
+
+	public WeatherMessageResult getWeatherMessage(RegionEntity region) {
+		try {
+			if (region == null)
+				return WeatherMessageResult.defaultMessage();
+
+			WeatherResult weather = getOrFetchWeather(region);
+
+			if (weather.temperature() == null || weather.rainyProb() == null) {
+				log.warn("날씨 데이터 불완전 (regionId: {})", region.getRegionId());
+				return WeatherMessageResult.defaultMessage();
+			}
+
+			WeatherMessage message = commentaryGenerator.generate(weather.temperature(), weather.temperature());
+
+			return new WeatherMessageResult(message.mainMessage(), message.subMessage());
+
+		} catch (Exception e) {
+			log.error("날씨 메시지 생성 실패: {}", e.getMessage());
+			return WeatherMessageResult.defaultMessage();
+		}
 	}
 }

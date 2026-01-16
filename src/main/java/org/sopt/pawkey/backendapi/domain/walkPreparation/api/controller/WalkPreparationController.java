@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class WalkPreparationController {
 
 	private final RouteStartFacade routeStartFacade;
+	private final PreparationFacade preparationFacade;
 
 	@Operation(
 		summary = "산책 안내 메시지",
@@ -47,7 +48,7 @@ public class WalkPreparationController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	private final PreparationFacade preparationFacade;
+
 
 	@Operation(summary = "산책 준비물 조회", tags = {"WalkPreparation"})
 	@ApiResponses({

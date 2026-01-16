@@ -16,7 +16,6 @@ public record WeatherResult(
 	Integer rainyProb,
 	Integer weatherCode
 ) implements Serializable {
-
 	/**
 	 * WeatherEntity를 WeatherResult DTO로 변환합니다. (저장 시 사용)
 	 */
