@@ -48,7 +48,7 @@ public class UserEntity extends BaseEntity {
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "gender", length = 1)
+	@Column(name = "gender", length = 10)
 	private String gender; // 'M' or 'F'
 
 	@Column(name = "birth")
