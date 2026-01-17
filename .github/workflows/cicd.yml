@@ -92,6 +92,7 @@ jobs:
               -e SPRING_PROFILES_ACTIVE=aws \
               -e SPRING_DATA_REDIS_HOST=redis \
               -e SPRING_DATA_REDIS_PORT=6379 \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
               -e DOKI_GOOGLE_CLIENT_ID=${{ secrets.DOKI_GOOGLE_CLIENT_ID }} \
               -e DOKI_APPLE_CLIENT_ID=${{ secrets.DOKI_APPLE_CLIENT_ID }} \
@@ -103,6 +104,8 @@ jobs:
               -e DOKI_KAKAO_CLIENT_ID=${{ secrets.DOKI_KAKAO_CLIENT_ID }} \
               -e DOKI_KAKAO_CLIENT_SECRET=${{ secrets.DOKI_KAKAO_CLIENT_SECRET }} \
               -e DOKI_KAKAO_REDIRECT_URI=${{ secrets.DOKI_KAKAO_REDIRECT_URI }} \
+              -e WEATHER_URL=${{ secrets.WEATHER_URL }} \
+              -e WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }} \
               ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
 
             echo "🔄 Reload nginx"
