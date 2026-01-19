@@ -62,6 +62,7 @@ dependencies {
     // s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+
     // Hibernate Spatial (PostGIS)
     implementation 'org.hibernate.orm:hibernate-spatial:6.5.2.Final' // spring-boot 3.5.x에서 호환되는 최신 버전 사용
     // QueryDSL Spatial (jakarta 패키지 사용)
@@ -93,6 +94,10 @@ dependencies {
     // OpenFeign (날씨 연동)
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+
+    implementation platform("software.amazon.awssdk:bom:2.25.39")
+    implementation "software.amazon.awssdk:s3"
+    implementation "software.amazon.awssdk:s3-presigner"
 }
 
 dependencyManagement {
