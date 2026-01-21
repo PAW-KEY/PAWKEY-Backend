@@ -14,11 +14,9 @@ public record PetProfileResponseDto(
 	String gender,
 	boolean isNeutered,
 	String breed,
-
-	// 추후 dbti 엔티티 생성 시에, dbti 소개 문구로 변경할 예정
 	String dbti
 ) {
-	public static PetProfileResponseDto from(PetEntity pet) {
+	public static PetProfileResponseDto of(PetEntity pet, String dbti) {
 		return new PetProfileResponseDto(
 			pet.getPetId(),
 			pet.getProfileImage() != null ? pet.getProfileImage().getImageUrl() : null,
@@ -28,7 +26,7 @@ public record PetProfileResponseDto(
 			convertGender(pet.getGender()),
 			pet.isNeutered(),
 			pet.getBreed(),
-			parseDbti(pet.getDbti())
+			parseDbti(dbti)
 		);
 	}
 

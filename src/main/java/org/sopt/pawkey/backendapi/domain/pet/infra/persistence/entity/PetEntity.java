@@ -60,9 +60,6 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "walk_count", nullable = false)
 	private int walkCount;
 
-	@Column(name = "dbti")
-	private String dbti;
-
 	@Builder
 	public PetEntity(Long petId,
 		String name,
@@ -72,7 +69,6 @@ public class PetEntity extends BaseEntity {
 		UserEntity user,
 		boolean isNeutered,
 		String breed,
-		String dbti,
 		int walkCount) {
 		this.petId = petId;
 		this.name = name;
@@ -83,7 +79,6 @@ public class PetEntity extends BaseEntity {
 		this.isNeutered = isNeutered;
 		this.breed = breed;
 		this.walkCount = walkCount;
-		this.dbti = dbti;
 	}
 
 	public void incrementWalkCount() {
