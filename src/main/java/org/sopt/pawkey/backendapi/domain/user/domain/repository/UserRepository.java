@@ -8,9 +8,8 @@ public interface UserRepository {
 
 	UserEntity save(final UserEntity user);
 
-	boolean existsByLoginId(String loginId);
-
-	void deleteAllInBatch();
 
 	Optional<UserEntity> findById(Long id);
+
+	void deleteById(Long userId);
 }

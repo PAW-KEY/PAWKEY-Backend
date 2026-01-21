@@ -2,8 +2,8 @@ package org.sopt.pawkey.backendapi.domain.post.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostLikeFacade;
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostLikeFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,9 +35,9 @@ public class PostLikeController {
 	@PostMapping("/{postId}")
 	public ResponseEntity<ApiResponse<Void>> like(
 		@PathVariable Long postId,
-		@NotNull @UserId Long userId
+		@Parameter(hidden = true) @UserId Long userId
 	) {
-		postLikeFacade.like(postId, userId.longValue());
+		postLikeFacade.like(postId, userId);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
 
@@ -52,9 +52,9 @@ public class PostLikeController {
 	@DeleteMapping("/{postId}")
 	public ResponseEntity<ApiResponse<Void>> cancelLike(
 		@PathVariable Long postId,
-		@NotNull @UserId Long userId) {
+		@Parameter(hidden = true) @UserId Long userId) {
 
-		postLikeFacade.cancelLike(postId, userId.longValue());
+		postLikeFacade.cancelLike(postId, userId);
 		return ResponseEntity.ok(ApiResponse.success(null));
 	}
 }

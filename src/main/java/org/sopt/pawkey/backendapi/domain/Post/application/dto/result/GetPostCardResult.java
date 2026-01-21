@@ -10,14 +10,11 @@ import lombok.Builder;
 @Builder
 public record GetPostCardResult(
 	Long postId,
+	String regionName,
 	String title,
-	boolean isLike,
-	AuthorDto author,
-	List<String> categoryTags,
 	LocalDateTime createdAt,
-	String routeMapImageUrl,
-	Long routeId,
-	boolean isPublic,
-	boolean isMine
+	Integer durationMinutes,
+	boolean isLike,
+	String routeMapImageUrl
 ) {
 }

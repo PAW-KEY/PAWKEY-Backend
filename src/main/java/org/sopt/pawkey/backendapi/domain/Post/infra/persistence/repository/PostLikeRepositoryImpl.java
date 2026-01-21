@@ -27,12 +27,17 @@ public class PostLikeRepositoryImpl implements PostLikeRepository {
 	}
 
 	@Override
-	public void deleteByUserIdAndPostId(Long userId, Long postId) {
-		jpaRepository.deleteByUserIdAndPostIdQuery(userId, postId);
+	public int deleteByUserIdAndPostId(Long userId, Long postId) {
+		return jpaRepository.deleteByUserIdAndPostIdQuery(userId, postId);
 	}
 
 	@Override
 	public List<PostLikeEntity> findAllByUserWithPostAndImages(Long userId) {
 		return jpaRepository.findAllByUserWithPostAndImages(userId);
+	}
+
+	@Override
+	public List<Long> findLikedPostIdsByUserId(Long userId) {
+		return jpaRepository.findLikedPostIdsByUserId(userId);
 	}
 }

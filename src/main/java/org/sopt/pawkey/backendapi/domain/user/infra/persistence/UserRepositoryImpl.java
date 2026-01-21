@@ -19,19 +19,14 @@ public class UserRepositoryImpl implements UserRepository {
 		return springDataUserRepository.save(user);
 	}
 
-	@Override
-	public boolean existsByLoginId(final String loginId) {
-		return false;
-		// return springDataUserRepository.existsByLoginId(loginId);
-	}
-
-	@Override
-	public void deleteAllInBatch() {
-		springDataUserRepository.deleteAllInBatch();
-	}
 
 	@Override
 	public Optional<UserEntity> findById(Long id) {
 		return springDataUserRepository.findById(id);
+	}
+
+	@Override
+	public void deleteById(Long userId) {
+		springDataUserRepository.deleteById(userId);
 	}
 }

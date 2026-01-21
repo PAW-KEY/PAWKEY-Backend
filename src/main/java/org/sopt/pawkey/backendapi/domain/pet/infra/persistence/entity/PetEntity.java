@@ -1,13 +1,11 @@
 package org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,9 +14,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,11 +39,9 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "gender", nullable = false, length = 10)
 	private String gender;
 
-	@Column(name = "age")
-	private int age;
-
-	@Column(name = "is_age_known", nullable = false)
-	private boolean isAgeKnown;
+	@Column(name = "birth", nullable = false)
+	@PastOrPresent(message = "생년월일은 현재 또는 과거 날짜여야 합니다")
+	private LocalDate birth;
 
 	//Image 연관관계 추가
 	@OneToOne
@@ -64,33 +60,30 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "walk_count", nullable = false)
 	private int walkCount;
 
-	@OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PetTraitSelectedEntity> petTraitSelectedEntityList = new ArrayList<>();
+	@Column(name = "dbti")
+	private String dbti;
 
 	@Builder
 	public PetEntity(Long petId,
 		String name,
 		String gender,
-		int age,
-		boolean isAgeKnown,
+		LocalDate birth,
 		ImageEntity profileImage,
 		UserEntity user,
 		boolean isNeutered,
 		String breed,
-		int walkCount,
-		List<PetTraitSelectedEntity> petTraitSelectedEntityList) {
+		String dbti,
+		int walkCount) {
 		this.petId = petId;
 		this.name = name;
 		this.gender = gender;
-		this.age = age;
-		this.isAgeKnown = isAgeKnown;
+		this.birth = birth;
 		this.profileImage = profileImage;
 		this.user = user;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
 		this.walkCount = walkCount;
-		this.petTraitSelectedEntityList =
-			petTraitSelectedEntityList != null ? petTraitSelectedEntityList : new ArrayList<>();
+		this.dbti = dbti;
 	}
 
 	public void incrementWalkCount() {

@@ -27,7 +27,8 @@ public class SecurityConfig {
 					"/api/v1/auth/**",    // 로그인/회원가입/리프레시 등
 					"/v3/api-docs/**",
 					"/swagger-ui/**",
-					"/swagger-ui.html"
+					"/swagger-ui.html",
+					"/api/v1/routes/stream/**"
 				).permitAll()
 				.anyRequest().authenticated()
 			)

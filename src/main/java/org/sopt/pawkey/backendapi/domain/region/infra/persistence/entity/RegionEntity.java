@@ -11,6 +11,7 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 import org.sopt.pawkey.backendapi.global.util.GeoJsonUtil;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +51,12 @@ public class RegionEntity extends BaseEntity {
 	@Column(name = "region_name", nullable = false)
 	private String regionName;
 
+	@Column(name = "latitude", nullable = false)
+	private Double latitude;
+
+	@Column(name = "longitude", nullable = false)
+	private Double longitude;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	private RegionEntity parent;
@@ -66,17 +73,8 @@ public class RegionEntity extends BaseEntity {
 	@OneToMany(mappedBy = "region", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private List<RouteEntity> routeEntityList = new ArrayList<>();
 
-	@Builder
-	public RegionEntity(Long regionId, String regionName, RegionType regionType, RegionEntity parent) {
-		this.regionId = regionId;
-		this.regionName = regionName;
-		this.regionType = regionType;
-		this.parent = parent;
-	}
-
 	public String getFullRegionName() {
 		String parentText = parent == null ? "" : parent.getRegionName() + " ";
-
 		return parentText + regionName;
 	}
 

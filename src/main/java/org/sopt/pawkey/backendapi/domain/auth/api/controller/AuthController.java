@@ -2,22 +2,20 @@ package org.sopt.pawkey.backendapi.domain.auth.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
-import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.AppleLoginRequestDTO;
-import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.test.KakaoAuthService;
-import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.AppleLoginRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.LoginRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.LogoutRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.RefreshTokenRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.request.WithdrawRequestDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.response.SocialLoginResponseDTO;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.response.TokenResponseDTO;
+import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier.test.KakaoAuthService;
 import org.sopt.pawkey.backendapi.domain.auth.application.service.token.TokenService;
-
+import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserWithdrawFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -125,7 +124,7 @@ public class AuthController {
 		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(@UserId Long userId,@RequestBody @Valid LogoutRequestDTO request){
+	public ResponseEntity<Void> logout(@Parameter(hidden = true) @UserId Long userId,@RequestBody @Valid LogoutRequestDTO request){
 		tokenService.revokeSession(userId, request.deviceId());
 		return ResponseEntity.noContent().build();
 	}
@@ -139,7 +138,7 @@ public class AuthController {
 		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content())
 	})
 	@DeleteMapping("/withdraw")
-	public ResponseEntity<Void> withdraw(@UserId Long userId, @RequestBody @Valid WithdrawRequestDTO request){
+	public ResponseEntity<Void> withdraw(@Parameter(hidden = true) @UserId Long userId, @RequestBody @Valid WithdrawRequestDTO request){
 		userWithdrawFacade.withdraw(userId, request.provider());
 		return ResponseEntity.noContent().build();
 	}

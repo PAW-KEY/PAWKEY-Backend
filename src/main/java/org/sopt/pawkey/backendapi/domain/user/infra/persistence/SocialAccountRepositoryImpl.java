@@ -27,4 +27,14 @@ public class SocialAccountRepositoryImpl implements SocialAccountRepository {
 	public Optional<SocialAccountEntity> findByUser_UserIdAndPlatform(Long userId, String platform) {
 		return jpaRepository.findByUser_UserIdAndPlatform(userId, platform);
 	}
+
+	@Override
+	public Optional<SocialAccountEntity> findByUser_UserId(Long userId) {
+		return jpaRepository.findByUser_UserId(userId);
+	}
+
+	@Override
+	public void deleteByUser_UserId(Long userId) {
+		jpaRepository.deleteByUser_UserId(userId);
+	}
 }

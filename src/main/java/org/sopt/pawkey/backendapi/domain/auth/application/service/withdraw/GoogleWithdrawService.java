@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.auth.application.service.withdraw;
 
 import org.sopt.pawkey.backendapi.domain.auth.exception.AuthBusinessException;
 import org.sopt.pawkey.backendapi.domain.auth.exception.AuthErrorCode;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.beans.factory.annotation.Value;
+
 import lombok.RequiredArgsConstructor;
 
 @Service("GOOGLE")

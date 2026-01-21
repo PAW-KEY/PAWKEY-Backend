@@ -2,12 +2,12 @@ package org.sopt.pawkey.backendapi.domain.post.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
+import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategorySelectListResponseDto;
 import org.sopt.pawkey.backendapi.domain.category.application.facade.query.CategorySelectFacade;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
-import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

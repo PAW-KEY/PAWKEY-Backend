@@ -24,6 +24,7 @@ public class RouteService {
 	private final RouteRepository routeRepository;
 
 	private static LineString toLineString(List<Coordinate> coordinates) {
+
 		if (coordinates.size() < 2) {
 			throw new RouteBusinessException(RouteErrorCode.INVALID_ROUTE_COORDINATES);
 		}
