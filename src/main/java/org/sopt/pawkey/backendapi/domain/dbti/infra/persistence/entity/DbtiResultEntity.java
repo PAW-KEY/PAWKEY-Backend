@@ -44,4 +44,11 @@ public class DbtiResultEntity {
 		this.psScore = psScore;
 		this.rfScore = rfScore;
 	}
+
+	public void updateResult(DbtiType dbtiType, int eiScore, int psScore, int rfScore) {
+		this.dbtiType = dbtiType;
+		this.eiScore = eiScore;
+		this.psScore = psScore;
+		this.rfScore = rfScore;
+	}
 }

@@ -37,10 +37,6 @@ public class DbtiCommandService {
 			throw new PetBusinessException(PetErrorCode.PET_NOT_FOUND);
 		}
 
-		if (resultRepository.findByPetId(petId).isPresent()) {
-			throw new DbtiBusinessException(DbtiErrorCode.DUPLICATE_DBTI_RESULT);
-		}
-
 		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
 			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_COUNT);
 		}
@@ -57,13 +53,20 @@ public class DbtiCommandService {
 
 		DbtiType dbtiType = DbtiType.determine(eiScore, psScore, rfScore);
 
-		DbtiResultEntity result = resultRepository.save(DbtiResultEntity.builder()
-			.petId(petId)
-			.dbtiType(dbtiType)
-			.eiScore(eiScore)
-			.psScore(psScore)
-			.rfScore(rfScore)
-			.build());
+		DbtiResultEntity result = resultRepository.findByPetId(petId)
+			.map(existingResult -> {
+				existingResult.updateResult(dbtiType, eiScore, psScore, rfScore);
+				return existingResult;
+			})
+			.orElseGet(() -> {
+				return resultRepository.save(DbtiResultEntity.builder()
+					.petId(petId)
+					.dbtiType(dbtiType)
+					.eiScore(eiScore)
+					.psScore(psScore)
+					.rfScore(rfScore)
+					.build());
+			});
 
 		DbtiEntity dbtiInfo = dbtiRepository.findDbtiByType(dbtiType)
 			.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_NOT_FOUND));
