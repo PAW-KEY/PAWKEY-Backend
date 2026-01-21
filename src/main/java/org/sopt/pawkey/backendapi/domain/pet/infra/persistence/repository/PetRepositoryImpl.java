@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.pet.infra.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.BreedEntity;
@@ -38,5 +39,10 @@ public class PetRepositoryImpl implements PetRepository {
 			.map(BreedEntity::getName)
 			.sorted()
 			.toList();
+	}
+
+	@Override
+	public Optional<PetEntity> findById(Long petId) {
+		return springDataPetRepository.findById(petId);
 	}
 }

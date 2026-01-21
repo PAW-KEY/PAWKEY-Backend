@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity;
 
 import java.time.LocalDate;
 
+import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
@@ -59,6 +60,9 @@ public class PetEntity extends BaseEntity {
 
 	@Column(name = "walk_count", nullable = false)
 	private int walkCount;
+
+	@OneToOne(mappedBy = "pet", fetch = FetchType.LAZY)
+	private DbtiResultEntity dbtiResult;
 
 	@Builder
 	public PetEntity(Long petId,

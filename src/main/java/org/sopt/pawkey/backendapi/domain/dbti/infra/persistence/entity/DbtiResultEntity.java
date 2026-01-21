@@ -1,14 +1,19 @@
 package org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity;
 
 import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
+import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,8 +30,9 @@ public class DbtiResultEntity {
 	@Column(name = "dbti_result_id")
 	private Long id;
 
-	@Column(nullable = false)
-	private Long petId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pet_id", nullable = false)
+	private PetEntity pet;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 3)
@@ -37,8 +43,8 @@ public class DbtiResultEntity {
 	private int rfScore;
 
 	@Builder
-	public DbtiResultEntity(Long petId, DbtiType dbtiType, int eiScore, int psScore, int rfScore) {
-		this.petId = petId;
+	public DbtiResultEntity(PetEntity pet, DbtiType dbtiType, int eiScore, int psScore, int rfScore) {
+		this.pet = pet;
 		this.dbtiType = dbtiType;
 		this.eiScore = eiScore;
 		this.psScore = psScore;

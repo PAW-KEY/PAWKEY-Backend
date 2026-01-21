@@ -15,6 +15,7 @@ import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResul
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetBusinessException;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetErrorCode;
+import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +34,8 @@ public class DbtiCommandService {
 
 	public DbtiResultDetailVo calculateSaveAndGetDetail(Long petId, DbtiSubmitRequestDto request) {
 
-		if (!petRepository.existsById(petId)) {
-			throw new PetBusinessException(PetErrorCode.PET_NOT_FOUND);
-		}
+		PetEntity pet = petRepository.findById(petId)
+			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
 
 		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
 			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_COUNT);
@@ -60,7 +60,7 @@ public class DbtiCommandService {
 			})
 			.orElseGet(() -> {
 				return resultRepository.save(DbtiResultEntity.builder()
-					.petId(petId)
+					.pet(pet)
 					.dbtiType(dbtiType)
 					.eiScore(eiScore)
 					.psScore(psScore)

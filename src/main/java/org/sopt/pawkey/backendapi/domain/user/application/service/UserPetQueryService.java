@@ -22,13 +22,7 @@ public class UserPetQueryService {
 		List<PetEntity> petEntityList = petRepository.findAllPetsByUserId(user.getUserId());
 
 		return petEntityList.stream()
-			.map(pet -> {
-				String dbtiName = dbtiResultRepository.findByPetId(pet.getPetId())
-					.map(result -> result.getDbtiType().name())
-					.orElse(null);
-
-				return PetProfileResponseDto.of(pet, dbtiName);
-			})
+			.map(PetProfileResponseDto::from)
 			.toList();
 	}
 }

@@ -16,7 +16,7 @@ public record PetProfileResponseDto(
 	String breed,
 	String dbti
 ) {
-	public static PetProfileResponseDto of(PetEntity pet, String dbti) {
+	public static PetProfileResponseDto from(PetEntity pet) {
 		return new PetProfileResponseDto(
 			pet.getPetId(),
 			pet.getProfileImage() != null ? pet.getProfileImage().getImageUrl() : null,
@@ -26,7 +26,7 @@ public record PetProfileResponseDto(
 			convertGender(pet.getGender()),
 			pet.isNeutered(),
 			pet.getBreed(),
-			parseDbti(dbti)
+			pet.getDbtiResult() != null ? pet.getDbtiResult().getDbtiType().name() : "DBTI 검사 미완료"
 		);
 	}
 
@@ -43,9 +43,5 @@ public record PetProfileResponseDto(
 			return "여아";
 		}
 		throw new IllegalArgumentException("올바르지 않은 성별 값입니다: " + gender);
-	}
-
-	private static String parseDbti(String dbti) {
-		return (dbti == null || dbti.isBlank()) ? "DBTI 검사 미완료" : dbti;
 	}
 }

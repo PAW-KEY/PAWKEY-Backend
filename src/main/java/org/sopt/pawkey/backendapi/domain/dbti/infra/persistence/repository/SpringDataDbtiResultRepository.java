@@ -6,5 +6,5 @@ import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResul
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SpringDataDbtiResultRepository extends JpaRepository<DbtiResultEntity, Long> {
-	Optional<DbtiResultEntity> findByPetId(Long petId);
+	Optional<DbtiResultEntity> findByPet_PetId(Long petId);
 }

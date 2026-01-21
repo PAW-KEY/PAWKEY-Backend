@@ -20,6 +20,6 @@ public class DbtiResultRepositoryImpl implements DbtiResultRepository {
 
 	@Override
 	public Optional<DbtiResultEntity> findByPetId(Long petId) {
-		return springDataDbtiResultRepository.findByPetId(petId);
+		return springDataDbtiResultRepository.findByPet_PetId(petId);
 	}
 }
