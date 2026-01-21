@@ -25,7 +25,7 @@ public class BreedRepositoryImpl implements BreedRepository {
 	}
 
 	@Override
-	public Optional<BreedEntity> findById(Long id) {
-		return springDataBreedRepository.findById(id);
+	public Optional<BreedEntity> findBreedById(Long breedId) {
+		return springDataBreedRepository.findById(breedId);
 	}
 }

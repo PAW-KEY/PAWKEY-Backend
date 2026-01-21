@@ -25,7 +25,7 @@ public record PetProfileResponseDto(
 			calculateAgeInMonths(pet.getBirth()),
 			convertGender(pet.getGender()),
 			pet.isNeutered(),
-			pet.getBreed(),
+			pet.getBreed().getName(),
 			pet.getDbtiResult() != null ? pet.getDbtiResult().getDbtiType().name() : "DBTI 검사 미완료"
 		);
 	}

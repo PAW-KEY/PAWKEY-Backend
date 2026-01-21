@@ -55,8 +55,9 @@ public class PetEntity extends BaseEntity {
 
 	private boolean isNeutered;
 
-	@Column(name = "breed", length = 50)
-	private String breed;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "breed_id")
+	private BreedEntity breed;
 
 	@Column(name = "walk_count", nullable = false)
 	private int walkCount;
@@ -72,7 +73,7 @@ public class PetEntity extends BaseEntity {
 		ImageEntity profileImage,
 		UserEntity user,
 		boolean isNeutered,
-		String breed,
+		BreedEntity breed,
 		int walkCount) {
 		this.petId = petId;
 		this.name = name;
