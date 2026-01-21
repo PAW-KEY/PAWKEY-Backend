@@ -18,12 +18,12 @@ import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import lombok.RequiredArgsConstructor;
-
 @Component
 @RequiredArgsConstructor
 @Transactional
@@ -36,18 +36,17 @@ public class PostRegisterFacade {
 	private final CategoryOptionService categoryOptionService;
 
 	public PostRegisterResult execute(Long userId,
-		PostRegisterCommand command,
-		List<MultipartFile> postImages) {
+		PostRegisterCommand command) {
 
 		UserEntity writer = userService.findById(userId);
 		RouteEntity route = routeService.getRouteById(command.routeId());
 
 		throwIfRoutePostExist(route);
 
-		List<ImageEntity> imageEntities = imageService.storeWalkPostImages(postImages);
+		//List<ImageEntity> imageEntities = imageService.storeWalkPostImages(postImages);
 
 		try {
-			PostEntity post = postService.savePost(writer, command, route, imageEntities);
+			PostEntity post = postService.savePost(writer, command, route);
 
 			List<CategoryOptionEntity> selectedCategoryOptions = getCategoryOptionEntities(
 				command.selectedOptionsForCategories());
@@ -59,10 +58,10 @@ public class PostRegisterFacade {
 				.build();
 
 		} catch (Exception e) {
-			// 이미지 rollback
-			for (ImageEntity image : imageEntities) {
-				imageService.deleteImage(image);
-			}
+			// // 이미지 rollback
+			// for (ImageEntity image : imageEntities) {
+			// 	imageService.deleteImage(image);
+			// }
 			throw e;
 		}
 	}

@@ -14,6 +14,7 @@ import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostReg
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.review.api.dto.response.ReviewResponseDto;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequiredArgsConstructor

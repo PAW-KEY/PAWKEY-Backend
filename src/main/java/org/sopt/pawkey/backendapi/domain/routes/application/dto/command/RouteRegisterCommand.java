@@ -14,7 +14,8 @@ public record RouteRegisterCommand(
 	int duration,
 	LocalDateTime startedAt,
 	LocalDateTime endedAt,
-	int stepCount
+	int stepCount,
+	Long trackingImageId
 ) {
 
 }

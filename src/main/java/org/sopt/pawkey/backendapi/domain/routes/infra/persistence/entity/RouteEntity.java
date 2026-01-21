@@ -66,7 +66,7 @@ public class RouteEntity extends BaseEntity {
 	private RegionEntity region;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "image_id", nullable = true)
+	@JoinColumn(name = "image_id", nullable = false)
 	private ImageEntity trackingImage;
 
 	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
