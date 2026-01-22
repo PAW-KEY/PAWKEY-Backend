@@ -74,9 +74,10 @@ public class DbtiController {
 	})
 	@GetMapping("/{petId}")
 	public ResponseEntity<ApiResponse<DbtiResultResponseDto>> getPetDbtiResult(
+		@Parameter(hidden = true) @UserId Long userId,
 		@PathVariable Long petId
 	) {
-		DbtiResultResponseDto response = dbtiQueryFacade.getPetDbtiResult(petId);
+		DbtiResultResponseDto response = dbtiQueryFacade.getPetDbtiResult(userId, petId);
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
 	}
 }

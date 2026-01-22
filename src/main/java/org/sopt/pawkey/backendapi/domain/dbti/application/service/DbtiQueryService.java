@@ -13,6 +13,9 @@ import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResul
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetBusinessException;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetErrorCode;
+import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,15 +34,18 @@ public class DbtiQueryService {
 	private final DbtiResultRepository resultRepository;
 	private final PetRepository petRepository;
 
-	public DbtiResultDetailVo getPetDbtiResultDetail(Long petId) {
+	public DbtiResultDetailVo getPetDbtiResultDetail(Long userId, Long petId) {
 
-		if (!petRepository.existsById(petId)) {
-			throw new PetBusinessException(PetErrorCode.PET_NOT_FOUND);
+		PetEntity pet = petRepository.findById(petId)
+			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
+
+		if (!pet.getUser().getUserId().equals(userId)) {
+			throw new UserBusinessException(UserErrorCode.USER_NOT_FOUND);
 		}
 
 		DbtiResultEntity result = resultRepository.findByPetId(petId)
-			.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_RESULT_NOT_FOUND));
-		
+			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED));
+
 		DbtiEntity dbtiInfo = dbtiRepository.findDbtiByType(result.getDbtiType())
 			.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_NOT_FOUND));
 

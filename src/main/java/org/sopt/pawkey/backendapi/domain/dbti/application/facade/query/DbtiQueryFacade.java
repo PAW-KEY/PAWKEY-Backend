@@ -30,8 +30,8 @@ public class DbtiQueryFacade {
 		return DbtiQuestionListResponseDto.from(questions);
 	}
 
-	public DbtiResultResponseDto getPetDbtiResult(Long petId) {
-		var detail = dbtiQueryService.getPetDbtiResultDetail(petId);
+	public DbtiResultResponseDto getPetDbtiResult(Long userId, Long petId) {
+		var detail = dbtiQueryService.getPetDbtiResultDetail(userId, petId);
 
 		return DbtiResultResponseDto.of(detail.result(), detail.dbtiInfo());
 	}
