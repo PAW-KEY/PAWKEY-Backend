@@ -2,7 +2,6 @@ package org.sopt.pawkey.backendapi.domain.user.application.service;
 
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiResultRepository;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class UserPetQueryService {
 
 	private final PetRepository petRepository;
-	private final DbtiResultRepository dbtiResultRepository;
 
 	public List<PetProfileResponseDto> getPetProfiles(UserEntity user) {
 		List<PetEntity> petEntityList = petRepository.findAllPetsByUserId(user.getUserId());
