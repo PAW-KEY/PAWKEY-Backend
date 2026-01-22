@@ -57,4 +57,11 @@ public class DbtiResultEntity {
 		this.psScore = psScore;
 		this.rfScore = rfScore;
 	}
+
+	public void setPet(PetEntity pet) {
+		this.pet = pet;
+		if (pet.getDbtiResult() != this) {
+			pet.setDbtiResult(this);
+		}
+	}
 }

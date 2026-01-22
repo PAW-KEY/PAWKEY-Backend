@@ -89,4 +89,8 @@ public class PetEntity extends BaseEntity {
 	public void incrementWalkCount() {
 		this.walkCount++;
 	}
+
+	public void setDbtiResult(DbtiResultEntity dbtiResult) {
+		this.dbtiResult = dbtiResult;
+	}
 }
