@@ -44,7 +44,7 @@ public class DbtiQueryService {
 		}
 
 		DbtiResultEntity result = resultRepository.findByPetId(petId)
-			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED));
+			.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_RESULT_NOT_FOUND));
 
 		DbtiEntity dbtiInfo = dbtiRepository.findDbtiByType(result.getDbtiType())
 			.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_NOT_FOUND));
