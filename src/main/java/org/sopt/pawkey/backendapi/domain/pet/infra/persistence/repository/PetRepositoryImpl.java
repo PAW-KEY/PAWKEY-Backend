@@ -23,22 +23,13 @@ public class PetRepositoryImpl implements PetRepository {
 	}
 
 	@Override
-	public List<PetEntity> findAllPetsByUserId(Long userId) {
-		return springDataPetRepository.findAllByUser_UserId(userId);
+	public Optional<PetEntity> findByUserId(Long userId) {
+		return springDataPetRepository.findByUser_UserId(userId);
 	}
 
 	@Override
-	public boolean existsById(Long petId) {
-		return springDataPetRepository.existsById(petId);
-	}
-
-	@Override
-	public List<String> findAllBreeds() {
-		return springDataBreedRepository.findAllByOrderByNameAsc()
-			.stream()
-			.map(BreedEntity::getName)
-			.sorted()
-			.toList();
+	public boolean existsByUserId(Long userId) {
+		return springDataPetRepository.existsByUser_UserId(userId);
 	}
 
 	@Override

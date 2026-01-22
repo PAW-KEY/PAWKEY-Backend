@@ -115,11 +115,11 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
 	})
 	@GetMapping("/me/pets")
-	public ResponseEntity<ApiResponse<List<PetProfileResponseDto>>> getMyPets(
+	public ResponseEntity<ApiResponse<PetProfileResponseDto>> getMyPet(
 		@Parameter(hidden = true) @UserId Long userId
 	) {
-		List<PetProfileResponseDto> petDtos = userPetQueryFacade.getUserPets(userId);
-		return ResponseEntity.ok(ApiResponse.success(petDtos));
+		PetProfileResponseDto response = userPetQueryFacade.getUserPet(userId);
+		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
 	@PatchMapping("/me/regions")

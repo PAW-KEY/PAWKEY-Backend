@@ -1,10 +1,10 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
-import java.util.List;
-
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +16,10 @@ public class UserPetQueryService {
 
 	private final PetRepository petRepository;
 
-	public List<PetProfileResponseDto> getPetProfiles(UserEntity user) {
-		List<PetEntity> petEntityList = petRepository.findAllPetsByUserId(user.getUserId());
+	public PetProfileResponseDto getPetProfile(UserEntity user) {
+		PetEntity pet = petRepository.findByUserId(user.getUserId())
+			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED));
 
-		return petEntityList.stream()
-			.map(PetProfileResponseDto::from)
-			.toList();
+		return PetProfileResponseDto.from(pet);
 	}
 }

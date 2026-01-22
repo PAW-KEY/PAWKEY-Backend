@@ -19,10 +19,10 @@ public class UserPetQueryFacade {
 	private final UserPetQueryService userPetQueryService;
 	private final UserService userService;
 
-	public List<PetProfileResponseDto> getUserPets(Long userId) {
+	public PetProfileResponseDto getUserPet(Long userId) {
 
 		UserEntity user = userService.findById(userId);
 
-		return userPetQueryService.getPetProfiles(user);
+		return userPetQueryService.getPetProfile(user);
 	}
 }

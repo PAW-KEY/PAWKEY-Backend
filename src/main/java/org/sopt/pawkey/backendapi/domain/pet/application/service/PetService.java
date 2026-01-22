@@ -20,6 +20,11 @@ public class PetService {
 	private final BreedRepository breedRepository;
 
 	public PetEntity savePet(CreatePetCommand command, UserEntity user) {
+
+		if (petRepository.existsByUserId(user.getUserId())) {
+			throw new PetBusinessException(PetErrorCode.ALREADY_REGISTERED_PET);
+		}
+		
 		BreedEntity breed = breedRepository.findBreedById(command.breedId())
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
 
