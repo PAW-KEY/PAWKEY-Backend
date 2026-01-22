@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public enum ImageErrorCode implements ErrorCode {
 
-	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "R40401", "해당 이미지를 찾을 수 없습니다.");
-
+	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "R40401", "해당 이미지를 찾을 수 없습니다."),
+	INVALID_IMAGE_DOMAIN(HttpStatus.BAD_REQUEST, "R40001", "유효하지 않은 이미지 도메인입니다.");
 	private final HttpStatus status;
 	private final String code;
 	private final String message;

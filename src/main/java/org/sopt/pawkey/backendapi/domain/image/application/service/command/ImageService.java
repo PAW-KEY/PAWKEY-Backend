@@ -6,6 +6,7 @@ import org.sopt.pawkey.backendapi.domain.image.domain.repository.ImageRepository
 import org.sopt.pawkey.backendapi.domain.image.exception.ImageBusinessException;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 
+import org.sopt.pawkey.backendapi.domain.tempImage.domain.ImageDomain;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -27,14 +28,14 @@ public class ImageService {
 	}
 
 
-	public ImageEntity createUploadedImage(String imageUrl, String contentType, int width, int height) {
+	public ImageEntity createUploadedImage(String imageUrl, String contentType, int width, int height, ImageDomain domain) {
 		ImageEntity image = ImageEntity.builder()
 			.imageUrl(imageUrl)
 			.extension(contentType)
 			.width(width)
 			.height(height)
+			.domain(domain)
 			.build();
-
 		return imageRepository.save(image);
 	}
 }

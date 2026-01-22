@@ -22,7 +22,8 @@ public class RegisterImageFacade { //이미지 메타데이터 등록
 			command.imageUrl(),
 			command.contentType(),
 			command.width(),
-			command.height()
+			command.height(),
+			command.domain()
 		);
 
 		return RegisterImageResult.from(image);

@@ -25,6 +25,8 @@ public class RouteRegisterFacade {
 		UserEntity user = userService.findById(userId);
 		ImageEntity trackingImage  = imageService.getImageById(command.trackingImageId());
 
+		trackingImage.validateUsableForRoute();
+
 		return RouteRegisterResult.from(
 			routeService.saveRoute(user, command, trackingImage)
 		);
