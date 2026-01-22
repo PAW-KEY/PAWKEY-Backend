@@ -62,7 +62,7 @@ public class DbtiController {
 		@PathVariable Long petId,
 		@RequestBody @Valid DbtiSubmitRequestDto request
 	) {
-		DbtiResultResponseDto response = dbtiCommandFacade.submitDbtiTest(petId, request);
+		DbtiResultResponseDto response = dbtiCommandFacade.submitDbtiTest(userId, petId, request);
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
 	}
 

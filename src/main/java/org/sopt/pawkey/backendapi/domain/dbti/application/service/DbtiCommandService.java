@@ -16,6 +16,8 @@ import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetBusinessException;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetErrorCode;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
+import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,10 +34,14 @@ public class DbtiCommandService {
 
 	private static final int EXPECTED_OPTION_COUNT = 9;
 
-	public DbtiResultDetailVo calculateSaveAndGetDetail(Long petId, DbtiSubmitRequestDto request) {
+	public DbtiResultDetailVo calculateSaveAndGetDetail(Long userId, Long petId, DbtiSubmitRequestDto request) {
 
 		PetEntity pet = petRepository.findById(petId)
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
+
+		if (!pet.getUser().getUserId().equals(userId)) {
+			throw new UserBusinessException(UserErrorCode.USER_NOT_FOUND);
+		}
 
 		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
 			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_COUNT);

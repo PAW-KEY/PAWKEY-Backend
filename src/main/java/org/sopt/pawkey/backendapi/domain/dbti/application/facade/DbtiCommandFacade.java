@@ -13,8 +13,8 @@ public class DbtiCommandFacade {
 
 	private final DbtiCommandService dbtiCommandService;
 
-	public DbtiResultResponseDto submitDbtiTest(Long petId, DbtiSubmitRequestDto request) {
-		var detail = dbtiCommandService.calculateSaveAndGetDetail(petId, request);
+	public DbtiResultResponseDto submitDbtiTest(Long userId, Long petId, DbtiSubmitRequestDto request) {
+		var detail = dbtiCommandService.calculateSaveAndGetDetail(userId, petId, request);
 
 		return DbtiResultResponseDto.of(detail.result(), detail.dbtiInfo());
 	}
