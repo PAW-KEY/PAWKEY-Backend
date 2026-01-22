@@ -31,7 +31,7 @@ public class DbtiResultEntity {
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pet_id", nullable = false)
+	@JoinColumn(name = "pet_id", nullable = false, unique = true)
 	private PetEntity pet;
 
 	@Enumerated(EnumType.STRING)
