@@ -7,7 +7,8 @@ public enum PetErrorCode implements ErrorCode {
 
 	CATEGORY_OPTION_NOT_FOUND("P40401", "존재하지 않는 성향 옵션입니다.", HttpStatus.NOT_FOUND),
 	PET_NOT_FOUND("P40402", "존재하지 않는 반려견 정보입니다.", HttpStatus.NOT_FOUND),
-	BREED_NOT_FOUND("P40403", "존재하지 않는 견종 정보입니다.", HttpStatus.NOT_FOUND);
+	BREED_NOT_FOUND("P40403", "존재하지 않는 견종 정보입니다.", HttpStatus.NOT_FOUND),
+	PET_ACCESS_DENIED("P40301", "해당 반려견 정보에 대한 접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
 	private final String code;
 	private final String message;
 	private final HttpStatus status;

@@ -39,8 +39,8 @@ public class DbtiCommandService {
 		PetEntity pet = petRepository.findById(petId)
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
 
-		if (!pet.getUser().getUserId().equals(userId)) {
-			throw new UserBusinessException(UserErrorCode.USER_NOT_FOUND);
+		if (pet.getUser() == null || !pet.getUser().getUserId().equals(userId)) {
+			throw new PetBusinessException(PetErrorCode.PET_ACCESS_DENIED);
 		}
 
 		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
