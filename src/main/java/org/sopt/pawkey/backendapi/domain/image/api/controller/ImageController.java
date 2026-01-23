@@ -33,7 +33,8 @@ public class ImageController {
 				request.imageUrl(),
 				request.contentType(),
 				request.width(),
-				request.height()
+				request.height(),
+				request
 			)
 		);
 
