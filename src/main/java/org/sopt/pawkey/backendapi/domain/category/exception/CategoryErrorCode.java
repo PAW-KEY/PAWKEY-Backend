@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public enum CategoryErrorCode implements ErrorCode {
 
-	CATEGORY_ERROR_CODE(HttpStatus.BAD_REQUEST, "C40001", "잘못된 카테고리 요청입니다.");
+	CATEGORY_ERROR_CODE(HttpStatus.BAD_REQUEST, "C40001", "잘못된 카테고리 요청입니다."),
+	CATEGORY_SELECTION_REQUIRED(HttpStatus.BAD_REQUEST, "C40001", "카테고리 선택이 필요합니다."),
+	INVALID_CATEGORY_SELECTION(HttpStatus.BAD_REQUEST, "C40001", "카테고리 선택 조건이 아닙니다.");
 
 	private final HttpStatus status;
 	private final String code;

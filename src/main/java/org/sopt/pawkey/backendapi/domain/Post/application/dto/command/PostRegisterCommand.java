@@ -10,6 +10,7 @@ public record PostRegisterCommand(
 	String description,
 	boolean isPublic,
 	List<SelectedOptionsForCategory> selectedOptionsForCategories,
-	Long routeId
+	Long routeId,
+	List<Long> imageIds
 ) {
 }

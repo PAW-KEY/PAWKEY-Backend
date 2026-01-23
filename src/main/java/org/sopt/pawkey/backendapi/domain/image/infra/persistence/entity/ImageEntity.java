@@ -70,5 +70,10 @@ public class ImageEntity extends BaseEntity {
 			throw new ImageBusinessException(ImageErrorCode.INVALID_IMAGE_DOMAIN);
 		}
 	}
+	public void validateUsableForPost() {
+		if (this.domain != ImageDomain.WALK) {
+			throw new ImageBusinessException(ImageErrorCode.INVALID_IMAGE_DOMAIN);
+		}
+	}
 
 }

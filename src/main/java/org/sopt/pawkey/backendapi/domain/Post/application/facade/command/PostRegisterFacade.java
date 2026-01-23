@@ -1,8 +1,13 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryOptionService;
+import org.sopt.pawkey.backendapi.domain.category.exception.CategoryBusinessException;
+import org.sopt.pawkey.backendapi.domain.category.exception.CategoryErrorCode;
+import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryEntity;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.image.application.service.command.ImageService;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
@@ -18,7 +23,6 @@ import org.sopt.pawkey.backendapi.domain.routes.application.service.RouteService
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,36 +39,62 @@ public class PostRegisterFacade {
 	private final PostSelectedCategoryOptionService postSelectedCategoryOptionService;
 	private final CategoryOptionService categoryOptionService;
 
-	public PostRegisterResult execute(Long userId,
-		PostRegisterCommand command) {
+	public PostRegisterResult execute(Long userId, PostRegisterCommand command) {
 
+		//User와 Route 조회 ( 유스케이스 시작에 필요한 기본 엔티티들)
 		UserEntity writer = userService.findById(userId);
 		RouteEntity route = routeService.getRouteById(command.routeId());
 
+		// 하나의 루트에는 하나의 게시물만 허용
 		throwIfRoutePostExist(route);
 
-		//List<ImageEntity> imageEntities = imageService.storeWalkPostImages(postImages);
+		// 게시물 이미지(presined)
+		List<ImageEntity> images = command.imageIds().stream()
+			.map(imageService::getImageById)
+			.peek(ImageEntity::validateUsableForPost)
+			.toList();
 
-		try {
-			PostEntity post = postService.savePost(writer, command, route);
 
-			List<CategoryOptionEntity> selectedCategoryOptions = getCategoryOptionEntities(
-				command.selectedOptionsForCategories());
-			postSelectedCategoryOptionService.saveSelectedOption(post, selectedCategoryOptions);
+		PostEntity post = postService.savePost(writer, command, route);
 
-			return PostRegisterResult.builder()
-				.postId(post.getPostId())
-				.routeId(route.getRouteId())
-				.build();
+		// Post Aggregate( PostImageEntity 생성 책임-> PostEntity 담당)
+		post.addImages(images);
 
-		} catch (Exception e) {
-			// // 이미지 rollback
-			// for (ImageEntity image : imageEntities) {
-			// 	imageService.deleteImage(image);
-			// }
-			throw e;
-		}
+		processCategorySelection(post, command.selectedOptionsForCategories());
+
+
+		return PostRegisterResult.builder()
+			.postId(post.getPostId())
+			.routeId(route.getRouteId())
+			.build();
 	}
+	private void processCategorySelection(
+		PostEntity post,
+		List<SelectedOptionsForCategory> selectedOptionsForCategories
+	) {
+		// optionId → CategoryOptionEntity 변환
+		List<CategoryOptionEntity> selectedCategoryOptions =
+			getCategoryOptionEntities(selectedOptionsForCategories);
+
+		// 카테고리 기준 그룹핑
+		Map<CategoryEntity, List<CategoryOptionEntity>> optionsByCategory =
+			selectedCategoryOptions.stream()
+				.collect(Collectors.groupingBy(CategoryOptionEntity::getCategory));
+
+		// 카테고리 내부 선택 규칙 검증
+		optionsByCategory.forEach(
+			(category, options) -> category.validateSelection(options)
+		);
+
+		// 필수 카테고리 누락 검증
+		validateAllRequiredCategoriesSelected(optionsByCategory);
+
+		postSelectedCategoryOptionService.saveSelectedOption(
+			post,
+			selectedCategoryOptions
+		);
+	}
+
 
 	private List<CategoryOptionEntity> getCategoryOptionEntities(
 		List<SelectedOptionsForCategory> selectedOptionsForCategories
@@ -75,6 +105,21 @@ public class PostRegisterFacade {
 
 		return categoryOptionService.getAllWhereInIds(
 			selectedOptionIds);
+	}
+
+	private void validateAllRequiredCategoriesSelected(
+		Map<CategoryEntity, List<CategoryOptionEntity>> optionsByCategory
+	) {
+		List<CategoryEntity> requiredCategories =
+			categoryService.getAllRequiredCategories();
+
+		for (CategoryEntity category : requiredCategories) {
+			if (!optionsByCategory.containsKey(category)) {
+				throw new CategoryBusinessException(
+					CategoryErrorCode.CATEGORY_SELECTION_REQUIRED
+				);
+			}
+		}
 	}
 
 	private void throwIfRoutePostExist(RouteEntity route) {
