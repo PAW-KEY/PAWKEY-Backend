@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.user.application.facade.command;
+package org.sopt.pawkey.backendapi.domain.pet.application.facade;
 
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.UpdatePetCommand;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserPetCommandFacade {
+public class PetCommandFacade {
 
 	private final PetService petService;
 	private final PetQueryService petQueryService;
