@@ -14,11 +14,9 @@ import lombok.RequiredArgsConstructor;
 public class PetCommandFacade {
 
 	private final PetService petService;
-	private final PetQueryService petQueryService;
 
 	@Transactional
-	public PetProfileResponseDto updatePetInfo(Long userId, Long petId, UpdatePetCommand command) {
+	public void updatePetInfo(Long userId, Long petId, UpdatePetCommand command) {
 		petService.updatePetInfo(userId, petId, command);
-		return petQueryService.getPetProfile(petId);
 	}
 }

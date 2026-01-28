@@ -4,8 +4,6 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.request.UpdatePetRequestDto;
-import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
-import org.sopt.pawkey.backendapi.domain.pet.application.service.PetQueryService;
 import org.sopt.pawkey.backendapi.domain.pet.application.facade.PetCommandFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -35,13 +33,13 @@ public class PetController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "해당 반려견에 대한 수정 권한이 없음"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "반려견 정보를 찾을 수 없음")
 	})
-	public ResponseEntity<ApiResponse<PetProfileResponseDto>> updatePetInfo(
+	public ResponseEntity<ApiResponse<Void>> updatePetInfo(
 		@Parameter(hidden = true) @UserId Long userId,
 		@PathVariable Long petId,
 		@Valid @RequestBody UpdatePetRequestDto requestDto
 	) {
-		PetProfileResponseDto response = petCommandFacade.updatePetInfo(userId, petId, requestDto.toCommand());
-		return ResponseEntity.ok(ApiResponse.success(response));
+		petCommandFacade.updatePetInfo(userId, petId, requestDto.toCommand());
+		return ResponseEntity.ok(ApiResponse.success());
 	}
 
 }
