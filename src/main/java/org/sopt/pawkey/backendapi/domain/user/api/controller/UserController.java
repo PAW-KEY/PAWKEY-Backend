@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.request.CreateUserRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserInfoRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UserOnboardingRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapper;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserOnboardingResponseDto;
@@ -47,7 +47,7 @@ public class UserController {
 	private final UserOnboardingFacade userOnboardingFacade;
 	private final UserQueryFacade userQueryFacade;
 
-	@Operation(summary = "유저 정보 등록", description = "회원가입과 동시에, 유저 정보 등록. ", tags = {"Users"})
+	@Operation(summary = "유저 온보딩 정보 등록", description = "회원가입과 동시에, 유저 정보 등록. ", tags = {"Users"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보 등록 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "중복된 로그인 아이디입니다.", content = @Content(mediaType = "application/json")),
@@ -58,7 +58,7 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<ApiResponse<UserOnboardingResponseDto>> onboardUser(
 		@Parameter(hidden = true) @UserId Long userId,
-		@RequestBody @Valid CreateUserRequestDto requestDto) {
+		@RequestBody @Valid UserOnboardingRequestDto requestDto) {
 
 		UserOnboardingCommand command = requestDto.toCommand();
 		UserOnboardingResponseDto response = userOnboardingFacade.onboard(userId, command);
