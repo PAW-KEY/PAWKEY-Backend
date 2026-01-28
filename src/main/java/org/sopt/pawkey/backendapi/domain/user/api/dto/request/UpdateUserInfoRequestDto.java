@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.user.api.dto.request;
 import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UpdateUserInfoCommand;
+import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,9 +18,8 @@ public record UpdateUserInfoRequestDto(
 	@PastOrPresent(message = "생년월일은 현재 또는 과거 날짜여야 합니다")
 	LocalDate birth,
 
-	@Pattern(regexp = "^(M|F)$", message = "성별은 M 또는 F이어야 합니다.")
-	@NotBlank(message = "성별 선택은 필수 사항입니다.")
-	String gender
+	@NotNull(message = "성별 선택은 필수 사항입니다.")
+	Gender gender
 ) {
 	public UpdateUserInfoCommand toCommand() {
 		return new UpdateUserInfoCommand(name, birth, gender);

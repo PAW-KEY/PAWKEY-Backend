@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.user.api.dto.response;
 import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
+import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 public record UserInfoResponseDto(
 	String name,
@@ -19,13 +20,13 @@ public record UserInfoResponseDto(
 		);
 	}
 
-	private static String parseGender(String gender) {
+	private static String parseGender(Gender gender) {
 		if (gender == null)
 			return "미선택";
-		return switch (gender.toUpperCase()) {
-			case "M" -> "남성";
-			case "F" -> "여성";
-			default -> gender;
+
+		return switch (gender) {
+			case M -> "남성";
+			case F -> "여성";
 		};
 	}
 }

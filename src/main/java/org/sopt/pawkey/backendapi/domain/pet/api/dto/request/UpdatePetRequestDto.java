@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.pet.api.dto.request;
 import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.UpdatePetCommand;
+import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,8 +16,7 @@ public record UpdatePetRequestDto(
 	@PastOrPresent(message = "생년월일은 현재 또는 과거 날짜여야 합니다")
 	@NotNull LocalDate birth,
 
-	@Pattern(regexp = "^(M|F)$", message = "성별은 M 또는 F이어야 합니다.")
-	@NotBlank String gender,
+	@NotNull(message = "성별은 필수입니다") Gender gender,
 
 	@NotNull Boolean isNeutered,
 
