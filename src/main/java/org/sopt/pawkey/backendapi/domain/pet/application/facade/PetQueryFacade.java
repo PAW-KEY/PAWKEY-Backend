@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
+package org.sopt.pawkey.backendapi.domain.pet.application.facade;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserPetQueryFacade {
+public class PetQueryFacade {
 
 	private final PetQueryService petQueryService;
 	private final UserService userService;
