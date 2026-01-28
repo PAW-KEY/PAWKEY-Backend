@@ -11,10 +11,10 @@ import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserInfoRequ
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapper;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterResponseDto;
-import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserOnboardingResponseDto;
+import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserOnboardingCommand;
+import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UserOnboardingFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserInfoFacade;
-import org.sopt.pawkey.backendapi.domain.user.application.facade.UserRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserRegionFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLikedPostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
@@ -44,7 +44,7 @@ public class UserController {
 	private final UpdateUserInfoFacade updateUserInfoFacade;
 	private final UserLikedPostQueryFacade userLikedPostQueryFacade;
 	private final UserWrittenPostQueryFacade userWrittenPostQueryFacade;
-	private final UserRegisterFacade userRegisterFacade;
+	private final UserOnboardingFacade userOnboardingFacade;
 	private final UserQueryFacade userQueryFacade;
 
 	@Operation(summary = "유저 정보 등록", description = "회원가입과 동시에, 유저 정보 등록. ", tags = {"Users"})
@@ -56,12 +56,12 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "강아지 프로필 이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping
-	public ResponseEntity<ApiResponse<UserRegisterResponseDto>> createUser(
+	public ResponseEntity<ApiResponse<UserOnboardingResponseDto>> onboardUser(
 		@Parameter(hidden = true) @UserId Long userId,
 		@RequestBody @Valid CreateUserRequestDto requestDto) {
 
-		UserRegisterCommand command = requestDto.toCommand();
-		UserRegisterResponseDto response = userRegisterFacade.execute(userId, command);
+		UserOnboardingCommand command = requestDto.toCommand();
+		UserOnboardingResponseDto response = userOnboardingFacade.onboard(userId, command);
 
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}

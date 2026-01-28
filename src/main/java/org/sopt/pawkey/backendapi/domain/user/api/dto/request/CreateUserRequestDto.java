@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.request.PetRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.CreateUserCommand;
-import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserOnboardingCommand;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -25,9 +25,9 @@ public record CreateUserRequestDto(
 
 	@Valid @NotNull(message = "강아지 정보 입력은 필수값입니다.") PetRequestDto pet
 ) {
-	public UserRegisterCommand toCommand() {
+	public UserOnboardingCommand toCommand() {
 
-		return new UserRegisterCommand(
+		return new UserOnboardingCommand(
 			CreateUserCommand.of(name, birth, gender, regionId),
 			pet.toCommand()
 		);

@@ -32,7 +32,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserEntity saveUser(Long userId, CreateUserCommand command, RegionEntity region) {
+	public UserEntity completeOnboarding(Long userId, CreateUserCommand command, RegionEntity region) {
 
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
