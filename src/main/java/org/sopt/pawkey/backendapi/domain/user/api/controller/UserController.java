@@ -15,7 +15,7 @@ import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapp
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserRegisterResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserRegisterCommand;
-import org.sopt.pawkey.backendapi.domain.user.application.facade.UpdateUserInfoFacade;
+import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserInfoFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateUserRegionFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UserPetCommandFacade;
@@ -94,12 +94,12 @@ public class UserController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
 	})
 	@Operation(summary = "유저 정보 수정", description = "이름, 성별, 생년월일을 수정합니다.", tags = {"Users"})
-	public ResponseEntity<ApiResponse<UserInfoResponseDto>> updateUserInfo(
+	public ResponseEntity<ApiResponse<Void>> updateUserInfo(
 		@Parameter(hidden = true) @UserId Long userId,
 		@Valid @RequestBody UpdateUserInfoRequestDto requestDto
 	) {
-		UserInfoResponseDto response = updateUserInfoFacade.execute(userId, requestDto.toCommand());
-		return ResponseEntity.ok(ApiResponse.success(response));
+		updateUserInfoFacade.execute(userId, requestDto.toCommand());
+		return ResponseEntity.ok(ApiResponse.success());
 	}
 
 	@PatchMapping("/me/regions")
