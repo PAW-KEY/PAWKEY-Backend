@@ -15,8 +15,6 @@ public record PetProfileResponseDto(
 	String gender,
 	boolean isNeutered,
 	String breed,
-
-	// 추후 dbti 엔티티 생성 시에, dbti 소개 문구로 변경할 예정
 	String dbti
 ) {
 	public static PetProfileResponseDto from(PetEntity pet) {
@@ -28,8 +26,8 @@ public record PetProfileResponseDto(
 			calculateAgeInMonths(pet.getBirth()),
 			convertGender(pet.getGender()),
 			pet.isNeutered(),
-			pet.getBreed(),
-			parseDbti(pet.getDbti())
+			pet.getBreed() != null ? pet.getBreed().getName() : null,
+			pet.getDbtiResult() != null ? pet.getDbtiResult().getDbtiType().name() : "DBTI 검사 미완료"
 		);
 	}
 
@@ -47,9 +45,5 @@ public record PetProfileResponseDto(
 			case M -> "남아";
 			case F -> "여아";
 		};
-	}
-
-	private static String parseDbti(String dbti) {
-		return (dbti == null || dbti.isBlank()) ? "DBTI 검사 미완료" : dbti;
 	}
 }

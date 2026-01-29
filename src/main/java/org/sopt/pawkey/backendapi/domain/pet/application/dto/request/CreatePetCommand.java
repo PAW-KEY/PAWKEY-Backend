@@ -9,15 +9,15 @@ public record CreatePetCommand(
 	Gender gender,
 	LocalDate birth,
 	boolean isNeutered,
-	String breed
+	Long breedId
 ) {
 	public static CreatePetCommand of(
 		String name,
 		Gender gender,
 		LocalDate birth,
 		boolean isNeutered,
-		String breed
+		Long breedId
 	) {
-		return new CreatePetCommand(name, gender, birth, isNeutered, breed);
+		return new CreatePetCommand(name, gender, birth, isNeutered, breedId);
 	}
 }

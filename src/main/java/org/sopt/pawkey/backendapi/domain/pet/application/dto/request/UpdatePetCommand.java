@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.pet.application.dto.request;
 
 import java.time.LocalDate;
 
+import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.BreedEntity;
 import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 public record UpdatePetCommand(
@@ -9,6 +10,6 @@ public record UpdatePetCommand(
 	LocalDate birth,
 	Gender gender,
 	boolean isNeutered,
-	String breed
+	BreedEntity breed
 ) {
 }

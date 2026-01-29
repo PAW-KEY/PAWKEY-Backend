@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.pet.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import java.util.List;
+
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.request.UpdatePetRequestDto;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
@@ -47,11 +48,11 @@ public class PetController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
 	})
 	@GetMapping("/me/pets")
-	public ResponseEntity<ApiResponse<List<PetProfileResponseDto>>> getMyPets(
+	public ResponseEntity<ApiResponse<PetProfileResponseDto>> getMyPet(
 		@Parameter(hidden = true) @UserId Long userId
 	) {
-		List<PetProfileResponseDto> petDtos = petQueryFacade.getUserPets(userId);
-		return ResponseEntity.ok(ApiResponse.success(petDtos));
+		PetProfileResponseDto response = petQueryFacade.getUserPet(userId);
+		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
 	@PatchMapping("/{petId}")

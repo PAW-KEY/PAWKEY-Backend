@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity;
 
 import java.time.LocalDate;
 
+import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.enums.Gender;
@@ -58,11 +59,12 @@ public class PetEntity extends BaseEntity {
 
 	private boolean isNeutered;
 
-	@Column(name = "breed", length = 50)
-	private String breed;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "breed_id")
+	private BreedEntity breed;
 
-	@Column(name = "dbti")
-	private String dbti;
+	@OneToOne(mappedBy = "pet", fetch = FetchType.LAZY)
+	private DbtiResultEntity dbtiResult;
 
 	@Builder
 	public PetEntity(Long petId,
@@ -72,8 +74,8 @@ public class PetEntity extends BaseEntity {
 		ImageEntity profileImage,
 		UserEntity user,
 		boolean isNeutered,
-		String breed,
-		String dbti) {
+		BreedEntity breed) {
+
 		this.petId = petId;
 		this.name = name;
 		this.gender = gender;
@@ -82,14 +84,17 @@ public class PetEntity extends BaseEntity {
 		this.user = user;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
-		this.dbti = dbti;
 	}
 
-	public void updateProfile(String name, LocalDate birth, Gender gender, boolean isNeutered, String breed) {
+	public void updateProfile(String name, LocalDate birth, Gender gender, boolean isNeutered, BreedEntity breed) {
 		this.name = name;
 		this.birth = birth;
 		this.gender = gender;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
+	}
+
+	public void setDbtiResult(DbtiResultEntity dbtiResult) {
+		this.dbtiResult = dbtiResult;
 	}
 }

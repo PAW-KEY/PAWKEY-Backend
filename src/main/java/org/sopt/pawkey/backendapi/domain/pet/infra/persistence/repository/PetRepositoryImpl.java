@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class PetRepositoryImpl implements PetRepository {
 
 	private final SpringDataPetRepository springDataPetRepository;
-	private final SpringDataBreedRepository springDataBreedRepository;
 
 	@Override
 	public PetEntity save(PetEntity pet) {
@@ -23,13 +22,13 @@ public class PetRepositoryImpl implements PetRepository {
 	}
 
 	@Override
-	public List<PetEntity> findAllPetsByUserId(Long userId) {
-		return springDataPetRepository.findAllByUser_UserId(userId);
+	public Optional<PetEntity> findByUserId(Long userId) {
+		return springDataPetRepository.findByUser_UserId(userId);
 	}
 
 	@Override
-	public boolean existsById(Long petId) {
-		return springDataPetRepository.existsById(petId);
+	public boolean existsByUserId(Long userId) {
+		return springDataPetRepository.existsByUser_UserId(userId);
 	}
 
 	@Override
@@ -37,11 +36,4 @@ public class PetRepositoryImpl implements PetRepository {
 		return springDataPetRepository.findById(petId);
 	}
 
-	public List<String> findAllBreeds() {
-		return springDataBreedRepository.findAllByOrderByNameAsc()
-			.stream()
-			.map(BreedEntity::getName)
-			.sorted()
-			.toList();
-	}
 }

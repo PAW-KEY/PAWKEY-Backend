@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.pet.api.dto.request;
 import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.UpdatePetCommand;
+import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.BreedEntity;
 import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 import jakarta.validation.constraints.NotBlank;
@@ -20,7 +21,7 @@ public record UpdatePetRequestDto(
 
 	@NotNull Boolean isNeutered,
 
-	@NotBlank String breed
+	@NotBlank BreedEntity breed
 ) {
 	public UpdatePetCommand toCommand() {
 		return new UpdatePetCommand(name, birth, gender, isNeutered, breed);
