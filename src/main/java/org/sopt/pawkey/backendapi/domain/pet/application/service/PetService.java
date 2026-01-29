@@ -53,12 +53,15 @@ public class PetService {
 			throw new UserBusinessException(UserErrorCode.UNAUTHORIZED_ACCESS);
 		}
 
+		BreedEntity breed = breedRepository.findBreedById(command.breedId())
+			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
+
 		pet.updateProfile(
 			command.name(),
 			command.birth(),
 			command.gender(),
 			command.isNeutered(),
-			command.breed()
+			breed
 		);
 	}
 }

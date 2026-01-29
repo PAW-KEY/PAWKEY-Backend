@@ -3,13 +3,11 @@ package org.sopt.pawkey.backendapi.domain.pet.api.dto.request;
 import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.UpdatePetCommand;
-import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.BreedEntity;
 import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
 
 public record UpdatePetRequestDto(
 	@NotBlank String name,
@@ -21,9 +19,9 @@ public record UpdatePetRequestDto(
 
 	@NotNull Boolean isNeutered,
 
-	@NotBlank BreedEntity breed
+	@NotNull(message = "견종은 필수값입니다.") Long breedId
 ) {
 	public UpdatePetCommand toCommand() {
-		return new UpdatePetCommand(name, birth, gender, isNeutered, breed);
+		return UpdatePetCommand.of(name, gender, birth, isNeutered, breedId);
 	}
 }
