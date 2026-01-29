@@ -32,14 +32,7 @@ public class DbtiQueryService {
 	private final DbtiResultRepository resultRepository;
 	private final PetRepository petRepository;
 
-	public DbtiResultEntity getPetDbtiResult(Long userId, Long petId) {
-		PetEntity pet = petRepository.findById(petId)
-			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
-
-		if (pet.getUser() == null || !pet.getUser().getUserId().equals(userId)) {
-			throw new PetBusinessException(PetErrorCode.PET_ACCESS_DENIED);
-		}
-
+	public DbtiResultEntity getPetDbtiResult(Long petId) {
 		return resultRepository.findByPetId(petId)
 			.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_RESULT_NOT_FOUND));
 	}

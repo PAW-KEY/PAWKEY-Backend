@@ -30,14 +30,7 @@ public class DbtiCommandService {
 
 	private static final int EXPECTED_OPTION_COUNT = 9;
 
-	public DbtiResultEntity calculateAndSave(Long userId, Long petId, DbtiSubmitRequestDto request) {
-
-		PetEntity pet = petRepository.findById(petId)
-			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
-
-		if (pet.getUser() == null || !pet.getUser().getUserId().equals(userId)) {
-			throw new PetBusinessException(PetErrorCode.PET_ACCESS_DENIED);
-		}
+	public DbtiResultEntity calculateAndSave(PetEntity pet, DbtiSubmitRequestDto request) {
 
 		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
 			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_COUNT);
@@ -55,7 +48,7 @@ public class DbtiCommandService {
 
 		DbtiType dbtiType = DbtiType.determine(eiScore, psScore, rfScore);
 
-		return resultRepository.findByPetId(petId)
+		return resultRepository.findByPetId(pet.getPetId())
 			.map(existingResult -> {
 				existingResult.updateResult(dbtiType, eiScore, psScore, rfScore);
 				return existingResult;
