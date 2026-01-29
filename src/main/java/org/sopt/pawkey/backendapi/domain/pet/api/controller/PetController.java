@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.BreedListResponseDto;
-import org.sopt.pawkey.backendapi.domain.pet.application.facade.PetFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,8 +63,6 @@ public class PetController {
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 
-	private final PetFacade petFacade;
-
 	@Operation(summary = "견종 옵션 리스트 조회", description = "온보딩 과정에서 선택 가능한 전체 견종 리스트를 가나다순으로 조회합니다.", tags = {"Users"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "견종 리스트 조회 성공"),
@@ -73,7 +70,7 @@ public class PetController {
 	})
 	@GetMapping("/breeds")
 	public ResponseEntity<ApiResponse<BreedListResponseDto>> getBreeds() {
-		BreedListResponseDto response = petFacade.getBreedList();
+		BreedListResponseDto response = petQueryFacade.getBreedList();
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(ApiResponse.success(response));

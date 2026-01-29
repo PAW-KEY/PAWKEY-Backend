@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PetService {
+public class PetCommandService {
 
 	private final PetRepository petRepository;
 	private final BreedRepository breedRepository;
@@ -45,14 +45,7 @@ public class PetService {
 	}
 
 	@Transactional
-	public void updatePetInfo(Long userId, Long petId, UpdatePetCommand command) {
-		PetEntity pet = petRepository.findById(petId)
-			.orElseThrow(() -> new PetBusinessException(PetErrorCode.PET_NOT_FOUND));
-
-		if (!pet.getUser().getUserId().equals(userId)) {
-			throw new UserBusinessException(UserErrorCode.UNAUTHORIZED_ACCESS);
-		}
-
+	public void updatePetInfo(PetEntity pet, UpdatePetCommand command) {
 		BreedEntity breed = breedRepository.findBreedById(command.breedId())
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
 
