@@ -11,4 +11,5 @@ public interface SpringDataSocialAccountRepository extends JpaRepository<SocialA
 	Optional<SocialAccountEntity> findByUser_UserIdAndPlatform(Long userId, String platform);
 
 	Optional<SocialAccountEntity> findByUser_UserId(Long userId);
+	void deleteByUser_UserId(Long userId);
 }

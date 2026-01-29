@@ -30,6 +30,10 @@ public class UserQueryService {
 			.orElse("");
 
 		return UserInfoResponseDto.of(user, email);
+	}
 
+	public UserEntity getUser(Long userId) {
+		return userRepository.findById(userId)
+			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 	}
 }

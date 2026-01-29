@@ -17,6 +17,7 @@ import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostImag
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostSelectedCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.QRegionEntity;
+import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.QRouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.AuthorDto;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.QUserEntity;
@@ -121,22 +122,21 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		return posts.stream().map(p -> {
 			Long postId = p.getPostId();
 
+			RegionEntity region = p.getRoute().getRegion();
+			String regionName = region.getParent() != null
+					? region.getParent().getRegionName() + " " + region.getRegionName()
+					: region.getRegionName();
+
+			int durationMinutes = (int)(p.getRoute().getDuration() / 60);
+
 			return GetPostCardResult.builder()
 				.postId(postId)
+				.regionName(regionName)
 				.title(p.getTitle())
-				.isLike(likedPostIds.contains(postId))
-				.isPublic(p.isPublic())
-				.author(new AuthorDto(
-					p.getUser().getUserId(),
-					p.getPet().getPetId(),
-					p.getPet().getName(),
-					p.getPet().getProfileImage().getImageUrl()
-				))
-				.categoryTags(postIdToCategoryTags.getOrDefault(postId, List.of()))
 				.createdAt(p.getCreatedAt())
+				.durationMinutes(durationMinutes)
+				.isLike(likedPostIds.contains(postId))
 				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
-				.routeId(p.getRoute().getRouteId())
-				.isMine(p.getUser().getUserId().equals(userId))
 				.build();
 		}).toList();
 	}

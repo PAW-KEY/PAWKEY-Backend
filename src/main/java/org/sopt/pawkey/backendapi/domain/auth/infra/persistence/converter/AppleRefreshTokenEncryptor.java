@@ -6,17 +6,27 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import lombok.RequiredArgsConstructor;
 
+@Component
 @Converter
 public class AppleRefreshTokenEncryptor
 	implements AttributeConverter<String, String> {
 
 	private static final String ALGORITHM = "AES";
 
-	// ⚠️ application.yml에서 주입받는 걸 권장
-	private static final String SECRET_KEY = "pawkey-apple-token!"; // 16byte
+	@Value("${apple.refresh-token.secret}")
+	private String secretKey; // Base64 문자열
+
+	private SecretKeySpec getKey() {
+		byte[] decodedKey = Base64.getDecoder().decode(secretKey);
+		return new SecretKeySpec(decodedKey, ALGORITHM);
+	}
 
 	@Override
 	public String convertToDatabaseColumn(String attribute) {
@@ -25,9 +35,7 @@ public class AppleRefreshTokenEncryptor
 		}
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
-			SecretKeySpec key =
-				new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-			cipher.init(Cipher.ENCRYPT_MODE, key);
+			cipher.init(Cipher.ENCRYPT_MODE, getKey());
 
 			byte[] encrypted = cipher.doFinal(attribute.getBytes(StandardCharsets.UTF_8));
 			return Base64.getEncoder().encodeToString(encrypted);
@@ -44,9 +52,7 @@ public class AppleRefreshTokenEncryptor
 		}
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
-			SecretKeySpec key =
-				new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-			cipher.init(Cipher.DECRYPT_MODE, key);
+			cipher.init(Cipher.DECRYPT_MODE, getKey());
 
 			byte[] decoded = Base64.getDecoder().decode(dbData);
 			return new String(cipher.doFinal(decoded), StandardCharsets.UTF_8);

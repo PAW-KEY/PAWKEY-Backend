@@ -17,11 +17,9 @@ import org.locationtech.jts.geom.Polygon;
 
 public class GeoJsonUtil {
 	public static Map<String, Object> toGeoJson(Geometry geometry) {
-
 		if (geometry == null) {
 			return null;
 		}
-
 		if (geometry instanceof MultiPolygon) {
 			return multiPolygonToGeoJson((MultiPolygon)geometry);
 		} else if (geometry instanceof Polygon) {
@@ -41,7 +39,6 @@ public class GeoJsonUtil {
 			Polygon polygon = (Polygon)multiPolygon.getGeometryN(i);
 			coordinates.add(extractPolygonCoordinates(polygon));
 		}
-
 		return generateGeoJsonMap(MULTIPOLYGON.getText(), coordinates);
 	}
 
@@ -67,12 +64,10 @@ public class GeoJsonUtil {
 
 		// exterior ring
 		polygonCoordinates.add(extractLineStringCoordinates(polygon.getExteriorRing()));
-
 		// interior rings (holes)
 		for (int j = 0; j < polygon.getNumInteriorRing(); j++) {
 			polygonCoordinates.add(extractLineStringCoordinates(polygon.getInteriorRingN(j)));
 		}
-
 		return polygonCoordinates;
 	}
 

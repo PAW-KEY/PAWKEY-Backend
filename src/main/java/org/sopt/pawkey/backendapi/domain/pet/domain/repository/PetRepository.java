@@ -12,4 +12,8 @@ public interface PetRepository {
 	List<PetEntity> findAllPetsByUserId(Long userId);
 
 	Optional<PetEntity> findById(Long petId);
+  
+	boolean existsById(Long petId);
+
+	List<String> findAllBreeds();
 }

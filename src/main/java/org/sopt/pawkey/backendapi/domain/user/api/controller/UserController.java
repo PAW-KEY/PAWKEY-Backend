@@ -66,6 +66,20 @@ public class UserController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
+	@Operation(summary = "내가 좋아요한 게시물 조회", description = "사용자가 좋아요를 누른 게시물 목록을 반환합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	@GetMapping("/me/likes")
+	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyLikedPosts(
+		@Parameter(hidden = true) @UserId Long userId
+	) {
+		List<PostCardResponseDto> likedPosts = userLikedPostQueryFacade.getLikedPosts(userId);
+		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(likedPosts)));
+	}
+
 	@Operation(summary = "유저 정보 조회", description = "마이페이지에서 유저 상세 정보를 조회합니다.", tags = {"Users"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
@@ -80,7 +94,20 @@ public class UserController {
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 
-	@PatchMapping("/me/userInfo")
+	@Operation(summary = "내가 작성한 게시물 조회", description = "사용자가 작성한 게시물 목록을 반환합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	@GetMapping("/me/posts")
+	public ResponseEntity<ApiResponse<ListResponseWrapper<PostCardResponseDto>>> getMyPosts(
+		@Parameter(hidden = true) @UserId Long userId
+	) {
+		List<PostCardResponseDto> myPosts = userWrittenPostQueryFacade.getMyPosts(userId);
+		return ResponseEntity.ok(ApiResponse.success(ListResponseWrapper.from(myPosts)));
+	}
+
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
