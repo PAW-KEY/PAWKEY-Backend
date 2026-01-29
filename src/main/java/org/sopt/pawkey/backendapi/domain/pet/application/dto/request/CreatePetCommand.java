@@ -2,16 +2,18 @@ package org.sopt.pawkey.backendapi.domain.pet.application.dto.request;
 
 import java.time.LocalDate;
 
+import org.sopt.pawkey.backendapi.global.enums.Gender;
+
 public record CreatePetCommand(
 	String name,
-	String gender,
+	Gender gender,
 	LocalDate birth,
 	boolean isNeutered,
 	Long breedId
 ) {
 	public static CreatePetCommand of(
 		String name,
-		String gender,
+		Gender gender,
 		LocalDate birth,
 		boolean isNeutered,
 		Long breedId

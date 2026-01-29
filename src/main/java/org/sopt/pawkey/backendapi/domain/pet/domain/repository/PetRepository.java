@@ -10,9 +10,7 @@ public interface PetRepository {
 
 	Optional<PetEntity> findByUserId(Long userId);
 
-	boolean existsByUserId(Long userId);
-
 	Optional<PetEntity> findById(Long petId);
+
+	boolean existsByUserId(Long petId);
 }
-
-

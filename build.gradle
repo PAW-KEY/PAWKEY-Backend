@@ -49,9 +49,8 @@ dependencies {
     implementation 'com.h2database:h2'
 
     // query-dsl
-    implementation "io.github.openfeign.querydsl:querydsl-core:${queryDslVersion}"
-    implementation "io.github.openfeign.querydsl:querydsl-jpa:${queryDslVersion}"
-    annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${queryDslVersion}:jpa"
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     implementation 'com.h2database:h2'
@@ -102,16 +101,18 @@ dependencyManagement {
     }
 }
 
-def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile;
+def querydslDir = "build/generated/querydsl"
 
-tasks.withType(JavaCompile) {
-    options.generatedSourceOutputDirectory = file(querydslDir)
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
 }
 
-tasks.named("clean") {
-    doLast {
-        delete file(querydslDir)
-    }
+sourceSets {
+    main.java.srcDirs += [querydslDir]
+}
+
+clean {
+    delete file(querydslDir)
 }
 
 tasks.named('test') {

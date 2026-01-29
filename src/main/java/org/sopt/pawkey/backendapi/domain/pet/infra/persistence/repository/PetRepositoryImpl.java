@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class PetRepositoryImpl implements PetRepository {
 
 	private final SpringDataPetRepository springDataPetRepository;
-	private final SpringDataBreedRepository springDataBreedRepository;
 
 	@Override
 	public PetEntity save(PetEntity pet) {
@@ -36,4 +35,5 @@ public class PetRepositoryImpl implements PetRepository {
 	public Optional<PetEntity> findById(Long petId) {
 		return springDataPetRepository.findById(petId);
 	}
+
 }

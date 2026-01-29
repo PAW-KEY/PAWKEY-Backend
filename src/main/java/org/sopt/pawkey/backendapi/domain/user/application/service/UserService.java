@@ -1,12 +1,12 @@
 package org.sopt.pawkey.backendapi.domain.user.application.service;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.auth.domain.Provider;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.result.UserCreationResult;
-import org.sopt.pawkey.backendapi.domain.user.application.dto.request.CreateUserCommand;
+import org.sopt.pawkey.backendapi.domain.user.application.dto.request.OnboardingInfoCommand;
+import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UpdateUserInfoCommand;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.SocialAccountRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserRepository;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
@@ -32,17 +32,13 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserEntity saveUser(Long userId, CreateUserCommand command, RegionEntity region) {
+	public UserEntity completeOnboarding(Long userId, OnboardingInfoCommand command, RegionEntity region) {
 
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		user.updateOnboardingInfo(
-			command.name(),
-			command.gender(),
-			command.birth(),
-			region
-		);
+		user.updateProfile(command.name(), command.gender(), command.birth());
+		user.updateRegion(region);
 
 		return user;
 	}
@@ -93,6 +89,17 @@ public class UserService {
 		}
 	}
 
+	@Transactional
+	public void updateUserInfo(Long userId, UpdateUserInfoCommand command) {
+		UserEntity user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
+
+		user.updateProfile(
+			command.name(),
+			command.gender(),
+			command.birth()
+		);
+	}
 }
 
 

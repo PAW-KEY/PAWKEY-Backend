@@ -5,10 +5,13 @@ import java.time.LocalDate;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
+import org.sopt.pawkey.backendapi.global.enums.Gender;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,8 +40,9 @@ public class PetEntity extends BaseEntity {
 	@Column(name = "name", nullable = false, length = 50)
 	private String name;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "gender", nullable = false, length = 10)
-	private String gender;
+	private Gender gender;
 
 	@Column(name = "birth", nullable = false)
 	@PastOrPresent(message = "생년월일은 현재 또는 과거 날짜여야 합니다")
@@ -59,22 +63,19 @@ public class PetEntity extends BaseEntity {
 	@JoinColumn(name = "breed_id")
 	private BreedEntity breed;
 
-	@Column(name = "walk_count", nullable = false)
-	private int walkCount;
-
 	@OneToOne(mappedBy = "pet", fetch = FetchType.LAZY)
 	private DbtiResultEntity dbtiResult;
 
 	@Builder
 	public PetEntity(Long petId,
 		String name,
-		String gender,
+		Gender gender,
 		LocalDate birth,
 		ImageEntity profileImage,
 		UserEntity user,
 		boolean isNeutered,
-		BreedEntity breed,
-		int walkCount) {
+		BreedEntity breed) {
+
 		this.petId = petId;
 		this.name = name;
 		this.gender = gender;
@@ -83,11 +84,14 @@ public class PetEntity extends BaseEntity {
 		this.user = user;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
-		this.walkCount = walkCount;
 	}
 
-	public void incrementWalkCount() {
-		this.walkCount++;
+	public void updateProfile(String name, LocalDate birth, Gender gender, boolean isNeutered, BreedEntity breed) {
+		this.name = name;
+		this.birth = birth;
+		this.gender = gender;
+		this.isNeutered = isNeutered;
+		this.breed = breed;
 	}
 
 	public void setDbtiResult(DbtiResultEntity dbtiResult) {
