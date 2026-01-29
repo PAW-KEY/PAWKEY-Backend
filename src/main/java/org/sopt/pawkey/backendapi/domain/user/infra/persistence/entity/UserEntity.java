@@ -13,11 +13,14 @@ import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionE
 import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewEntity;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
+import org.sopt.pawkey.backendapi.global.enums.Gender;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,14 +51,15 @@ public class UserEntity extends BaseEntity {
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "gender", length = 10)
-	private String gender; // 'M' or 'F'
+	@Enumerated(EnumType.STRING)
+	@Column(name = "gender", length = 1)
+	private Gender gender; // 'M' or 'F'
 
 	@Column(name = "birth")
 	private LocalDate birth;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "region_id")
+	@JoinColumn(name = "region_id", nullable = true)
 	private RegionEntity region;
 
 	@BatchSize(size = 100)
@@ -71,7 +75,7 @@ public class UserEntity extends BaseEntity {
 	private List<PostLikeEntity> postLikeEntityList = new ArrayList<>();
 
 	@Builder
-	public UserEntity(Long userId, String name, String gender, LocalDate birth, RegionEntity region) {
+	public UserEntity(Long userId, String name, Gender gender, LocalDate birth, RegionEntity region) {
 		this.userId = userId;
 		this.name = name;
 		this.gender = gender;
@@ -116,11 +120,10 @@ public class UserEntity extends BaseEntity {
 		this.region = region;
 	}
 
-	public void updateOnboardingInfo(String name, String gender, LocalDate birth, RegionEntity region) {
+	public void updateProfile(String name, Gender gender, LocalDate birth) {
 		this.name = name;
 		this.gender = gender;
 		this.birth = birth;
-		this.region = region;
 	}
 }
 

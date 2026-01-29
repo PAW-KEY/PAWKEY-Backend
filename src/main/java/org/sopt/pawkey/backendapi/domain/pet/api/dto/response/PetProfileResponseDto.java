@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 public record PetProfileResponseDto(
 	Long petId,
@@ -38,13 +39,14 @@ public record PetProfileResponseDto(
 		return ChronoUnit.MONTHS.between(birth, LocalDate.now());
 	}
 
-	private static String convertGender(String gender) {
-		if ("M".equals(gender)) {
-			return "남아";
-		} else if ("F".equals(gender)) {
-			return "여아";
-		}
-		throw new IllegalArgumentException("올바르지 않은 성별 값입니다: " + gender);
+	private static String convertGender(Gender gender) {
+		if (gender == null)
+			return "알 수 없음";
+
+		return switch (gender) {
+			case M -> "남아";
+			case F -> "여아";
+		};
 	}
 
 	private static String parseDbti(String dbti) {
