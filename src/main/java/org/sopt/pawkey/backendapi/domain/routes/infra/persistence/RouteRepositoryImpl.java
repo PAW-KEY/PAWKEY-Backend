@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.routes.infra.persistence;
 
 import java.util.Optional;
 
+import org.sopt.pawkey.backendapi.domain.home.api.dto.response.HomeInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteRepository;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,12 @@ public class RouteRepositoryImpl implements RouteRepository {
 	@Override
 	public RouteEntity save(RouteEntity route) {
 		return jpaRepository.save(route);
+	}
+
+	private final RouteQueryRepository queryRepository;
+
+	@Override
+	public HomeInfoResponseDto getMonthlyWalkSummary(Long userId) {
+		return queryRepository.getMonthlyWalkSummary(userId);
 	}
 }
