@@ -2,7 +2,7 @@ package org.sopt.pawkey.backendapi.domain.routes.domain.repository;
 
 import java.util.Optional;
 
-import org.sopt.pawkey.backendapi.domain.home.api.dto.response.HomeInfoResponseDto;
+import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 
 public interface RouteRepository {

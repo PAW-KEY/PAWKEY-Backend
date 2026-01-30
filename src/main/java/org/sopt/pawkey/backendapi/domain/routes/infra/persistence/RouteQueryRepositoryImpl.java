@@ -3,14 +3,16 @@ package org.sopt.pawkey.backendapi.domain.routes.infra.persistence;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.sopt.pawkey.backendapi.domain.home.api.dto.response.HomeInfoResponseDto;
+import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.QRouteEntity;
+import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
+@Repository
 @RequiredArgsConstructor
 public class RouteQueryRepositoryImpl implements RouteQueryRepository {
 	private final JPAQueryFactory query;
