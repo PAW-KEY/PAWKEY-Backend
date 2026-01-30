@@ -52,7 +52,7 @@ public class CategoryEntity extends BaseEntity {
 	private List<CategoryOptionEntity> options = new ArrayList<>();
 
 
-	public void validateSelection(List<CategoryOptionEntity> selectedOptions) {
+	public void validateSelection(List<CategoryOptionEntity> selectedOptions) { //카테고리 선택방식에 대한 책임 -> Entity
 
 		if (selectedOptions == null || selectedOptions.isEmpty()) {
 			throw new CategoryBusinessException(
@@ -67,8 +67,6 @@ public class CategoryEntity extends BaseEntity {
 			);
 		}
 	}
-
-
 
 }
 

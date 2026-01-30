@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryOptionService;
+import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryQueryService;
 import org.sopt.pawkey.backendapi.domain.category.exception.CategoryBusinessException;
 import org.sopt.pawkey.backendapi.domain.category.exception.CategoryErrorCode;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryEntity;
@@ -38,6 +39,7 @@ public class PostRegisterFacade {
 	private final PostService postService;
 	private final PostSelectedCategoryOptionService postSelectedCategoryOptionService;
 	private final CategoryOptionService categoryOptionService;
+	private final CategoryQueryService categoryQueryService;
 
 	public PostRegisterResult execute(Long userId, PostRegisterCommand command) {
 
@@ -107,11 +109,11 @@ public class PostRegisterFacade {
 			selectedOptionIds);
 	}
 
-	private void validateAllRequiredCategoriesSelected(
+	private void validateAllRequiredCategoriesSelected( //선택 기준의 검증 -> Facade 책임
 		Map<CategoryEntity, List<CategoryOptionEntity>> optionsByCategory
 	) {
 		List<CategoryEntity> requiredCategories =
-			categoryService.getAllRequiredCategories();
+			categoryQueryService.getAllCategoryEntitiesWithOptions();
 
 		for (CategoryEntity category : requiredCategories) {
 			if (!optionsByCategory.containsKey(category)) {

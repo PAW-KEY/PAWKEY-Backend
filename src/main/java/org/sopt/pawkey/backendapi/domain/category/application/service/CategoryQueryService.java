@@ -27,4 +27,11 @@ public class CategoryQueryService {
 			.map(CategoryResult::fromEntityWithSummary)
 			.toList();
 	}
+
+	public List<CategoryEntity> getAllCategoryEntitiesWithOptions() {
+		return categoryRepository.findAllCategoryWithOptions();
+	}
+
+
+
 }
