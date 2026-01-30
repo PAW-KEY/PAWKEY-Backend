@@ -23,7 +23,7 @@ public class RouteQueryRepositoryImpl implements RouteQueryRepository {
 		LocalDateTime startOfMonth = LocalDate.now().withDayOfMonth(1).atStartOfDay();
 
 		return query.select(Projections.constructor(HomeInfoResponseDto.class,
-				route.distance.sum().doubleValue().coalesce(0.0), // 누적 거리
+				route.distance.sum().doubleValue().divide(1000.0).coalesce(0.0),// 누적 거리
 				route.duration.sum().coalesce(0),   // 총 산책 시간 (초)
 				route.count().intValue()            // 산책 횟수
 			))
