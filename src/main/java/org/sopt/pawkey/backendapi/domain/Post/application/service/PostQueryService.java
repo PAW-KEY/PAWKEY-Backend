@@ -32,7 +32,7 @@ public class PostQueryService {
 		);
 
 		List<String> categoryTags = post.getPostSelectedCategoryOptionEntityList().stream()
-			.map(sel -> sel.getCategoryOption().getOptionSummary())
+			.map(sel -> sel.getCategoryOption().getOptionValue())
 			.toList();
 
 		PostResponseDto.CategoryTagsDto categoryTagsDto = new PostResponseDto.CategoryTagsDto(categoryTags);

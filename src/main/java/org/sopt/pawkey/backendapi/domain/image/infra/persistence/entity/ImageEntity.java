@@ -2,10 +2,7 @@ package org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity;
 
 import org.sopt.pawkey.backendapi.domain.image.exception.ImageBusinessException;
 import org.sopt.pawkey.backendapi.domain.image.exception.ImageErrorCode;
-import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException;
-import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
-import org.sopt.pawkey.backendapi.domain.tempImage.domain.ImageDomain;
-import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
+import org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -44,7 +41,7 @@ public class ImageEntity extends BaseEntity {
 	private int height;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Column(name = "image_domain",nullable = false)
 	private ImageDomain domain;
 
 

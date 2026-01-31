@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.tempImage.domain;
+package org.sopt.pawkey.backendapi.domain.image.domain;
 
 public enum ImageDomain { //S3 경로의 최상위 prefix로 사용({domain}/{uuid}.{ext})
 	WALK("walk"),

@@ -1,6 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.image.application.dto.command;
 
-import org.sopt.pawkey.backendapi.domain.tempImage.domain.ImageDomain;
+import org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain;
 
 public record RegisterImageCommand(
 	String imageUrl,

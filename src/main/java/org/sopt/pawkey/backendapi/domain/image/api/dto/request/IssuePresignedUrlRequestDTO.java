@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.tempImage.api.dto.request;
+package org.sopt.pawkey.backendapi.domain.image.api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

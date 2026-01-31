@@ -6,7 +6,7 @@ import org.sopt.pawkey.backendapi.domain.image.domain.repository.ImageRepository
 import org.sopt.pawkey.backendapi.domain.image.exception.ImageBusinessException;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 
-import org.sopt.pawkey.backendapi.domain.tempImage.domain.ImageDomain;
+import org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,9 @@
 package org.sopt.pawkey.backendapi.domain.image.application.facade.command;
 
-import org.sopt.pawkey.backendapi.domain.tempImage.application.dto.command.IssuePresignedUrlCommand;
-import org.sopt.pawkey.backendapi.domain.tempImage.application.dto.result.IssuePresignedUrlResult;
-import org.sopt.pawkey.backendapi.domain.tempImage.application.service.PresignedImageService;
-import org.sopt.pawkey.backendapi.domain.tempImage.domain.ImageDomain;
+import org.sopt.pawkey.backendapi.domain.image.application.dto.command.IssuePresignedUrlCommand;
+import org.sopt.pawkey.backendapi.domain.image.application.dto.result.IssuePresignedUrlResult;
+import org.sopt.pawkey.backendapi.domain.image.application.service.PresignedImageService;
+import org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;

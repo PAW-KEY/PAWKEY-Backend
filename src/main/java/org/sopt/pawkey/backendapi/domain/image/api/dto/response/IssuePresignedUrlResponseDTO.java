@@ -1,6 +1,6 @@
-package org.sopt.pawkey.backendapi.domain.tempImage.api.dto.response;
+package org.sopt.pawkey.backendapi.domain.image.api.dto.response;
 
-import org.sopt.pawkey.backendapi.domain.tempImage.application.dto.result.IssuePresignedUrlResult;
+import org.sopt.pawkey.backendapi.domain.image.application.dto.result.IssuePresignedUrlResult;
 
 public record IssuePresignedUrlResponseDTO(
 	String uploadUrl, // PUT용 Presigned URL
