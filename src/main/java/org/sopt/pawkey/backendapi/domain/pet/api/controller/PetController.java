@@ -36,14 +36,16 @@ public class PetController {
 	@Operation(summary = "반려견 프로필 조회", description = "반려견의 정보를 조회합니다.", tags = {"Users"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "해당 반려견에 대한 조회 권한이 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "반려견 정보를 찾을 수 없음"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
 	})
-	@GetMapping("/me/pets")
+	@GetMapping("/{petId}")
 	public ResponseEntity<ApiResponse<PetProfileResponseDto>> getMyPet(
-		@Parameter(hidden = true) @UserId Long userId
+		@Parameter(hidden = true) @UserId Long userId,
+		@PathVariable Long petId
 	) {
-		PetProfileResponseDto response = petQueryFacade.getUserPet(userId);
+		PetProfileResponseDto response = petQueryFacade.getPetProfile(userId, petId);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 

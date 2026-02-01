@@ -12,9 +12,6 @@ import org.sopt.pawkey.backendapi.domain.pet.exception.PetErrorCode;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.BreedListResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.BreedRepository;
-import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
-import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
-import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
@@ -31,9 +28,8 @@ public class PetQueryService {
 	private final PetRepository petRepository;
 
 	@Transactional(readOnly = true)
-	public PetProfileResponseDto getPetProfile(UserEntity user) {
-		PetEntity pet = petRepository.findByUserId(user.getUserId())
-			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED));
+	public PetProfileResponseDto getPetProfileDetail(Long userId, Long petId) {
+		PetEntity pet = getPetOwnedByUser(userId, petId);
 
 		String dbtiDescription = null;
 		if (pet.getDbtiResult() != null) {
@@ -43,6 +39,7 @@ public class PetQueryService {
 		}
 
 		String formattedAge = formatAge(pet.getBirth());
+
 		return PetProfileResponseDto.of(pet, formattedAge, dbtiDescription);
 	}
 
