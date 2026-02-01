@@ -1,6 +1,8 @@
 package org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity;
 
 import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
+import org.sopt.pawkey.backendapi.domain.dbti.exception.DbtiBusinessException;
+import org.sopt.pawkey.backendapi.domain.dbti.exception.DbtiErrorCode;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 
 import jakarta.persistence.Column;
@@ -12,7 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -64,4 +65,23 @@ public class DbtiResultEntity {
 			pet.setDbtiResult(this);
 		}
 	}
+
+	public DbtiAnalysisResult getAnalysisOf(String axisCode) {
+		int rawScore = switch (axisCode) {
+			case "EI" -> this.eiScore;
+			case "PS" -> this.psScore;
+			case "RT" -> this.rfScore;
+			default -> throw new DbtiBusinessException(DbtiErrorCode.DBTI_NOT_FOUND);
+		};
+
+		boolean isLeftDominant = rawScore >= 2;
+		String side = isLeftDominant ? "left" : "right";
+		int finalScore = isLeftDominant ? rawScore : (3 - rawScore);
+
+		return new DbtiAnalysisResult(side, finalScore);
+	}
+
+	public record DbtiAnalysisResult(String side, int score) {
+	}
+
 }

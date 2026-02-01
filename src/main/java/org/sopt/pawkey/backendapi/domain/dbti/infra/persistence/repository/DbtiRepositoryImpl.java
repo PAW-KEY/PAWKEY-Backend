@@ -7,6 +7,7 @@ import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiRepository;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiOptionEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiQuestionEntity;
+import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiTypeEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public class DbtiRepositoryImpl implements DbtiRepository {
 	private final SpringDataDbtiQuestionRepository springDataDbtiQuestionRepository;
 	private final SpringDataDbtiOptionRepository optionRepository;
 	private final SpringDataDbtiRepository dbtiRepository;
+
+	private final SpringDataDbtiTypeRepository dbtiTypeRepository;
 
 	@Override
 	public List<DbtiQuestionEntity> findAllQuestionsWithDetails() {
@@ -35,4 +38,8 @@ public class DbtiRepositoryImpl implements DbtiRepository {
 		return dbtiRepository.findById(type);
 	}
 
+	@Override
+	public List<DbtiTypeEntity> findAllTypes() {
+		return dbtiTypeRepository.findAll();
+	}
 }

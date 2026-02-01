@@ -17,4 +17,9 @@ public class DbtiTypeEntity {
 
 	@Column(nullable = false)
 	private String name;
+
+	@Column(nullable = false)
+	private String leftLabel;
+	@Column(nullable = false)
+	private String rightLabel;
 }
