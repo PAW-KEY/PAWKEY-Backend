@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.routes.infra.persistence;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.QRouteEntity;
@@ -20,7 +21,8 @@ public class RouteQueryRepositoryImpl implements RouteQueryRepository {
 
 	@Override
 	public HomeInfoResponseDto getMonthlyWalkSummary(Long userId) {
-		LocalDateTime startOfMonth = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+		LocalDateTime startOfMonth =
+			LocalDate.now(ZoneId.of("Asia/Seoul")).withDayOfMonth(1).atStartOfDay();
 
 		return query.select(Projections.constructor(HomeInfoResponseDto.class,
 				route.distance.sum().doubleValue().divide(1000.0).coalesce(0.0),// 누적 거리
