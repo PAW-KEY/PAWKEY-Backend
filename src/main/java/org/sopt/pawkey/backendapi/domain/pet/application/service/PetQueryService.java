@@ -1,7 +1,10 @@
 package org.sopt.pawkey.backendapi.domain.pet.application.service;
 
+import static org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto.*;
+
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiRepository;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetBusinessException;
@@ -13,6 +16,8 @@ import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,14 +26,24 @@ import lombok.RequiredArgsConstructor;
 public class PetQueryService {
 
 	private final BreedRepository breedRepository;
+	private final DbtiRepository dbtiRepository;
 
 	private final PetRepository petRepository;
 
+	@Transactional(readOnly = true)
 	public PetProfileResponseDto getPetProfile(UserEntity user) {
 		PetEntity pet = petRepository.findByUserId(user.getUserId())
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED));
 
-		return PetProfileResponseDto.from(pet);
+		String dbtiDescription = null;
+		if (pet.getDbtiResult() != null) {
+			dbtiDescription = dbtiRepository.findDbtiByType(pet.getDbtiResult().getDbtiType())
+				.map(DbtiEntity::getName)
+				.orElse(null);
+		}
+
+		String formattedAge = formatAge(pet.getBirth());
+		return PetProfileResponseDto.of(pet, formattedAge, dbtiDescription);
 	}
 
 	public List<BreedListResponseDto.BreedDto> getAllBreeds() {
