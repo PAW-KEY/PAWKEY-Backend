@@ -21,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RouteService {
-	private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory();
+
+	// [공간 데이터 SRID(좌표계) 불일치 에러 해결을 위한] 표준 위경도 좌표계(SRID 4326) 정보를 포함한 Geometry 생성 팩토리 설정
+	private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory(
+		new org.locationtech.jts.geom.PrecisionModel(), 4326);
 	private final RouteRepository routeRepository;
 
 	private static LineString toLineString(List<Coordinate> coordinates) {
@@ -34,7 +37,9 @@ public class RouteService {
 			.map(coord -> new org.locationtech.jts.geom.Coordinate(coord.longitude(), coord.latitude()))
 			.toArray(org.locationtech.jts.geom.Coordinate[]::new);
 
-		return GEOMETRY_FACTORY.createLineString(coords);
+		LineString lineString = GEOMETRY_FACTORY.createLineString(coords);
+
+		return lineString;
 	}
 
 	public RouteEntity getRouteById(Long routeId) {

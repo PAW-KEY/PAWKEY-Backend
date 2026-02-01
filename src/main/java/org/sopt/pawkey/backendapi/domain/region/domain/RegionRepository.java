@@ -6,4 +6,6 @@ import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionE
 
 public interface RegionRepository {
 	Optional<RegionEntity> getById(Long regionId);
+
+	RegionEntity save(RegionEntity region);
 }
