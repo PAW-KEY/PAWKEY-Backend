@@ -38,6 +38,9 @@ public record PetProfileResponseDto(
 			return "정보 없음";
 
 		long months = ChronoUnit.MONTHS.between(birth, LocalDate.now());
+		if (months < 0) {
+			return "정보 없음";
+		}
 		if (months < 24) {
 			return months + "개월";
 		} else {
