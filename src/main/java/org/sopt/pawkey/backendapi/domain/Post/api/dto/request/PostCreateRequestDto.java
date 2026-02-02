@@ -33,6 +33,9 @@ public class PostCreateRequestDto {
 	@NotNull(message = "루트 ID는 필수입니다.")
 	private final Long routeId;
 
+	@Size(max=3, message = "이미지는 최대 3장까지 등록할 수 있습니다.")
+	private final List<Long> imageIds;
+
 	public boolean getIsPublic() {
 		return isPublic;
 	}
@@ -44,6 +47,7 @@ public class PostCreateRequestDto {
 			.isPublic(this.isPublic)
 			.selectedOptionsForCategories(this.selectedOptionsForCategories)
 			.routeId(this.routeId)
+			.imageIds(imageIds)
 			.build();
 	}
 }

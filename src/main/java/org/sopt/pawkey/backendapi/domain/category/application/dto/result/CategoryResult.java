@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CategoryResult(
 	Long categoryId,
-	String categoryDescription,
 	String categoryName,
 	List<CategoryOptionResult> options
 
@@ -19,9 +18,8 @@ public record CategoryResult(
 	public static CategoryResult fromEntity(CategoryEntity categoryEntity) {
 		return new CategoryResult(
 			categoryEntity.getCategoryId(),
-			categoryEntity.getCategoryDescription(),
 			categoryEntity.getCategoryName(),
-			categoryEntity.getCategoryOptionEntityList().stream()
+			categoryEntity.getOptions().stream()
 				.map(CategoryOptionResult::fromEntity)
 				.toList()
 		);
@@ -30,10 +28,9 @@ public record CategoryResult(
 	public static CategoryResult fromEntityWithSummary(CategoryEntity categoryEntity) {
 		return new CategoryResult(
 			categoryEntity.getCategoryId(),
-			null,
 			categoryEntity.getCategoryName(),
-			categoryEntity.getCategoryOptionEntityList().stream()
-				.map(CategoryOptionResult::fromEntityWithSummary)
+			categoryEntity.getOptions().stream()
+				.map(CategoryOptionResult::fromEntity)
 				.toList()
 		);
 	}
@@ -41,17 +38,10 @@ public record CategoryResult(
 	//하위 -  카테고리 별 상세 옵션
 	public record CategoryOptionResult(
 		Long categoryOptionId,
-		String optionText
+		String optionValue
 	) {
 		public static CategoryOptionResult fromEntity(CategoryOptionEntity categoryOptionEntity) {
-			return new CategoryOptionResult(categoryOptionEntity.getId(), categoryOptionEntity.getOptionText());
-		}
-
-		public static CategoryOptionResult fromEntityWithSummary(CategoryOptionEntity entity) {
-			return new CategoryOptionResult(
-				entity.getId(),
-				entity.getOptionSummary()
-			);
+			return new CategoryOptionResult(categoryOptionEntity.getId(), categoryOptionEntity.getOptionValue());
 		}
 	}
 }

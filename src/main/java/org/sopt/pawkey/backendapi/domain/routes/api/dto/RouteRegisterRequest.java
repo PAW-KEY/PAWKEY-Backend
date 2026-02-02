@@ -29,7 +29,10 @@ public record RouteRegisterRequest(
 	LocalDateTime endedAt,
 
 	@Positive(message = "걸음 수는 양수여야 합니다.")
-	int stepCount
+	int stepCount,
+
+	@NotNull(message = "산책 루트에는 대표 이미지가 반드시 필요합니다.")
+	Long trackingImageId
 ) {
 	public RouteRegisterCommand toCommand() {
 		return RouteRegisterCommand.builder()
@@ -39,6 +42,7 @@ public record RouteRegisterRequest(
 			.startedAt(startedAt())
 			.endedAt(endedAt())
 			.stepCount(stepCount())
+			.trackingImageId(trackingImageId)
 			.build();
 	}
 

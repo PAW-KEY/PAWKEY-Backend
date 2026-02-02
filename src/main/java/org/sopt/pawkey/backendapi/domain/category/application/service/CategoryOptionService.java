@@ -14,7 +14,6 @@ public class CategoryOptionService {
 	private final CategoryOptionRepository categoryOptionRepository;
 
 	public List<CategoryOptionEntity> getAllWhereInIds(List<Long> selectedOptionIds) {
-
 		return categoryOptionRepository.findAllWhereInIds(selectedOptionIds);
 	}
 }

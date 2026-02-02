@@ -1,9 +1,14 @@
 package org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity;
 
+import org.sopt.pawkey.backendapi.domain.image.exception.ImageBusinessException;
+import org.sopt.pawkey.backendapi.domain.image.exception.ImageErrorCode;
+import org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,19 +40,37 @@ public class ImageEntity extends BaseEntity {
 	@Column(name = "height", nullable = false)
 	private int height;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "image_domain",nullable = false)
+	private ImageDomain domain;
+
+
 	@Builder
 	public ImageEntity(
 		Long imageId,
 		String imageUrl,
 		String extension,
 		int width,
-		int height
+		int height,
+		ImageDomain domain
 	) {
 		this.imageId = imageId;
 		this.imageUrl = imageUrl;
 		this.extension = extension;
 		this.width = width;
 		this.height = height;
+		this.domain = domain;
+	}
+
+	public void validateUsableForRoute() {
+		if (this.domain != ImageDomain.ROUTE) {
+			throw new ImageBusinessException(ImageErrorCode.INVALID_IMAGE_DOMAIN);
+		}
+	}
+	public void validateUsableForPost() {
+		if (this.domain != ImageDomain.WALK) {
+			throw new ImageBusinessException(ImageErrorCode.INVALID_IMAGE_DOMAIN);
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.image.infra.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.image.domain.repository.ImageRepository;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
@@ -25,5 +26,10 @@ public class ImageRepositoryImpl implements ImageRepository {
 	@Override
 	public void delete(ImageEntity imageEntity) {
 		imageRepository.delete(imageEntity);
+	}
+
+	@Override
+	public Optional<ImageEntity> findById(Long imageId) {
+		return imageRepository.findById(imageId);
 	}
 }

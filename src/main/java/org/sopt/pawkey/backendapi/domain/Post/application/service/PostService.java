@@ -30,8 +30,7 @@ public class PostService {
 
 	public PostEntity savePost(UserEntity writer,
 		PostRegisterCommand command,
-		RouteEntity route,
-		List<ImageEntity> images) {
+		RouteEntity route) {
 
 		if (!route.getUser().equals(writer)) {
 			throw new PostBusinessException(PostErrorCode.POST_WRITE_FORBIDDEN);
@@ -47,13 +46,8 @@ public class PostService {
 			.pet(pet)
 			.build();
 
-		for (ImageEntity image : images) {
-			PostImageEntity postImage = PostImageEntity.builder()
-				.imageType(ImageType.WALK_POST)
-				.image(image)
-				.post(post)
-				.build();
 
+		pet.incrementWalkCount();
 			post.getPostImageEntityList().add(postImage);
 		}
 		postRepository.save(post);

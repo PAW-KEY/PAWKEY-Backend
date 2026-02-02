@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.category.exception;
+package org.sopt.pawkey.backendapi.domain.image.exception;
 
 import org.sopt.pawkey.backendapi.global.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
@@ -7,12 +7,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public enum CategoryErrorCode implements ErrorCode {
+public enum ImageErrorCode implements ErrorCode {
 
-	CATEGORY_ERROR_CODE(HttpStatus.BAD_REQUEST, "C40001", "잘못된 카테고리 요청입니다."),
-	CATEGORY_SELECTION_REQUIRED(HttpStatus.BAD_REQUEST, "C40001", "카테고리 선택이 필요합니다."),
-	INVALID_CATEGORY_SELECTION(HttpStatus.BAD_REQUEST, "C40001", "카테고리 선택 조건이 아닙니다.");
-
+	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "R40401", "해당 이미지를 찾을 수 없습니다."),
+	INVALID_IMAGE_DOMAIN(HttpStatus.BAD_REQUEST, "R40001", "유효하지 않은 이미지 도메인입니다.");
 	private final HttpStatus status;
 	private final String code;
 	private final String message;
@@ -31,5 +29,4 @@ public enum CategoryErrorCode implements ErrorCode {
 	public HttpStatus getStatus() {
 		return status;
 	}
-
 }
