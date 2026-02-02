@@ -1,16 +1,12 @@
 package org.sopt.pawkey.backendapi.domain.post.application.service;
 
-import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
-import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostErrorCode;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
-import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostImageEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -37,6 +33,7 @@ public class PostService {
 		}
 
 		PetEntity pet = writer.getPetOrThrow();
+
 		PostEntity post = PostEntity.builder()
 			.user(writer)
 			.route(route)
@@ -46,13 +43,10 @@ public class PostService {
 			.pet(pet)
 			.build();
 
-
-		pet.incrementWalkCount();
-			post.getPostImageEntityList().add(postImage);
-		}
 		postRepository.save(post);
 		return post;
 	}
+
 
 	public boolean existsByRouteId(Long routeId) {
 		return postRepository.existsByRouteId(routeId);
