@@ -48,6 +48,8 @@ public class PostService {
 
 
 		pet.incrementWalkCount();
+			post.getPostImageEntityList().add(postImage);
+		}
 		postRepository.save(post);
 		return post;
 	}

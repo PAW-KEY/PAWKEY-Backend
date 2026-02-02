@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.pet.infra.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.BreedEntity;
@@ -14,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class PetRepositoryImpl implements PetRepository {
 
 	private final SpringDataPetRepository springDataPetRepository;
-	private final SpringDataBreedRepository springDataBreedRepository;
 
 	@Override
 	public PetEntity save(PetEntity pet) {
@@ -22,21 +22,18 @@ public class PetRepositoryImpl implements PetRepository {
 	}
 
 	@Override
-	public List<PetEntity> findAllPetsByUserId(Long userId) {
-		return springDataPetRepository.findAllByUser_UserId(userId);
+	public Optional<PetEntity> findByUserId(Long userId) {
+		return springDataPetRepository.findByUser_UserId(userId);
 	}
 
 	@Override
-	public boolean existsById(Long petId) {
-		return springDataPetRepository.existsById(petId);
+	public boolean existsByUserId(Long userId) {
+		return springDataPetRepository.existsByUser_UserId(userId);
 	}
 
 	@Override
-	public List<String> findAllBreeds() {
-		return springDataBreedRepository.findAllByOrderByNameAsc()
-			.stream()
-			.map(BreedEntity::getName)
-			.sorted()
-			.toList();
+	public Optional<PetEntity> findById(Long petId) {
+		return springDataPetRepository.findById(petId);
 	}
+
 }

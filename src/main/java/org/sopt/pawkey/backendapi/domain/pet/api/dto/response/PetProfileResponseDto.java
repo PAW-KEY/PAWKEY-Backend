@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 public record PetProfileResponseDto(
 	Long petId,
@@ -14,8 +15,6 @@ public record PetProfileResponseDto(
 	String gender,
 	boolean isNeutered,
 	String breed,
-
-	// 추후 dbti 엔티티 생성 시에, dbti 소개 문구로 변경할 예정
 	String dbti
 ) {
 	public static PetProfileResponseDto from(PetEntity pet) {
@@ -27,8 +26,8 @@ public record PetProfileResponseDto(
 			calculateAgeInMonths(pet.getBirth()),
 			convertGender(pet.getGender()),
 			pet.isNeutered(),
-			pet.getBreed(),
-			parseDbti(pet.getDbti())
+			pet.getBreed() != null ? pet.getBreed().getName() : null,
+			pet.getDbtiResult() != null ? pet.getDbtiResult().getDbtiType().name() : "DBTI 검사 미완료"
 		);
 	}
 
@@ -38,16 +37,13 @@ public record PetProfileResponseDto(
 		return ChronoUnit.MONTHS.between(birth, LocalDate.now());
 	}
 
-	private static String convertGender(String gender) {
-		if ("M".equals(gender)) {
-			return "남아";
-		} else if ("F".equals(gender)) {
-			return "여아";
-		}
-		throw new IllegalArgumentException("올바르지 않은 성별 값입니다: " + gender);
-	}
+	private static String convertGender(Gender gender) {
+		if (gender == null)
+			return "알 수 없음";
 
-	private static String parseDbti(String dbti) {
-		return (dbti == null || dbti.isBlank()) ? "DBTI 검사 미완료" : dbti;
+		return switch (gender) {
+			case M -> "남아";
+			case F -> "여아";
+		};
 	}
 }

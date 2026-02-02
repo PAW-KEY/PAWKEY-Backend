@@ -28,7 +28,7 @@ public class SocialAccountEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY) // 1:1의 관계로 변경 됨에 따라 수정 필요!
 	@JoinColumn(name = "user_id", nullable = false)
 	private UserEntity user;
 

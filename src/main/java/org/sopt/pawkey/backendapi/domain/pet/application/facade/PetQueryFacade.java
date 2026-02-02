@@ -1,9 +1,10 @@
-package org.sopt.pawkey.backendapi.domain.user.application.facade.query;
+package org.sopt.pawkey.backendapi.domain.pet.application.facade;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.BreedListResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
-import org.sopt.pawkey.backendapi.domain.user.application.service.UserPetQueryService;
+import org.sopt.pawkey.backendapi.domain.pet.application.service.PetQueryService;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -14,15 +15,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserPetQueryFacade {
+public class PetQueryFacade {
 
-	private final UserPetQueryService userPetQueryService;
+	private final PetQueryService petQueryService;
 	private final UserService userService;
 
-	public List<PetProfileResponseDto> getUserPets(Long userId) {
+	public BreedListResponseDto getBreedList() {
+		List<BreedListResponseDto.BreedDto> breeds = petQueryService.getAllBreeds();
+		return BreedListResponseDto.from(breeds);
+	}
 
+	public PetProfileResponseDto getUserPet(Long userId) {
 		UserEntity user = userService.findById(userId);
-
-		return userPetQueryService.getPetProfiles(user);
+		return petQueryService.getPetProfile(user);
 	}
 }

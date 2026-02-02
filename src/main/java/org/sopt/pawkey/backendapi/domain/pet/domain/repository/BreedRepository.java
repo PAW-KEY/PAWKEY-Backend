@@ -8,6 +8,6 @@ import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.BreedEntit
 public interface BreedRepository {
 	List<BreedEntity> findAll();
 
-	Optional<BreedEntity> findById(Long id);
+	Optional<BreedEntity> findBreedById(Long breedId);
 }
 

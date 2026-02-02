@@ -19,7 +19,6 @@ import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostSele
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.QRegionEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.QRouteEntity;
-import org.sopt.pawkey.backendapi.domain.user.api.dto.AuthorDto;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.QUserEntity;
 import org.springframework.stereotype.Repository;
 

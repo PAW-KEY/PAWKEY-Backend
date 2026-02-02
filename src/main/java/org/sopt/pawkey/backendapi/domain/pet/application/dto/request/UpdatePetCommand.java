@@ -4,20 +4,20 @@ import java.time.LocalDate;
 
 import org.sopt.pawkey.backendapi.global.enums.Gender;
 
-public record CreatePetCommand(
+public record UpdatePetCommand(
 	String name,
 	Gender gender,
 	LocalDate birth,
 	boolean isNeutered,
 	Long breedId
 ) {
-	public static CreatePetCommand of(
+	public static UpdatePetCommand of(
 		String name,
 		Gender gender,
 		LocalDate birth,
 		boolean isNeutered,
 		Long breedId
 	) {
-		return new CreatePetCommand(name, gender, birth, isNeutered, breedId);
+		return new UpdatePetCommand(name, gender, birth, isNeutered, breedId);
 	}
 }
