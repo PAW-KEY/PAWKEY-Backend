@@ -20,9 +20,7 @@ public class DbtiCommandFacade {
 
 	public DbtiResultResponseDto submitDbtiTest(Long userId, Long petId, DbtiSubmitRequestDto request) {
 		PetEntity pet = petQueryService.getPetOwnedByUser(userId, petId);
-
 		DbtiResultInfo info = dbtiCommandService.calculateAndSave(pet, request);
-
-		return DbtiResultResponseDto.of(info.result(), info.dbtiInfo(), info.types());
+		return DbtiResultResponseDto.from(info);
 	}
 }

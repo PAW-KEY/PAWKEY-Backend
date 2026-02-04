@@ -49,6 +49,6 @@ public class DbtiQueryService {
 
 		List<DbtiTypeEntity> types = dbtiRepository.findAllTypes();
 
-		return new DbtiResultInfo(result, dbtiInfo, types);
+		return DbtiResultInfo.from(result, dbtiInfo, types);
 	}
 }

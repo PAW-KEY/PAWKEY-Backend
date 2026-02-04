@@ -18,7 +18,7 @@ public class DbtiQueryFacade {
 	}
 
 	public DbtiResultResponseDto getPetDbtiResult(Long userId, Long petId) {
-		DbtiResultInfo detail = dbtiQueryService.getPetDbtiResultDetail(userId, petId);
-		return DbtiResultResponseDto.of(detail.result(), detail.dbtiInfo(), detail.types());
+		DbtiResultInfo info = dbtiQueryService.getPetDbtiResultDetail(userId, petId);
+		return DbtiResultResponseDto.from(info);
 	}
 }
