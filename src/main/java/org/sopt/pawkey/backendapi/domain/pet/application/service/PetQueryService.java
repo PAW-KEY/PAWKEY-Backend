@@ -5,8 +5,6 @@ import static org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileR
 import java.time.LocalDate;
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiRepository;
-import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetBusinessException;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetErrorCode;
@@ -15,7 +13,6 @@ import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.BreedListResponseD
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.BreedRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class PetQueryService {
 
 	private final BreedRepository breedRepository;
-	private final DbtiRepository dbtiRepository;
 
 	private final PetRepository petRepository;
 
