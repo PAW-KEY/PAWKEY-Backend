@@ -18,4 +18,9 @@ public class RegionRepositoryImpl implements RegionRepository {
 	public Optional<RegionEntity> getById(Long regionId) {
 		return springDataRegionRepository.getByRegionId(regionId);
 	}
+
+	@Override
+	public RegionEntity save(RegionEntity region) {
+		return springDataRegionRepository.save(region);
+	}
 }

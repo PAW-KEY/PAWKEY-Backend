@@ -7,7 +7,7 @@ import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.Route
 import org.sopt.pawkey.backendapi.domain.walkPreparation.api.dto.request.WalkPreparationRequestDto;
 import org.sopt.pawkey.backendapi.domain.walkPreparation.api.dto.response.WalkPreparationResponseDto;
 import org.sopt.pawkey.backendapi.domain.walkPreparation.application.facade.PreparationFacade;
-import org.sopt.pawkey.backendapi.domain.weather.api.dto.WeatherMessageResponseDTO;
+import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.WeatherMessageResponseDTO;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
