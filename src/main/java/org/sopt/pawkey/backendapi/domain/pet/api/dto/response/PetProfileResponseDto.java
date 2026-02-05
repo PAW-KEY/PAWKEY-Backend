@@ -11,30 +11,41 @@ public record PetProfileResponseDto(
 	String imageUrl,
 	String name,
 	LocalDate birth,
-	long age,
+	String age,
 	String gender,
 	boolean isNeutered,
 	String breed,
-	String dbti
+	String dbtiName,
+	String dbtiDescription
 ) {
-	public static PetProfileResponseDto from(PetEntity pet) {
+	public static PetProfileResponseDto of(PetEntity pet, String formattedAge, String dbtiDescription) {
 		return new PetProfileResponseDto(
 			pet.getPetId(),
 			pet.getProfileImage() != null ? pet.getProfileImage().getImageUrl() : null,
 			pet.getName(),
 			pet.getBirth(),
-			calculateAgeInMonths(pet.getBirth()),
+			formattedAge,
 			convertGender(pet.getGender()),
 			pet.isNeutered(),
 			pet.getBreed() != null ? pet.getBreed().getName() : null,
-			pet.getDbtiResult() != null ? pet.getDbtiResult().getDbtiType().name() : "DBTI 검사 미완료"
+			pet.getDbtiResult() != null ? pet.getDbtiResult().getDbtiType().name() : null,
+			dbtiDescription
 		);
 	}
 
-	private static long calculateAgeInMonths(LocalDate birth) {
+	public static String formatAge(LocalDate birth) {
 		if (birth == null)
-			return 0;
-		return ChronoUnit.MONTHS.between(birth, LocalDate.now());
+			return "정보 없음";
+
+		long months = ChronoUnit.MONTHS.between(birth, LocalDate.now());
+		if (months < 0) {
+			return "정보 없음";
+		}
+		if (months < 24) {
+			return months + "개월";
+		} else {
+			return (months / 12) + "살";
+		}
 	}
 
 	private static String convertGender(Gender gender) {

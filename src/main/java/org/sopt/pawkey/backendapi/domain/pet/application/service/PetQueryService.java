@@ -1,18 +1,18 @@
 package org.sopt.pawkey.backendapi.domain.pet.application.service;
 
+import static org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
-import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.PetRepository;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetBusinessException;
 import org.sopt.pawkey.backendapi.domain.pet.exception.PetErrorCode;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.BreedListResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.BreedRepository;
-import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
-import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
-import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,11 +24,13 @@ public class PetQueryService {
 
 	private final PetRepository petRepository;
 
-	public PetProfileResponseDto getPetProfile(UserEntity user) {
-		PetEntity pet = petRepository.findByUserId(user.getUserId())
-			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_PET_NOT_REGISTERED));
+	@Transactional(readOnly = true)
+	public PetEntity getPetDetail(Long userId, Long petId) {
+		return getPetOwnedByUser(userId, petId);
+	}
 
-		return PetProfileResponseDto.from(pet);
+	public String getFormattedAge(LocalDate birth) {
+		return formatAge(birth);
 	}
 
 	public List<BreedListResponseDto.BreedDto> getAllBreeds() {
