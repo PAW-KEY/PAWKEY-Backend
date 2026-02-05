@@ -1,7 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.dbti.application.dto;
 
 import java.util.List;
-
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiTypeEntity;
@@ -23,12 +22,20 @@ public record DbtiResultInfo(
 	) {
 	}
 
-	public static DbtiResultInfo from(DbtiResultEntity result, DbtiEntity dbtiInfo, List<DbtiTypeEntity> types) {
+	public static DbtiResultInfo of(
+		DbtiResultEntity result,
+		DbtiEntity dbtiInfo,
+		List<DbtiTypeEntity> types
+	) {
 		List<AnalysisDetail> analysis = types.stream()
 			.map(type -> {
 				var res = result.getAnalysisOf(type.getCode());
 				return new AnalysisDetail(
-					type.getCode(), type.getLeftLabel(), type.getRightLabel(), res.side(), res.score()
+					type.getCode(),
+					type.getLeftLabel(),
+					type.getRightLabel(),
+					res.side(),
+					res.score()
 				);
 			}).toList();
 
@@ -42,4 +49,3 @@ public record DbtiResultInfo(
 		);
 	}
 }
-

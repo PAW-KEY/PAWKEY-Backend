@@ -28,7 +28,7 @@ public class DbtiCommandService {
 
 	private static final int EXPECTED_OPTION_COUNT = 9;
 
-	public DbtiResultInfo calculateAndSave(PetEntity pet, DbtiSubmitRequestDto request) {
+	public DbtiResultEntity calculateAndSave(PetEntity pet, DbtiSubmitRequestDto request) {
 
 		if (request.optionIds() == null || request.optionIds().size() != EXPECTED_OPTION_COUNT) {
 			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_COUNT);
@@ -59,11 +59,6 @@ public class DbtiCommandService {
 				.rfScore(rfScore)
 				.build()));
 
-		DbtiEntity dbtiInfo = dbtiRepository.findDbtiByType(dbtiType)
-			.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_NOT_FOUND));
-
-		List<DbtiTypeEntity> types = dbtiRepository.findAllTypes();
-
-		return DbtiResultInfo.from(result, dbtiInfo, types);
+		return result;
 	}
 }
