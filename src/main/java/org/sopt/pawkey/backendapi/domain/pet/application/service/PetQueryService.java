@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.pet.application.service;
 
 import static org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiRepository;
@@ -28,19 +29,12 @@ public class PetQueryService {
 	private final PetRepository petRepository;
 
 	@Transactional(readOnly = true)
-	public PetProfileResponseDto getPetProfileDetail(Long userId, Long petId) {
-		PetEntity pet = getPetOwnedByUser(userId, petId);
+	public PetEntity getPetDetail(Long userId, Long petId) {
+		return getPetOwnedByUser(userId, petId);
+	}
 
-		String dbtiDescription = null;
-		if (pet.getDbtiResult() != null) {
-			dbtiDescription = dbtiRepository.findDbtiByType(pet.getDbtiResult().getDbtiType())
-				.map(DbtiEntity::getName)
-				.orElse(null);
-		}
-
-		String formattedAge = formatAge(pet.getBirth());
-
-		return PetProfileResponseDto.of(pet, formattedAge, dbtiDescription);
+	public String getFormattedAge(LocalDate birth) {
+		return formatAge(birth);
 	}
 
 	public List<BreedListResponseDto.BreedDto> getAllBreeds() {
