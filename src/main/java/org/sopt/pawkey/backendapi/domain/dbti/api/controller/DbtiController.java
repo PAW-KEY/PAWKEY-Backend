@@ -42,7 +42,7 @@ public class DbtiController {
 	public ResponseEntity<ApiResponse<DbtiQuestionListResponseDto>> getDbtiQuestions(
 		@Parameter(hidden = true) @UserId Long userId
 	) {
-		DbtiQuestionListResponseDto response = dbtiQueryFacade.getDbtiQuestions();
+		DbtiQuestionListResponseDto response = dbtiQueryFacade.getDbtiQuestions(userId);
 
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
 	}

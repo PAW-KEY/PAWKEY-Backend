@@ -11,6 +11,7 @@ import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResul
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiTypeEntity;
 import org.sopt.pawkey.backendapi.domain.pet.application.service.PetQueryService;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class DbtiQueryFacade {
 	private final DbtiQueryService dbtiQueryService;
 	private final PetQueryService petQueryService;
+	private final UserService userService;
 
-	public DbtiQuestionListResponseDto getDbtiQuestions() {
+	public DbtiQuestionListResponseDto getDbtiQuestions(Long userId) {
+		userService.findById(userId);
 		return DbtiQuestionListResponseDto.from(dbtiQueryService.getAllQuestions());
 	}
 
