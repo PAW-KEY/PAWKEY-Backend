@@ -17,21 +17,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "select_option")
+@Table(name = "duration_option")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class SelectOptionEntity extends BaseEntity {
+public class DurationOptionEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "select_option_id")
+	@Column(name = "duration_option_id")
 	private Long id;
 
-	@Column(name = "select_text", nullable = false)
-	private String selectText;
+	@Column(name = "duration_text", nullable = false)
+	private String durationText;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "select_id", nullable = false)
-	private SelectEntity select;
+	@JoinColumn(name = "duration_id", nullable = false)
+	private DurationEntity duration;
 }

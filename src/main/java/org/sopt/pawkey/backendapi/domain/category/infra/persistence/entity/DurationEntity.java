@@ -20,22 +20,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category_select")
+@Table(name = "category_duration")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class SelectEntity extends BaseEntity {
+public class DurationEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "select_id")
-	private Long selectId;
+	@Column(name = "duration_id")
+	private Long durationId;
 
-	@Column(name = "select_name", nullable = false)
-	private String selectName;
+	@Column(name = "duration_name", nullable = false)
+	private String durationName;
 
-	@OneToMany(mappedBy = "select", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "duration", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("id ASC")
-	private List<SelectOptionEntity> selectOptionEntityList = new ArrayList<>();
+	private List<DurationOptionEntity> durationOptionEntity = new ArrayList<>();
 
 }

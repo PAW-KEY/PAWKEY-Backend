@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.category.application.dto.result;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.category.domain.model.CategorySelectionType;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryEntity;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
 
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public record CategoryResult(
 	Long categoryId,
 	String categoryName,
+	CategorySelectionType selectionType,
 	List<CategoryOptionResult> options
 
 ) {
@@ -19,16 +21,7 @@ public record CategoryResult(
 		return new CategoryResult(
 			categoryEntity.getCategoryId(),
 			categoryEntity.getCategoryName(),
-			categoryEntity.getOptions().stream()
-				.map(CategoryOptionResult::fromEntity)
-				.toList()
-		);
-	}
-
-	public static CategoryResult fromEntityWithSummary(CategoryEntity categoryEntity) {
-		return new CategoryResult(
-			categoryEntity.getCategoryId(),
-			categoryEntity.getCategoryName(),
+			categoryEntity.getSelectionType(),
 			categoryEntity.getOptions().stream()
 				.map(CategoryOptionResult::fromEntity)
 				.toList()
