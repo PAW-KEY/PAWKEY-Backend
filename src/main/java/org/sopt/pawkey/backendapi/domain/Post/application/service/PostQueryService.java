@@ -57,7 +57,13 @@ public class PostQueryService {
 		);
 	}
 
-	public List<GetPostCardResult> getFilteredPosts(FilterPostsRequestDto requestDto, Long userId) {
-		return postQueryRepository.findByFilter(requestDto, userId);
+	public List<GetPostCardResult> getFilteredPosts(
+		FilterPostsRequestDto requestDto,
+		String sortBy,
+		String cursor,
+		int size,
+		Long userId
+	) {
+		return postQueryRepository.findByFilter(requestDto, sortBy, cursor, size, userId);
 	}
 }

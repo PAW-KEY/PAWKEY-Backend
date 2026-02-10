@@ -1,29 +1,24 @@
 package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.QCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.QImageEntity;
-import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.QPetEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostQueryRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostEntity;
-import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostLikeEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostSelectedCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.QRegionEntity;
-import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.QRouteEntity;
-import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.QUserEntity;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -49,128 +44,124 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	QPostEntity post = QPostEntity.postEntity;
 	QRouteEntity route = QRouteEntity.routeEntity;
 	QPostSelectedCategoryOptionEntity sel = QPostSelectedCategoryOptionEntity.postSelectedCategoryOptionEntity;
-	QCategoryOptionEntity opt = QCategoryOptionEntity.categoryOptionEntity;
 	QRegionEntity region = QRegionEntity.regionEntity;
-	QPostImageEntity image = QPostImageEntity.postImageEntity;
-	QImageEntity imageEntity = QImageEntity.imageEntity;
-	QPetEntity pet = QPetEntity.petEntity;
-	QUserEntity user = QUserEntity.userEntity;
 	QPostLikeEntity postLike = QPostLikeEntity.postLikeEntity;
 
-	QImageEntity petProfileImage = new QImageEntity("petProfileImage");
 	QImageEntity routeTrackingImage = new QImageEntity("routeTrackingImage");
 
 	@Override
-	public List<GetPostCardResult> findByFilter(FilterPostsRequestDto dto, Long userId) {
+	public List<GetPostCardResult> findByFilter(FilterPostsRequestDto dto, String sortBy, String cursor, int size,
+		Long userId) {
 
 		BooleanBuilder builder = new BooleanBuilder()
 			.and(post.isPublic.isTrue());
 
-		// duration 필터 처리 (분 → 초)
-		if (dto.durationStart() != null || dto.durationEnd() != null) {
-			Integer startInSec = dto.durationStart() != null ? dto.durationStart() * 60 : null;
-			Integer endInSec = dto.durationEnd() != null ? dto.durationEnd() * 60 : null;
-
-			if (startInSec != null && endInSec != null) {
-				builder.and(route.duration.between(startInSec, endInSec));
-			} else if (startInSec != null) {
-				builder.and(route.duration.goe(startInSec));
-			} else if (endInSec != null) {
-				builder.and(route.duration.loe(endInSec));
-			}
-		}
-
-		// 필터링
 		if (dto.selectedOptions() != null) {
-			List<Long> allOptionIds = dto.selectedOptions().stream()
-				.filter(cat -> cat.optionsIds() != null && !cat.optionsIds().isEmpty())
-				.flatMap(cat -> cat.optionsIds().stream())
-				.toList();
+			for (var filter : dto.selectedOptions()) {
+				Long targetId = filter.getTargetId();
+				List<Long> optionIds = filter.getOptionIdList();
 
-			if (!allOptionIds.isEmpty()) {
-				for (Long optionId : allOptionIds) {
-					builder.and(
-						JPAExpressions.selectOne()
-							.from(sel)
-							.where(
-								sel.post.eq(post),
-								sel.categoryOption.id.eq(optionId)
-							)
-							.exists()
-					);
+				if (targetId == 6) {
+					builder.and(durationFilter(optionIds));
+				} else {
+					builder.and(categoryFilter(optionIds));
 				}
 			}
 		}
 
+		// 메인 쿼리
 		List<PostEntity> posts = query.selectFrom(post)
 			.join(post.route, route).fetchJoin()
 			.join(route.region, region).fetchJoin()
-			.join(post.user, user).fetchJoin()
-			.join(post.user.petEntityList, pet).fetchJoin()
-			.leftJoin(pet.profileImage, petProfileImage).fetchJoin()
 			.leftJoin(route.trackingImage, routeTrackingImage).fetchJoin()
-			.where(builder)
-			.orderBy(post.createdAt.desc())
+			.where(
+				builder,
+				cursorCondition(sortBy, cursor)
+			)
+			.orderBy(getOrderSpecifiers(sortBy))
+			.limit(size + 1)
 			.fetch();
 
-		// 후처리용 N+1 safe 조회
-		Map<Long, List<String>> postIdToCategoryTags = getCategoryTagsMap(posts);
-		Set<Long> likedPostIds = getLikedPostIds(userId, posts); // 좋아요 정보 조회
-
-		// 4) Entity -> DTO 변환
-		return posts.stream().map(p -> {
-			Long postId = p.getPostId();
-
-			RegionEntity region = p.getRoute().getRegion();
-			String regionName = region.getParent() != null
-					? region.getParent().getRegionName() + " " + region.getRegionName()
-					: region.getRegionName();
-
-			int durationMinutes = (int)(p.getRoute().getDuration() / 60);
-
-			return GetPostCardResult.builder()
-				.postId(postId)
-				.regionName(regionName)
-				.title(p.getTitle())
-				.createdAt(p.getCreatedAt())
-				.durationMinutes(durationMinutes)
-				.isLike(likedPostIds.contains(postId))
-				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
-				.build();
-		}).toList();
+		return convertToResult(posts, userId);
 	}
 
-	// (private) 카테고리 태그 일괄 조회
-	private Map<Long, List<String>> getCategoryTagsMap(List<PostEntity> posts) {
-		List<Tuple> results = query
-			.select(post.postId, opt.optionValue)
-			.from(sel)
-			.join(sel.post, post)
-			.join(sel.categoryOption, opt)
-			.where(post.in(posts))
-			.fetch();
+	private BooleanExpression cursorCondition(String sortBy, String cursor) {
+		if (cursor == null || cursor.isBlank())
+			return null;
 
-		// 결과를 postId 기준 Map으로 그룹핑
-		return results.stream().collect(Collectors.groupingBy(
-			t -> t.get(post.postId),
-			Collectors.mapping(t -> t.get(opt.optionValue), Collectors.toList())
-		));
+		if ("popular".equals(sortBy)) { // 인기순 커서 파싱 (좋아요수_ID)
+			String[] parts = cursor.split("_");
+			long likeCount = Long.parseLong(parts[0]);
+			long postId = Long.parseLong(parts[1]);
+
+			// 좋아요가 더 적거나, 좋아요가 같으면 ID가 더 작은 것 조회
+			return post.postLikeEntityList.size().lt((int)likeCount)
+				.or(post.postLikeEntityList.size().eq((int)likeCount).and(post.postId.lt(postId)));
+		}
+
+		// 최신순 (Latest): ID 기준 내림차순
+		return post.postId.lt(Long.parseLong(cursor));
+	}
+
+	private BooleanBuilder durationFilter(List<Long> optionIds) {
+		if (optionIds.isEmpty() || optionIds.contains(21L))
+			return null;
+
+		BooleanBuilder durBuilder = new BooleanBuilder();
+		for (Long id : optionIds) {
+			if (id == 22)
+				durBuilder.or(route.duration.lt(1800));           // 30분 미만
+			else if (id == 23)
+				durBuilder.or(route.duration.between(1800, 3600)); // 30~60분
+			else if (id == 24)
+				durBuilder.or(route.duration.gt(3600));      // 1시간 이상
+		}
+		return durBuilder;
+	}
+
+	private BooleanExpression categoryFilter(List<Long> optionIds) {
+		return JPAExpressions.selectOne()
+			.from(sel)
+			.where(
+				sel.post.eq(post),
+				sel.categoryOption.id.in(optionIds)
+			).exists(); // EXISTS 서브쿼리를 사용하여 중복 데이터 발생을 차단
+	}
+
+	/**
+	 * OrderSpecifier는 QueryDSL에서 정렬 조건을 정의하는 객체
+	 * <?>는 제네릭 와일드카드로, 정렬 대상 컬럼의 데이터 타입(Long, String 등)에 관계없이 모두 수용하겠다는 의미
+	 */
+	private OrderSpecifier<?>[] getOrderSpecifiers(String sortBy) {
+		if ("popular".equals(sortBy)) {
+			return new OrderSpecifier[] {
+				post.postLikeEntityList.size().desc(),
+				post.postId.desc()
+			};
+		}
+		return new OrderSpecifier[] {post.postId.desc()};
+	}
+
+	private List<GetPostCardResult> convertToResult(List<PostEntity> posts, Long userId) {
+		Set<Long> likedPostIds = getLikedPostIds(userId, posts);
+
+		return posts.stream().map(p -> GetPostCardResult.builder()
+			.postId(p.getPostId())
+			.regionName(p.getRoute().getRegion().getRegionName())
+			.title(p.getTitle())
+			.createdAt(p.getCreatedAt())
+			.durationMinutes((int)(p.getRoute().getDuration() / 60)) // 분 단위
+			.isLike(likedPostIds.contains(p.getPostId()))
+			.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
+			.build()).toList();
 	}
 
 	private Set<Long> getLikedPostIds(Long userId, List<PostEntity> posts) {
-		if (userId == null || posts == null || posts.isEmpty()) {
+		if (userId == null || posts.isEmpty())
 			return Set.of();
-		}
-
-		return query
-			.select(postLike.post.postId)
+		return query.select(postLike.post.postId)
 			.from(postLike)
-			.where(
-				postLike.user.userId.eq(userId),
-				postLike.post.in(posts)
-			)
-			.fetch()
-			.stream()
-			.collect(Collectors.toSet());
+			.where(postLike.user.userId.eq(userId), postLike.post.in(posts))
+			.fetch().stream().collect(Collectors.toSet());
 	}
 }

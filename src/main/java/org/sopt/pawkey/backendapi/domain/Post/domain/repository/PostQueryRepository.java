@@ -7,5 +7,11 @@ import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCard
 
 public interface PostQueryRepository {
 
-	List<GetPostCardResult> findByFilter(FilterPostsRequestDto requestDto, Long userId);
+	List<GetPostCardResult> findByFilter(
+		FilterPostsRequestDto requestDto,
+		String sortBy,
+		String cursor,
+		int size,
+		Long userId
+	);
 }
