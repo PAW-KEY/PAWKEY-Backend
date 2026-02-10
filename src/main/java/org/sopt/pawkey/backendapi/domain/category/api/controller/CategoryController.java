@@ -9,7 +9,6 @@ import org.sopt.pawkey.backendapi.domain.category.api.dto.response.CategoryListR
 import org.sopt.pawkey.backendapi.domain.category.api.dto.response.PostCategoryListResponseDto;
 import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.category.application.facade.query.CategoryQueryFacade;
-import org.sopt.pawkey.backendapi.domain.category.application.facade.query.CategorySelectFacade;
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryQueryService;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,8 @@ import lombok.RequiredArgsConstructor;
 public class CategoryController {
 	private final CategoryQueryService categoryQueryService;
 
-	@Operation(summary = "카테고리 리스트 조회", description = "게사물 등록 과정에서 필요한 카테고리 정보를 리스트 형식으로 조회합니다", tags = {"Posts"})
+	@Operation(summary = "게시물 등록시, 카테고리 리스트 조회", description = "게사물 등록 과정에서 필요한 카테고리 정보를 리스트 형식으로 조회합니다", tags = {
+		"Posts"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),

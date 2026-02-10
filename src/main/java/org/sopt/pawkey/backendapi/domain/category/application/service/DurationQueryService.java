@@ -17,7 +17,7 @@ public class DurationQueryService {
 	@Transactional(readOnly = true)
 	public List<CategoryResult> getAllDurations() {
 		return durationRepository.findAllDurationWithOptions().stream()
-			.map(CategoryResult::fromEntity)
+			.map(CategoryResult::fromDuration)
 			.toList();
 	}
 }

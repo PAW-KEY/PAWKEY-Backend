@@ -143,7 +143,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	// (private) 카테고리 태그 일괄 조회
 	private Map<Long, List<String>> getCategoryTagsMap(List<PostEntity> posts) {
 		List<Tuple> results = query
-			.select(post.postId, opt.optionSummary)
+			.select(post.postId, opt.optionValue)
 			.from(sel)
 			.join(sel.post, post)
 			.join(sel.categoryOption, opt)
@@ -153,7 +153,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		// 결과를 postId 기준 Map으로 그룹핑
 		return results.stream().collect(Collectors.groupingBy(
 			t -> t.get(post.postId),
-			Collectors.mapping(t -> t.get(opt.optionSummary), Collectors.toList())
+			Collectors.mapping(t -> t.get(opt.optionValue), Collectors.toList())
 		));
 	}
 
