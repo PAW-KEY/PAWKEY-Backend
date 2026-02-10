@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class CategoryController {
 	private final CategoryQueryService categoryQueryService;
 
-	@Operation(summary = "게시물 등록시, 카테고리 리스트 조회", description = "게사물 등록 과정에서 필요한 카테고리 정보를 리스트 형식으로 조회합니다", tags = {
+	@Operation(summary = "게시물 등록시, 카테고리 리스트 조회", description = "게시물 등록 과정에서 필요한 카테고리 정보를 리스트 형식으로 조회합니다", tags = {
 		"Posts"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
@@ -45,7 +45,7 @@ public class CategoryController {
 
 	private final CategoryQueryFacade categoryQueryFacade;
 
-	@Operation(summary = "필터링 카테고리 리스트 조회", description = "게사물 필터링에서 필요한 카테고리 정보를 리스트 형식으로 조회합니다", tags = {"Posts"})
+	@Operation(summary = "필터링 카테고리 리스트 조회", description = "게시물 필터링에서 필요한 카테고리 정보를 리스트 형식으로 조회합니다", tags = {"Posts"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),

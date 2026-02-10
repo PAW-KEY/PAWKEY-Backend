@@ -34,7 +34,7 @@ public record CategoryResult(
 		return new CategoryResult(
 			entity.getDurationId(),
 			entity.getDurationName(),
-			CategorySelectionType.SINGLE,
+			entity.getSelectionType(),
 			entity.getOptions().stream()
 				.map(CategoryOptionResult::fromDurationOption)
 				.toList()
