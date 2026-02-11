@@ -98,12 +98,12 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				throw new PostBusinessException(PostErrorCode.INVALID_CURSOR_FORMAT);
 			}
 
-			long likeCount = Long.parseLong(parts[0]);
-			long postId = Long.parseLong(parts[1]);
+			long cursorLikeCount = Long.parseLong(parts[0]);
+			long cursorPostId = Long.parseLong(parts[1]);
 
 			// 좋아요가 더 적거나, 좋아요가 같으면 ID가 더 작은 것 조회
-			return post.postLikeEntityList.size().lt((int)likeCount)
-				.or(post.postLikeEntityList.size().eq((int)likeCount).and(post.postId.lt(postId)));
+			return post.likeCount.lt(cursorLikeCount)
+				.or(post.likeCount.eq(cursorLikeCount).and(post.postId.lt(cursorPostId)));
 		}
 
 		// 최신순 (Latest): ID 기준 내림차순
@@ -142,7 +142,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	private OrderSpecifier<?>[] getOrderSpecifiers(String sortBy) {
 		if ("popular".equals(sortBy)) {
 			return new OrderSpecifier[] {
-				post.postLikeEntityList.size().desc(),
+				post.likeCount.desc(),
 				post.postId.desc()
 			};
 		}
@@ -161,8 +161,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 			.isLike(likedPostIds.contains(p.getPostId()))
 			.routeMapImageUrl(p.getRoute().getTrackingImage() != null
 				? p.getRoute().getTrackingImage().getImageUrl() : null)
-			.likeCount(p.getPostLikeEntityList() != null
-				? p.getPostLikeEntityList().size() : 0)
+			.likeCount(p.getLikeCount())
 			.build()).toList();
 	}
 	private Set<Long> getLikedPostIds(Long userId, List<PostEntity> posts) {

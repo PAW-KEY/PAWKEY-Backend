@@ -17,31 +17,27 @@ public class PostLikeService {
 	private final PostLikeRepository postLikeRepository;
 
 	public void like(final UserEntity user, final PostEntity post) {
-		// validateNotSelfLike(user, post);
-
 		if (postLikeRepository.existsByUserIdAndPostId(user.getUserId(), post.getPostId())) {
 			throw new PostLikeBusinessException(PostLikeErrorCode.DUPLICATE_LIKE);
 		}
 
-		postLikeRepository.save(PostLikeEntity.builder()
+		PostLikeEntity postLike = PostLikeEntity.builder()
 			.post(post)
 			.user(user)
-			.build());
+			.build();
+
+		post.addPostLike(postLike);
+		postLikeRepository.save(postLike);
 	}
 
 	public void cancelLike(UserEntity user, PostEntity post) {
-		// validateNotSelfLike(user, post);
+		PostLikeEntity postLike = post.getPostLikeEntityList().stream()
+			.filter(like -> like.getUser().getUserId().equals(user.getUserId()))
+			.findFirst()
+			.orElseThrow(() -> new PostLikeBusinessException(PostLikeErrorCode.LIKE_NOT_FOUND));
 
-		long deletedCount = postLikeRepository.deleteByUserIdAndPostId(user.getUserId(), post.getPostId());
+		post.removePostLike(postLike);
 
-		if (deletedCount == 0) {
-			throw new PostLikeBusinessException(PostLikeErrorCode.LIKE_NOT_FOUND);
-		}
+		postLikeRepository.deleteByUserIdAndPostId(user.getUserId(), post.getPostId());
 	}
-
-	// private void validateNotSelfLike(UserEntity user, PostEntity post) {
-	// 	if (post.getUser().getUserId().equals(user.getUserId())) {
-	// 		throw new PostLikeBusinessException(PostLikeErrorCode.CANNOT_LIKE_OWN_POST);
-	// 	}
-	// }
 }
