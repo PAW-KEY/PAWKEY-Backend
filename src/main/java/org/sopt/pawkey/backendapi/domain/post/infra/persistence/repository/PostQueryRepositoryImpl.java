@@ -8,6 +8,8 @@ import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.QImageEn
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostQueryRepository;
+import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
+import org.sopt.pawkey.backendapi.domain.post.exception.PostErrorCode;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostLikeEntity;
@@ -91,6 +93,11 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
 		if ("popular".equals(sortBy)) { // 인기순 커서 파싱 (좋아요수_ID)
 			String[] parts = cursor.split("_");
+
+			if (parts.length < 2) {
+				throw new PostBusinessException(PostErrorCode.INVALID_CURSOR_FORMAT);
+			}
+
 			long likeCount = Long.parseLong(parts[0]);
 			long postId = Long.parseLong(parts[1]);
 
@@ -152,10 +159,12 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 			.createdAt(p.getCreatedAt())
 			.durationMinutes((int)(p.getRoute().getDuration() / 60)) // 분 단위
 			.isLike(likedPostIds.contains(p.getPostId()))
-			.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
+			.routeMapImageUrl(p.getRoute().getTrackingImage() != null
+				? p.getRoute().getTrackingImage().getImageUrl() : null)
+			.likeCount(p.getPostLikeEntityList() != null
+				? p.getPostLikeEntityList().size() : 0)
 			.build()).toList();
 	}
-
 	private Set<Long> getLikedPostIds(Long userId, List<PostEntity> posts) {
 		if (userId == null || posts.isEmpty())
 			return Set.of();
