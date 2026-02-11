@@ -1,5 +1,7 @@
 package org.sopt.pawkey.backendapi.fixtures;
 
+import static org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +23,8 @@ public class RouteFixture {
 			1200,
 			LocalDateTime.now().minusMinutes(20),
 			LocalDateTime.now(),
-			1500
+			1500,
+			null
 		);
 	}
 
@@ -31,6 +34,7 @@ public class RouteFixture {
 			.width(1080)
 			.height(720)
 			.extension("png")
+			.domain(ROUTE)
 			.build();
 	}
 }
