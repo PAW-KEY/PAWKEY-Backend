@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import org.locationtech.jts.geom.PrecisionModel;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.SpringDataImageRepository;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
-import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto.CategoryFilterDto;
+import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository.SpringDataPostRepository;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.SpringDataRegionRepository;
@@ -60,17 +61,19 @@ class PostFilterControllerTest {
 	private SpringDataRouteRepository routeRepository;
 	@Autowired
 	private SpringDataImageRepository imageRepository;
+	@Autowired
+	private PostLikeRepository postLikeRepository;
 
 	private UserEntity testUser;
 
 	@BeforeEach
 	void setUp() {
-		SecurityContextHolder.getContext().setAuthentication(
-			new UsernamePasswordAuthenticationToken(1L, null, List.of())
-		);
-
 		RegionEntity region = regionRepository.save(RegionFixture.createRegion());
 		testUser = userRepository.save(UserFixture.createUser(region));
+
+		SecurityContextHolder.getContext().setAuthentication(
+			new UsernamePasswordAuthenticationToken(testUser.getUserId(), null, List.of())
+		);
 
 		GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
@@ -124,9 +127,6 @@ class PostFilterControllerTest {
 	@Test
 	@DisplayName("30분 미만(22) 시간 필터 적용 시 데이터가 정상 조회")
 	void filterPosts_WithDuration_Success() throws Exception {
-		SecurityContextHolder.getContext().setAuthentication(
-			new UsernamePasswordAuthenticationToken(1L, null, java.util.List.of())
-		);
 
 		String jsonRequest = """
 			{
@@ -210,21 +210,28 @@ class PostFilterControllerTest {
 
 	@Test
 	@DisplayName("인기순 정렬 조회 시 좋아요가 많은 게시글이 상단에 노출")
-	void filterPosts_SortByPopularity_Success() throws Exception {
-		SecurityContextHolder.getContext().setAuthentication(
-			new UsernamePasswordAuthenticationToken(1L, null, List.of())
-		);
+	void filterPosts_SortByPopular_Success() throws Exception {
+		List<PostEntity> allPosts = postRepository.findAll();
+		PostEntity targetPost = allPosts.stream()
+			.min(Comparator.comparing(PostEntity::getPostId))
+			.orElseThrow();
+
+		postLikeRepository.save(org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostLikeEntity.builder()
+			.post(targetPost)
+			.user(testUser)
+			.build());
 
 		FilterPostsRequestDto request = new FilterPostsRequestDto(List.of());
 
 		mockMvc.perform(post("/api/v1/posts/filter")
-				.param("sortBy", "popularity")
+				.param("sortBy", "popular")
 				.param("size", "10")
 				.content(objectMapper.writeValueAsString(request))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpectAll(
 				status().isOk(),
-				jsonPath("$.data.posts").isArray()
+				jsonPath("$.data.posts[0].postId").value(targetPost.getPostId()),
+				jsonPath("$.data.posts[0].isLiked").value(true)
 			);
 	}
 }
