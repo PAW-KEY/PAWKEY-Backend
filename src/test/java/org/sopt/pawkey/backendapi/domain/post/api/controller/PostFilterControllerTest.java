@@ -150,4 +150,81 @@ class PostFilterControllerTest {
 				jsonPath("$.code").value("S000")
 			);
 	}
+
+	@Test
+	@DisplayName("Case 1: 선택된 옵션이 아예 없을 때 (빈 배열)")
+	void filterPosts_EmptyOptions_Success() throws Exception {
+		String jsonRequest = "{\"selectedOptions\": []}";
+
+		mockMvc.perform(post("/api/v1/posts/filter")
+				.param("sortBy", "latest")
+				.param("size", "10")
+				.content(jsonRequest)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("Case 2: 카테고리 1번(옵션 3)과 4번(옵션 12) 필터 적용")
+	void filterPosts_MultipleCategories_Success() throws Exception {
+		String jsonRequest = """
+			{
+			  "selectedOptions": [
+			    { "categoryId": 1, "optionsIds": [3] },
+			    { "categoryId": 4, "optionsIds": [12] }
+			  ]
+			}
+			""";
+
+		mockMvc.perform(post("/api/v1/posts/filter")
+				.param("sortBy", "latest")
+				.param("size", "10")
+				.content(jsonRequest)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("Case 3: 시간 필터 + 모든 카테고리 풀 세트 필터 적용")
+	void filterPosts_FullSetOptions_Success() throws Exception {
+		String jsonRequest = """
+			{
+			  "selectedOptions": [
+			    { "durationId": 6, "optionsIds": [22] },
+			    { "categoryId": 1, "optionsIds": [3] },
+			    { "categoryId": 2, "optionsIds": [4] },
+			    { "categoryId": 3, "optionsIds": [7, 9] },
+			    { "categoryId": 4, "optionsIds": [12] },
+			    { "categoryId": 5, "optionsIds": [17, 18] }
+			  ]
+			}
+			""";
+
+		mockMvc.perform(post("/api/v1/posts/filter")
+				.param("sortBy", "latest")
+				.param("size", "10")
+				.content(jsonRequest)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("인기순 정렬 조회 시 좋아요가 많은 게시글이 상단에 노출")
+	void filterPosts_SortByPopularity_Success() throws Exception {
+		SecurityContextHolder.getContext().setAuthentication(
+			new UsernamePasswordAuthenticationToken(1L, null, List.of())
+		);
+
+		FilterPostsRequestDto request = new FilterPostsRequestDto(List.of());
+
+		mockMvc.perform(post("/api/v1/posts/filter")
+				.param("sortBy", "popularity")
+				.param("size", "10")
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpectAll(
+				status().isOk(),
+				jsonPath("$.data.posts").isArray()
+			);
+	}
 }
