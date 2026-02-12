@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -54,4 +55,6 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	@Modifying
 	@Query("UPDATE PostEntity p SET p.likeCount = p.likeCount - 1 WHERE p.postId = :postId")
 	void decreaseLikeCount(@Param("postId") Long postId);
+
+	Optional<PostEntity> findByRoute(RouteEntity route);
 }

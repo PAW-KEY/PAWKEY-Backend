@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
@@ -49,5 +50,10 @@ public class PostRepositoryImpl implements PostRepository {
 	@Override
 	public void decreaseLikeCount(Long postId) {
 		jpaRepository.decreaseLikeCount(postId);
+	}
+
+	@Override
+	public Optional<PostEntity> findByRoute(RouteEntity route) {
+		return jpaRepository.findByRoute(route);
 	}
 }

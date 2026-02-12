@@ -10,6 +10,7 @@ import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserInfoRequ
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UpdateUserRegionRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.request.UserOnboardingRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ListResponseWrapper;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.response.ReviewCardResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserInfoResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.response.UserOnboardingResponseDto;
 import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UserOnboardingCommand;
@@ -138,6 +139,20 @@ public class UserController {
 
 		return ResponseEntity.ok(
 			ApiResponse.success());
+	}
+
+	@GetMapping("/me/reviews")
+	@Operation(summary = "내가 작성한 후기 리스트 조회", description = "마이페이지에서 본인이 작성한 산책 후기 리스트를 조회합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	public ResponseEntity<ApiResponse<ListResponseWrapper<ReviewCardResponseDto>>> getMyReviews(
+		@Parameter(hidden = true) @UserId Long userId
+	) {
+		ListResponseWrapper<ReviewCardResponseDto> response = userWrittenPostQueryFacade.getMyReviews(userId);
+		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }
 
