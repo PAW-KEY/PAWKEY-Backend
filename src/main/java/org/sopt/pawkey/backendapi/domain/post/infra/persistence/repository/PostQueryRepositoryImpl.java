@@ -116,12 +116,12 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
 		BooleanBuilder durBuilder = new BooleanBuilder();
 		for (Long id : optionIds) {
-			if (id == 22)
-				durBuilder.or(route.duration.lt(1800));           // 30분 미만
-			else if (id == 23)
-				durBuilder.or(route.duration.between(1800, 3600)); // 30~60분
-			else if (id == 24)
-				durBuilder.or(route.duration.gt(3600));      // 1시간 이상
+			if (id == 22) // 30분 미만
+				durBuilder.or(route.duration.lt(1800));
+			else if (id == 23) // 30분 이상 ~ 1시간 미만
+				durBuilder.or(route.duration.goe(1800).and(route.duration.lt(3600)));
+			else if (id == 24) // 1시간 이상
+				durBuilder.or(route.duration.goe(3600));
 		}
 		return durBuilder;
 	}
