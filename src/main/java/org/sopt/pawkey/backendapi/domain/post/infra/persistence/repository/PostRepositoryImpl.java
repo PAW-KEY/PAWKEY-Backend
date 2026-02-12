@@ -40,4 +40,14 @@ public class PostRepositoryImpl implements PostRepository {
 	public boolean existsByRouteId(Long routeId) {
 		return jpaRepository.existsByRouteRouteId(routeId);
 	}
+
+	@Override
+	public void increaseLikeCount(Long postId) {
+		jpaRepository.increaseLikeCount(postId);
+	}
+
+	@Override
+	public void decreaseLikeCount(Long postId) {
+		jpaRepository.decreaseLikeCount(postId);
+	}
 }

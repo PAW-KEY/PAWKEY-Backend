@@ -16,4 +16,8 @@ public interface PostRepository {
 	Optional<PostEntity> getPostWithAllDetails(Long postId);
 
 	boolean existsByRouteId(Long routeId);
+
+	void increaseLikeCount(Long postId);
+
+	void decreaseLikeCount(Long postId);
 }

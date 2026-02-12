@@ -91,16 +91,4 @@ public class PostEntity extends BaseEntity {
 			this.postImageEntityList.add(postImage);
 		}
 	}
-
-	public void addPostLike(PostLikeEntity postLike) {
-		this.postLikeEntityList.add(postLike);
-		this.likeCount++;
-	}
-
-	public void removePostLike(PostLikeEntity postLike) {
-		if (this.postLikeEntityList.remove(postLike)) {
-			this.likeCount--;
-		}
-	}
-
 }

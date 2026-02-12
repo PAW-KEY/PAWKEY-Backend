@@ -33,6 +33,7 @@ public record FilterPostsRequestDto(
 			try {
 				if (optionsIds instanceof List) { // 리스트(배열) 형태일 때
 					return ((List<?>)optionsIds).stream()
+						.filter(java.util.Objects::nonNull)
 						.map(o -> Long.valueOf(o.toString()))
 						.toList();
 				} else if (optionsIds != null) { // 단일 값일 때
