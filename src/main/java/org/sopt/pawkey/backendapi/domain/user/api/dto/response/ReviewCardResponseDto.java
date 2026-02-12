@@ -1,6 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.user.api.dto.response;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
@@ -13,7 +13,7 @@ public record ReviewCardResponseDto(
 	Long postId,
 	String title,
 	String regionName,
-	String date,
+	LocalDateTime date,
 	List<String> categoryOptionSummary
 ) {
 	public static ReviewCardResponseDto fromReview(ReviewEntity review, PostEntity post) {
@@ -23,7 +23,7 @@ public record ReviewCardResponseDto(
 			post.getPostId(),
 			post.getTitle(),
 			route.getRegion().getFullRegionName(),
-			review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+			review.getCreatedAt(),
 			post.getPostSelectedCategoryOptionEntityList().stream()
 				.map(sel -> sel.getCategoryOption().getOptionValue())
 				.toList()

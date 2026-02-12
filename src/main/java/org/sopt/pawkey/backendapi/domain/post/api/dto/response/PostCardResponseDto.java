@@ -1,6 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.api.dto.response;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 
@@ -11,7 +11,7 @@ public record PostCardResponseDto(
 	Long postId,
 	String regionName,
 	String title,
-	String date,
+	LocalDateTime date,
 	Integer durationMinutes,
 	boolean isLiked,
 	String imageUrl
@@ -22,7 +22,7 @@ public record PostCardResponseDto(
 			result.postId(),
 			result.regionName(),
 			result.title(),
-			result.createdAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+			result.createdAt(),
 			result.durationMinutes(),
 			result.isLike(),
 			result.routeMapImageUrl()
