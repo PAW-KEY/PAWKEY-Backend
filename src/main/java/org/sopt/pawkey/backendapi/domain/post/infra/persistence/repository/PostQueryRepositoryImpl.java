@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.Post.infra.persistence.repository;
+package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 게시글(Post) 조회 전용 커스텀 리포지토리 구현체.
+ * 게시글(post) 조회 전용 커스텀 리포지토리 구현체.
  * <p>
  *  - QueryDSL을 사용하여 동적 쿼리를 타입 세이프하게 작성.
  *  - FilterPostsRequestDto에 담긴 조건을 기반으로 게시글을 필터링.
