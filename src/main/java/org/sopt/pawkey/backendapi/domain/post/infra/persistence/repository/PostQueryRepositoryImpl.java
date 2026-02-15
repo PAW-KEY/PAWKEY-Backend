@@ -2,8 +2,11 @@ package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.QCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.QImageEntity;
@@ -135,7 +138,11 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				.createdAt(p.getCreatedAt())
 				.durationMinutes(durationMinutes)
 				.isLike(likedPostIds.contains(postId))
-				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
+				.routeMapImageUrl(
+					Optional.ofNullable(p.getRoute().getTrackingImage())
+						.map(ImageEntity::getImageUrl)
+						.orElse(null)
+				)
 				.build();
 		}).toList();
 	}
