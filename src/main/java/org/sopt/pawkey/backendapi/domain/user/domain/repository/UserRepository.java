@@ -8,8 +8,9 @@ public interface UserRepository {
 
 	UserEntity save(final UserEntity user);
 
-
 	Optional<UserEntity> findById(Long id);
 
 	void deleteById(Long userId);
+
+	boolean existsByName(String name);
 }

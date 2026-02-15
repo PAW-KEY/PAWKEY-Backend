@@ -34,6 +34,10 @@ public class UserService {
 	@Transactional
 	public UserEntity completeOnboarding(Long userId, OnboardingInfoCommand command, RegionEntity region) {
 
+		if (userRepository.existsByName(command.name())) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+		}
+
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 

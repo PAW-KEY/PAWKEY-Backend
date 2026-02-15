@@ -19,7 +19,6 @@ public class UserRepositoryImpl implements UserRepository {
 		return springDataUserRepository.save(user);
 	}
 
-
 	@Override
 	public Optional<UserEntity> findById(Long id) {
 		return springDataUserRepository.findById(id);
@@ -28,5 +27,10 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void deleteById(Long userId) {
 		springDataUserRepository.deleteById(userId);
+	}
+
+	@Override
+	public boolean existsByName(String name) {
+		return springDataUserRepository.existsByName(name);
 	}
 }

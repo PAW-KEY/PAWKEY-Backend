@@ -14,4 +14,6 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
 		"region.parent"
 	})
 	Optional<UserEntity> findById(Long id);
+
+	boolean existsByName(String name);
 }
