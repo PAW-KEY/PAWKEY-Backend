@@ -20,14 +20,14 @@ public record UserOnboardingRequestDto(
 
 	@NotNull(message = "성별은 필수값입니다.") Gender gender,
 
-	@NotNull(message = "활동 지역은 필수값입니다.") Long regionId,
+	@NotNull(message = "활동 지역은 필수값입니다.") Long dongId,
 
 	@Valid @NotNull(message = "강아지 정보 입력은 필수값입니다.") PetRequestDto pet
 ) {
 	public UserOnboardingCommand toCommand() {
 
 		return new UserOnboardingCommand(
-			OnboardingInfoCommand.of(name, birth, gender, regionId),
+			OnboardingInfoCommand.of(name, birth, gender, dongId),
 			pet.toCommand()
 		);
 	}

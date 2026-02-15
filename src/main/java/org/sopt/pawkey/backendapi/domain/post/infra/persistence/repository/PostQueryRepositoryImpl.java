@@ -2,8 +2,11 @@ package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.QCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.QImageEntity;
@@ -30,7 +33,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 게시글(Post) 조회 전용 커스텀 리포지토리 구현체.
+ * 게시글(post) 조회 전용 커스텀 리포지토리 구현체.
  * <p>
  *  - QueryDSL을 사용하여 동적 쿼리를 타입 세이프하게 작성.
  *  - FilterPostsRequestDto에 담긴 조건을 기반으로 게시글을 필터링.
@@ -135,7 +138,11 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				.createdAt(p.getCreatedAt())
 				.durationMinutes(durationMinutes)
 				.isLike(likedPostIds.contains(postId))
-				.routeMapImageUrl(p.getRoute().getTrackingImage().getImageUrl())
+				.routeMapImageUrl(
+					Optional.ofNullable(p.getRoute().getTrackingImage())
+						.map(ImageEntity::getImageUrl)
+						.orElse(null)
+				)
 				.build();
 		}).toList();
 	}
@@ -143,7 +150,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	// (private) 카테고리 태그 일괄 조회
 	private Map<Long, List<String>> getCategoryTagsMap(List<PostEntity> posts) {
 		List<Tuple> results = query
-			.select(post.postId, opt.optionSummary)
+			.select(post.postId, opt.optionValue)
 			.from(sel)
 			.join(sel.post, post)
 			.join(sel.categoryOption, opt)
@@ -153,7 +160,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		// 결과를 postId 기준 Map으로 그룹핑
 		return results.stream().collect(Collectors.groupingBy(
 			t -> t.get(post.postId),
-			Collectors.mapping(t -> t.get(opt.optionSummary), Collectors.toList())
+			Collectors.mapping(t -> t.get(opt.optionValue), Collectors.toList())
 		));
 	}
 
