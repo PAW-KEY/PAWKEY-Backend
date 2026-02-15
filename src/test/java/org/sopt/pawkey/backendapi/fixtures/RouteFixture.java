@@ -21,8 +21,8 @@ public class RouteFixture {
 			1200,
 			LocalDateTime.now().minusMinutes(20),
 			LocalDateTime.now(),
-			1500
-		);
+			1500,
+				1L);
 	}
 
 	public static ImageEntity createRouteImage() {

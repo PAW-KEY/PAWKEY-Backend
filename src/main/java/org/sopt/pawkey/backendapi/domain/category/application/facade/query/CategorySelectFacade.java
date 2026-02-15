@@ -7,10 +7,13 @@ import org.sopt.pawkey.backendapi.domain.category.application.dto.response.Selec
 import org.sopt.pawkey.backendapi.domain.category.application.dto.result.CategoryResult;
 import org.sopt.pawkey.backendapi.domain.category.application.service.CategoryQueryService;
 import org.sopt.pawkey.backendapi.domain.category.application.service.SelectQueryService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+
 
 @Component
 @RequiredArgsConstructor
