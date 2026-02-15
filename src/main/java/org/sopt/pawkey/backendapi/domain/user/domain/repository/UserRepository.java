@@ -13,4 +13,6 @@ public interface UserRepository {
 	void deleteById(Long userId);
 
 	boolean existsByName(String name);
+
+	void saveAndFlush(UserEntity user);
 }

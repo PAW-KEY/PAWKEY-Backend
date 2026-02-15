@@ -65,8 +65,10 @@ public class PetCommandService {
 		if (command.imageId() != null) {
 			profileImage = imageRepository.findById(command.imageId())
 				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+		} else {
+			profileImage = pet.getProfileImage();
 		}
-		
+
 		pet.updateProfile(
 			command.name(),
 			command.birth(),

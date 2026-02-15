@@ -33,4 +33,9 @@ public class UserRepositoryImpl implements UserRepository {
 	public boolean existsByName(String name) {
 		return springDataUserRepository.existsByName(name);
 	}
+
+	@Override
+	public void saveAndFlush(UserEntity user) {
+		springDataUserRepository.saveAndFlush(user);
+	}
 }

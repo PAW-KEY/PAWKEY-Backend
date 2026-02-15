@@ -50,9 +50,9 @@ public class UserController {
 	@Operation(summary = "유저 온보딩 정보 등록", description = "회원가입과 동시에, 유저 정보 등록. ", tags = {"Users"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 정보 등록 성공"),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "중복된 닉네임입니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "해당 지역 정보를 찾을 수 없습니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "강아지 프로필 이미지 파일 형식 또는 용량 오류", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "중복된 닉네임입니다.", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 	@PostMapping
 	public ResponseEntity<ApiResponse<UserOnboardingResponseDto>> onboardUser(
