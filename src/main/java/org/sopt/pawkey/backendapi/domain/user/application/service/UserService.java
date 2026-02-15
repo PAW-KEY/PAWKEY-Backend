@@ -110,11 +110,16 @@ public class UserService {
 			}
 		}
 
-		user.updateProfile(
-			command.name(),
-			command.gender(),
-			command.birth()
-		);
+		try {
+			user.updateProfile(
+				command.name(),
+				command.gender(),
+				command.birth()
+			);
+			userRepository.saveAndFlush(user);
+		} catch (DataIntegrityViolationException e) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+		}
 	}
 }
 
