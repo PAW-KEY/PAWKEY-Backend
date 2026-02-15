@@ -98,6 +98,12 @@ public class UserService {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
+		if (!user.getName().equals(command.name())) {
+			if (userRepository.existsByName(command.name())) {
+				throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+			}
+		}
+
 		user.updateProfile(
 			command.name(),
 			command.gender(),
