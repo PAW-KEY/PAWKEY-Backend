@@ -41,7 +41,7 @@ public class ImageController {
 	public ResponseEntity<ApiResponse<IssuePresignedUrlResponseDTO>> issuePresignedUrl(
 		@RequestBody IssuePresignedUrlRequestDTO request
 	) {
-		ImageDomain domain = ImageDomain.valueOf(request.domain().toUpperCase());
+		ImageDomain domain = request.getDomainEnum();
 		IssuePresignedUrlResult result = presignedImageService.createPresignedUrl(domain,request.contentType());
 
 		return ResponseEntity.ok(ApiResponse.success(IssuePresignedUrlResponseDTO.from(result)));
@@ -57,7 +57,7 @@ public class ImageController {
 				request.contentType(),
 				request.width(),
 				request.height(),
-				ImageDomain.valueOf(request.domain().toUpperCase())
+			    request.getDomainEnum()
 			)
 		);
 
