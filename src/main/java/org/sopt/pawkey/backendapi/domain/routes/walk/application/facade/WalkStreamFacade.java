@@ -22,13 +22,14 @@ public class WalkStreamFacade {
         return walkStreamService.start(command);
     }
 
-//    public void appendPoint(AppendWalkPointCommand command) {
-//        walkStreamService.appendPoint(command);
-//    }
-//
-//    @Transactional
-//    public void end(EndWalkCommand command) {
-//        WalkSession session = walkStreamService.end(command.routeId());
-//        routeService.saveFromSession(session);
-//    }
+    public void appendPoint(AppendWalkPointCommand command){
+        walkStreamService.appendPoint(command);
+    }
+
+    public void end(EndWalkCommand command){
+        walkStreamService.end(command);
+    }
+
+
+
 }
