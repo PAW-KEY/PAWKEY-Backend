@@ -16,19 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class WalkStreamFacade {
     private final WalkStreamService walkStreamService;
-    private final RouteService routeService;
+    //private final RouteService routeService;
 
     public StartWalkResult start(StartWalkCommand command) {
         return walkStreamService.start(command);
     }
 
-    public void appendPoint(AppendWalkPointCommand command) {
-        walkStreamService.appendPoint(command);
-    }
-
-    @Transactional
-    public void end(EndWalkCommand command) {
-        WalkSession session = walkStreamService.end(command.routeId());
-        routeService.saveFromSession(session);
-    }
+//    public void appendPoint(AppendWalkPointCommand command) {
+//        walkStreamService.appendPoint(command);
+//    }
+//
+//    @Transactional
+//    public void end(EndWalkCommand command) {
+//        WalkSession session = walkStreamService.end(command.routeId());
+//        routeService.saveFromSession(session);
+//    }
 }

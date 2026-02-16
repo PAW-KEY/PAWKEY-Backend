@@ -4,6 +4,7 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
+import org.sopt.pawkey.backendapi.domain.routes.walk.application.dto.result.StartWalkResult;
 import org.sopt.pawkey.backendapi.domain.routes.walk.application.facade.WalkStreamFacade;
 import org.sopt.pawkey.backendapi.domain.routes.walk.api.dto.request.WalkPointRequestDTO;
 import org.sopt.pawkey.backendapi.domain.routes.walk.api.dto.request.WalkStartRequestDTO;
@@ -27,21 +28,21 @@ public class WalkStreamController {
 	private final WalkStreamFacade walkStreamFacade;
 
 	@PostMapping("/start")
-	public ResponseEntity<WalkStartResponseDTO> start(@RequestBody WalkStartRequestDTO req) {
+	public ResponseEntity<WalkStartResponseDTO> start(@Parameter(hidden = true) @UserId Long userId, @RequestBody WalkStartRequestDTO req) {
 		StartWalkResult result = walkStreamFacade.start(req.toCommand());
 		return ResponseEntity.ok(WalkStartResponseDTO.from(result));
 	}
 
-	@PostMapping("/point")
-	public ResponseEntity<Void> point(@RequestBody WalkPointRequestDTO req) {
-		walkStreamFacade.appendPoint(req.toCommand());
-		return ResponseEntity.ok().build();
-	}
-
-	@PostMapping("/end")
-	public ResponseEntity<Void> end(@RequestParam String routeId) {
-		walkStreamFacade.end(new EndWalkCommand(routeId));
-		return ResponseEntity.ok().build();
-	}
+//	@PostMapping("/point")
+//	public ResponseEntity<Void> point(@RequestBody WalkPointRequestDTO req) {
+//		walkStreamFacade.appendPoint(req.toCommand());
+//		return ResponseEntity.ok().build();
+//	}
+//
+//	@PostMapping("/end")
+//	public ResponseEntity<Void> end(@RequestParam String routeId) {
+//		walkStreamFacade.end(new EndWalkCommand(routeId));
+//		return ResponseEntity.ok().build();
+//	}
 
 }
