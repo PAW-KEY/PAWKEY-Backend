@@ -1,8 +1,13 @@
 package org.sopt.pawkey.backendapi.domain.image.api.dto.request;
 
-public record ImageRegisterRequestDto( String imageUrl,
-									   String contentType,
-									   int width,
-									   int height,
-									   String domain) {
+import org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain;
+
+public record ImageRegisterRequestDto(String imageUrl,
+									  String contentType,
+									  int width,
+									  int height,
+									  String domain) {
+	public ImageDomain getDomainEnum() {
+		return ImageDomain.from(this.domain);
+	}
 }
