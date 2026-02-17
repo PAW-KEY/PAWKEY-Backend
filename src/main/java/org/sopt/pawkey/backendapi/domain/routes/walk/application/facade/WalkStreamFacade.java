@@ -30,6 +30,4 @@ public class WalkStreamFacade {
         walkStreamService.end(command);
     }
 
-
-
 }
