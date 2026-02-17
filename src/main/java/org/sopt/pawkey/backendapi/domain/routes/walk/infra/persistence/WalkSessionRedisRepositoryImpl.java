@@ -1,14 +1,23 @@
 package org.sopt.pawkey.backendapi.domain.routes.walk.infra.persistence;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.sopt.pawkey.backendapi.domain.routes.walk.domain.model.WalkPoint;
 import org.sopt.pawkey.backendapi.domain.routes.walk.domain.model.WalkSession;
 import org.sopt.pawkey.backendapi.domain.routes.walk.domain.repository.WalkSessionRepository;
+import org.sopt.pawkey.backendapi.domain.routes.walk.exception.WalkBusinessException;
+import org.sopt.pawkey.backendapi.domain.routes.walk.exception.WalkErrorCode;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -35,6 +44,7 @@ public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
         redisTemplate.opsForHash().put(key, "status", "ACTIVE");
         redisTemplate.opsForHash().put(key, "startedAt", String.valueOf(startedAt));
 
+        redisTemplate.expire(key, Duration.ofHours(5));
         return routeId;
     }
 
@@ -46,7 +56,24 @@ public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
     }
 
     @Override
+    public void clearActiveSession(Long userId) {
+        redisTemplate.delete("walk:active:" + userId);
+    }
+
+    @Override
     public void appendPoint(String routeId, WalkPoint point) {
+        String key = "walk:points:" + routeId;
+
+        try{
+            String value = objectMapper.writeValueAsString(point);
+            redisTemplate.opsForList().rightPush(key,value);
+
+            redisTemplate.expire("walk:session:" + routeId, Duration.ofHours(2));
+            redisTemplate.expire(key, Duration.ofHours(2));
+
+        } catch (JsonProcessingException e) {
+            throw new WalkBusinessException(WalkErrorCode.WALK_POINT_SERIALIZATION_FAILED);
+        }
 
     }
 
@@ -62,11 +89,56 @@ public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
 
     @Override
     public WalkSession loadSession(String routeId) {
-        return null;
+        String metaKey = "walk:session:" +routeId;
+        String pointsKey = "walk:points:" + routeId;
+
+        Map<Object,Object> meta = redisTemplate.opsForHash().entries(metaKey); //세션 시작 코드에서, "walk:session:" + routeId;로 넣어둔 해시값들을 담은 Map추출(?)
+        if(meta.isEmpty()){
+            throw new WalkBusinessException(WalkErrorCode.SESSION_NOT_FOUND);
+        }
+
+        Long userId = Long.valueOf((String)meta.get("userId"));
+        long startedAt = Long.parseLong((String) meta.get("startedAt"));
+
+
+        List<String> rawPoints = redisTemplate.opsForList().range(pointsKey,0,-1);
+        List<WalkPoint> points = new ArrayList<>();
+
+        if(rawPoints !=null){
+            for(String raw: rawPoints){
+                try{
+                    points.add(objectMapper.readValue(raw,WalkPoint.class)); //JSON String => Java객체(WalkPoint)로 변환(역직렬화)
+                } catch (JsonProcessingException e){
+                    throw new WalkBusinessException(WalkErrorCode.WALK_POINT_DESERIALIZATION_FAILED);
+                }
+            }
+        }
+
+        WalkSession session = new WalkSession(
+                routeId,
+                userId,
+                LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(startedAt),
+                        ZoneId.systemDefault()
+                )
+        );
+
+        session.getPoints().addAll(points);
+        session.end();
+
+        return session;
     }
 
     @Override
     public void endSession(String routeId) {
+        String key = "walk:session:" + routeId;
 
+        Boolean exists = redisTemplate.hasKey(key);
+        if (!exists) {
+            throw new WalkBusinessException(WalkErrorCode.SESSION_NOT_FOUND);
+        }
+
+        redisTemplate.opsForHash().put(key, "status", "ENDED");
+        redisTemplate.opsForHash().put(key, "endedAt", String.valueOf(System.currentTimeMillis()));
     }
 }

@@ -6,7 +6,7 @@ public record WalkPointRequestDTO(String routeId,
 								  double lat,
 								  double lng,
 								  long timestamp) {
-	public AppendWalkPointCommand toCommand() {
-		return new AppendWalkPointCommand(routeId, lat, lng, timestamp);
+	public AppendWalkPointCommand toCommand(Long userId) {
+		return new AppendWalkPointCommand(userId,routeId, lat, lng, timestamp);
 	}
 }

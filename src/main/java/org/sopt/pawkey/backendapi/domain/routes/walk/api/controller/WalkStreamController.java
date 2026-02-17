@@ -30,7 +30,7 @@ public class WalkStreamController {
 
 	@PostMapping("/start")
 	public ResponseEntity<WalkStartResponseDTO> start(@Parameter(hidden = true) @UserId Long userId, @RequestBody WalkStartRequestDTO req) {
-		StartWalkResult result = walkStreamFacade.start(req.toCommand());
+		StartWalkResult result = walkStreamFacade.start(req.toCommand(userId));
 		return ResponseEntity.ok(WalkStartResponseDTO.from(result));
 	}
 
