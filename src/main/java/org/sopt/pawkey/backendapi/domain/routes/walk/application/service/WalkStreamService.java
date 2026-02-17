@@ -68,7 +68,7 @@ public class WalkStreamService {
 		WalkSession session = redisRepository.loadSession(routeId);
 
 		//3. ACTIVE 세션 해지
-		redisRepository.clearActiveSession(session.getUserId());
+		redisRepository.clearActiveSession(command.userId());
 
 		return session;
 

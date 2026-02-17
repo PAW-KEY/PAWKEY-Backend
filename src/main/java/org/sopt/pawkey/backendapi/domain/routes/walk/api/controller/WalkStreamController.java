@@ -47,5 +47,4 @@ public class WalkStreamController {
 		return ResponseEntity.ok().build();
 	}
 
-
 }

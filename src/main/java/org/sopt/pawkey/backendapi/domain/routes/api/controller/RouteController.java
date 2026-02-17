@@ -3,12 +3,12 @@ package org.sopt.pawkey.backendapi.domain.routes.api.controller;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
-import org.sopt.pawkey.backendapi.domain.routes.api.dto.GetRouteInfoForPostResponse;
-import org.sopt.pawkey.backendapi.domain.routes.api.dto.GetSharedRouteMapDataResponseDto;
-import org.sopt.pawkey.backendapi.domain.routes.api.dto.RouteRegisterRequest;
-import org.sopt.pawkey.backendapi.domain.routes.api.dto.RouteRegisterResponse;
+import org.sopt.pawkey.backendapi.domain.routes.api.dto.request.SaveRouteRequestDTO;
+import org.sopt.pawkey.backendapi.domain.routes.api.dto.response.*;
+import org.sopt.pawkey.backendapi.domain.routes.api.dto.request.RouteRegisterRequest;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.GetRouteInfoForPostCommand;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.GetSharedRouteMapDataCommandDto;
+import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.FinishWalkResult;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteInfoForPostResult;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetSharedRouteMapDataResultDto;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.RouteRegisterResult;
@@ -16,17 +16,13 @@ import org.sopt.pawkey.backendapi.domain.routes.application.facade.command.Route
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteInfoForPostFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetSharedRouteMapDataFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
-import org.springframework.context.annotation.Profile;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -94,5 +90,25 @@ public class RouteController {
 
 		return ResponseEntity.ok(ApiResponse.success(GetRouteInfoForPostResponse.from(result)));
 	}
+
+	@PostMapping("/{routeId}/finish")
+	@Operation(summary = "산책 종료", description = "산책을 종료하고 루트를 저장합니다.", tags = {"Route"})
+	public ResponseEntity<ApiResponse<SaveRouteResponseDTO>> finishWalk(
+			@Parameter(hidden = true) @UserId Long userId,
+			@PathVariable String routeId,
+			@RequestBody @Valid SaveRouteRequestDTO request
+	) {
+		FinishWalkResult result =
+				routeRegisterFacade.finishWalk(userId, request.toCommand(userId,routeId));
+
+		return ResponseEntity.ok(
+				ApiResponse.success(SaveRouteResponseDTO.from(result))
+		);
+	}
+
+
+
+
+
 
 }

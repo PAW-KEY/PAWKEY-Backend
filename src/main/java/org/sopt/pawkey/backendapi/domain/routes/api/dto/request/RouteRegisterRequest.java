@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.routes.api.dto;
+package org.sopt.pawkey.backendapi.domain.routes.api.dto.request;
 
 import java.time.LocalDateTime;
 import java.util.List;
