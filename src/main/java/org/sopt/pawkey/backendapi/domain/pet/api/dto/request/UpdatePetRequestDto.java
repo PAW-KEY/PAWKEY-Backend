@@ -19,9 +19,10 @@ public record UpdatePetRequestDto(
 
 	@NotNull Boolean isNeutered,
 
-	@NotNull(message = "견종은 필수값입니다.") Long breedId
+	@NotNull(message = "견종은 필수값입니다.") Long breedId,
+	Long imageId
 ) {
 	public UpdatePetCommand toCommand() {
-		return UpdatePetCommand.of(name, gender, birth, isNeutered, breedId);
+		return UpdatePetCommand.of(name, gender, birth, isNeutered, breedId, imageId);
 	}
 }

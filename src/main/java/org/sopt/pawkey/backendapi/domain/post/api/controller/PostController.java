@@ -38,7 +38,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 
-//@RestController
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(API_PREFIX + "/posts")
 public class PostController {

@@ -21,49 +21,43 @@ public class PostQueryService {
 	private final PostQueryRepository postQueryRepository;
 
 	public PostResponseDto getPostDetail(PostEntity post, boolean isLiked, String routeMapImage,
-										 List<String> walkingImages) {
+		List<String> walkingImages) {
 
 		//작성자
 		AuthorDto authorDto = new AuthorDto(
-				post.getUser().getUserId(),
-				post.getPet().getPetId(),
-				post.getPet().getName(),
-				post.getPet().getProfileImage() != null ? post.getPet().getProfileImage().getImageUrl() : null
+			post.getUser().getUserId(),
+			post.getPet().getPetId(),
+			post.getPet().getName(),
+			post.getPet().getProfileImage() != null ? post.getPet().getProfileImage().getImageUrl() : null
 		);
 
 		List<String> categoryTags = post.getPostSelectedCategoryOptionEntityList().stream()
-				.map(sel -> sel.getCategoryOption().getOptionValue())
-				.toList();
+			.map(sel -> sel.getCategoryOption().getOptionValue())
+			.toList();
 
 		PostResponseDto.CategoryTagsDto categoryTagsDto = new PostResponseDto.CategoryTagsDto(categoryTags);
 
 		String regionName = post.getRoute().getRegion() != null
-				? post.getRoute().getRegion().getFullRegionName()
-				: "";
+			? post.getRoute().getRegion().getFullRegionName()
+			: "";
 
 		return PostResponseDto.of(
-				post.getPostId(),
-				post.getRoute().getRouteId(),
-				post.getTitle(),
-				post.getDescription(),
-				isLiked,
-				authorDto,
-				categoryTagsDto,
-				regionName,
-				post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
-						.withLocale(Locale.KOREAN)),
-				routeMapImage,
-				walkingImages
+			post.getPostId(),
+			post.getRoute().getRouteId(),
+			post.getTitle(),
+			post.getDescription(),
+			isLiked,
+			authorDto,
+			categoryTagsDto,
+			regionName,
+			post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd(E) | a hh:mm")
+				.withLocale(Locale.KOREAN)),
+			routeMapImage,
+			walkingImages
 		);
 	}
 
-	public List<GetPostCardResult> getFilteredPosts(
-			FilterPostsRequestDto requestDto,
-			String sortBy,
-			String cursor,
-			int size,
-			Long userId
-	) {
-		return postQueryRepository.findByFilter(requestDto, sortBy, cursor, size, userId);
+	public List<GetPostCardResult> getFilteredPosts(FilterPostsRequestDto requestDto, Long userId) {
+		return postQueryRepository.findByFilter(requestDto, userId);
 	}
 }

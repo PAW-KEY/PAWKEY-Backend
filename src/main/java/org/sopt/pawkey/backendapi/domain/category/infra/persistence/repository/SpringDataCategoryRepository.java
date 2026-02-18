@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface SpringDataCategoryRepository extends JpaRepository<CategoryEntity, Long> {
-//	@Query("SELECT DISTINCT c FROM CategoryEntity c " +
-//		"JOIN FETCH c.categoryOptionEntityList " +
-//		"ORDER BY c.displayOrder ASC")
-//	List<CategoryEntity> findAllWithOptions();
+	@Query("SELECT DISTINCT c FROM CategoryEntity c " +
+		"JOIN FETCH c.options " +
+		"ORDER BY c.displayOrder ASC")
+	List<CategoryEntity> findAllWithOptions();
 
 }

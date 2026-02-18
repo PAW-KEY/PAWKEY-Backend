@@ -5,7 +5,7 @@ import java.util.List;
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
-import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostPagingResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
@@ -23,26 +23,14 @@ public class PostQueryFacade {
 	private final PostQueryService postQueryService;
 	private final PostService postService;
 
-	public PostPagingResponseDto getFilterPostList(FilterPostsRequestDto requestDto, String sortBy, String cursor,
-												   int size, Long userId) {
-		List<GetPostCardResult> results = postQueryService.getFilteredPosts(requestDto, sortBy, cursor, size, userId);
+	public PostListResponseDto getFilterPostList(FilterPostsRequestDto requestDto, Long userId) {
+		List<GetPostCardResult> results = postQueryService.getFilteredPosts(requestDto, userId);
 
-		boolean hasNext = results.size() > size;
-		List<GetPostCardResult> pagedResults = hasNext ? results.subList(0, size) : results;
+		List<PostCardResponseDto> postResponseDtoList = results.stream()
+			.map(PostCardResponseDto::from)
+			.toList();
 
-		List<PostCardResponseDto> posts = pagedResults.stream().map(PostCardResponseDto::from).toList();
-
-		// 커서 생성
-		String nextCursor = null;
-		if (!posts.isEmpty() && hasNext) {
-			GetPostCardResult last = pagedResults.get(pagedResults.size() - 1); // 마지막 게시글 정보
-			nextCursor = "popular".equals(sortBy)
-					? last.likeCount() + "_" + last.postId() // 인기순
-					: String.valueOf(last.postId()); // 최신순
-		}
-
-		// 리스트, 다음 커서 위치, 다음 페이지 유무
-		return new PostPagingResponseDto(posts, nextCursor, hasNext);
+		return new PostListResponseDto(postResponseDtoList);
 	}
 
 	public PostResponseDto getPostDetail(Long postId, Long userId) {
@@ -50,15 +38,15 @@ public class PostQueryFacade {
 		PostEntity post = postService.findById(postId);
 
 		boolean isLiked = post.getPostLikeEntityList().stream()
-				.anyMatch(like -> like.getUser().getUserId().equals(userId));
+			.anyMatch(like -> like.getUser().getUserId().equals(userId));
 
 		String routeMapImageUrl =
-				post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl() : null;
+			post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl() : null;
 
 		List<String> walkingImages = post.getPostImageEntityList().stream()
-				.filter(img -> img.getImageType() == ImageType.WALK_POST)
-				.map(img -> img.getImage().getImageUrl())
-				.toList();
+			.filter(img -> img.getImageType() == ImageType.WALK_POST)
+			.map(img -> img.getImage().getImageUrl())
+			.toList();
 
 		return postQueryService.getPostDetail(post, isLiked, routeMapImageUrl, walkingImages);
 	}
