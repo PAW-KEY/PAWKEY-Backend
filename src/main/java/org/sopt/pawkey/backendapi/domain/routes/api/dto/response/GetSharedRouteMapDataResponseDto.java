@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.routes.api.dto;
+package org.sopt.pawkey.backendapi.domain.routes.api.dto.response;
 
 import java.util.Map;
 
