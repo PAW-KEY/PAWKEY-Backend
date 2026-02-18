@@ -39,21 +39,21 @@ public class RouteController {
 	private final GetSharedRouteMapDataFacade getSharedRouteMapDataFacade;
 	private final GetRouteInfoForPostFacade getRouteInfoForPostFacade;
 
-	@PostMapping
-	@Operation(summary = "산책 루트 정보 등록", description = "산책 루트 정보 등록 API입니다.", tags = {"Route"})
-	@ApiResponses({
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 루트 정보 등록 성공"),
-		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)")})
-	public ResponseEntity<ApiResponse<RouteRegisterResponse>> registerRoute(
-		@Parameter(hidden = true) @UserId Long userId,
-		@RequestBody @Valid RouteRegisterRequest request) {
-
-		RouteRegisterResult result =
-			routeRegisterFacade.execute(userId, request.toCommand());
-
-		return ResponseEntity.ok(
-			ApiResponse.success(RouteRegisterResponse.from(result)));
-	}
+	// @PostMapping
+	// @Operation(summary = "산책 루트 정보 등록", description = "산책 루트 정보 등록 API입니다.", tags = {"Route"})
+	// @ApiResponses({
+	// 	@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "산책 루트 정보 등록 성공"),
+	// 	@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)")})
+	// public ResponseEntity<ApiResponse<RouteRegisterResponse>> registerRoute(
+	// 	@Parameter(hidden = true) @UserId Long userId,
+	// 	@RequestBody @Valid RouteRegisterRequest request) {
+	//
+	// 	RouteRegisterResult result =
+	// 		routeRegisterFacade.execute(userId, request.toCommand());
+	//
+	// 	return ResponseEntity.ok(
+	// 		ApiResponse.success(RouteRegisterResponse.from(result)));
+	// }
 
 	@GetMapping("/{routeId}/track")
 	@Operation(summary = "트래킹 정보 조회", description = "공유된 루트의 좌표 정보 조회 API입니다.", tags = {"Route"})
@@ -105,10 +105,6 @@ public class RouteController {
 				ApiResponse.success(SaveRouteResponseDTO.from(result))
 		);
 	}
-
-
-
-
 
 
 }

@@ -46,6 +46,13 @@ public class WalkStreamService {
 	public void appendPoint(AppendWalkPointCommand command){
 		String routeId = command.routeId();
 
+		//(추가)
+		//0. 세션 로드 + 소유권 검증
+		WalkSession session = redisRepository.loadSession(routeId);
+		if (!session.getUserId().equals(command.userId())) {
+			throw new WalkBusinessException(WalkErrorCode.INVALID_SESSION_OWNER);
+		}
+
 
 		//1. 중복 산책 방지
 		boolean duplicated = redisRepository.isDuplicated(routeId, command.timestamp());
@@ -61,13 +68,22 @@ public class WalkStreamService {
 
 	public WalkSession end(EndWalkCommand command){
 		String routeId = command.routeId();
-		// 1. 세션 종료 처리
-		redisRepository.endSession(routeId);
 
-		// 2. Redis 좌표 → 도메인 모델로 복원
+		//(추가)
+		//0. 세션 로드 + 소유권 검증
+
+		// 1. 세션 로드
 		WalkSession session = redisRepository.loadSession(routeId);
 
-		//3. ACTIVE 세션 해지
+		// 2. 소유권 검증
+		if (!session.getUserId().equals(command.userId())) {
+			throw new WalkBusinessException(WalkErrorCode.INVALID_SESSION_OWNER);
+		}
+
+		// 3. 세션 종료 처리 (Redis 상태 업데이트)
+		redisRepository.endSession(routeId);
+
+		// 4. ACTIVE 세션 해지
 		redisRepository.clearActiveSession(command.userId());
 
 		return session;

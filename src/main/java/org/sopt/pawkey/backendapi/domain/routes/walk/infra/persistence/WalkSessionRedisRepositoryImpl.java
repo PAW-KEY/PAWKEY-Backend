@@ -24,13 +24,14 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
 
     @Override
     public boolean existsActiveSession(Long userId) {
-        return redisTemplate.hasKey("walk:active:" + userId);
+        return Boolean.TRUE.equals(redisTemplate.hasKey("walk:active:" + userId));
     }
 
     @Override
@@ -80,12 +81,16 @@ public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
     @Override
     public boolean isDuplicated(String routeId, long timestamp) {
         String key = "walk:dedup:" + routeId + ":" + timestamp;
-        Boolean exists = redisTemplate.hasKey(key);
-        if(exists) return true;
 
-        redisTemplate.opsForValue().set(key, "1", Duration.ofSeconds(60));
-        return false;
+        // setIfAbsent = Redis SETNX (원자적)
+        Boolean wasAbsent = redisTemplate
+            .opsForValue()
+            .setIfAbsent(key, "1", Duration.ofSeconds(60));
+        // wasAbsent == true  -> 처음 등록 (중복 아님)
+        // wasAbsent == false -> 이미 존재 (중복)
+        return !Boolean.TRUE.equals(wasAbsent);
     }
+
 
     @Override
     public WalkSession loadSession(String routeId) {
@@ -97,9 +102,15 @@ public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
             throw new WalkBusinessException(WalkErrorCode.SESSION_NOT_FOUND);
         }
 
-        Long userId = Long.valueOf((String)meta.get("userId"));
-        long startedAt = Long.parseLong((String) meta.get("startedAt"));
+        String userIdStr = (String) meta.get("userId");
+        String startedAtStr = (String) meta.get("startedAt");
 
+        if (userIdStr == null || startedAtStr == null) {
+            throw new WalkBusinessException(WalkErrorCode.SESSION_NOT_FOUND);
+        }
+
+        Long userId = Long.valueOf(userIdStr);
+        long startedAt = Long.parseLong(startedAtStr);
 
         List<String> rawPoints = redisTemplate.opsForList().range(pointsKey,0,-1);
         List<WalkPoint> points = new ArrayList<>();
@@ -115,12 +126,12 @@ public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
         }
 
         WalkSession session = new WalkSession(
-                routeId,
-                userId,
-                LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(startedAt),
-                        ZoneId.systemDefault()
-                )
+            routeId,
+            userId,
+            LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(startedAt),
+                KST
+            )
         );
 
         session.getPoints().addAll(points);
@@ -133,8 +144,7 @@ public class WalkSessionRedisRepositoryImpl implements WalkSessionRepository {
     public void endSession(String routeId) {
         String key = "walk:session:" + routeId;
 
-        Boolean exists = redisTemplate.hasKey(key);
-        if (!exists) {
+        if (!Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
             throw new WalkBusinessException(WalkErrorCode.SESSION_NOT_FOUND);
         }
 

@@ -28,16 +28,16 @@ public class RouteRegisterFacade {
 	private final ImageService imageService;
 	private final WalkStreamService walkStreamService;
 
-	public RouteRegisterResult execute(Long userId, RouteRegisterCommand command) {
-		UserEntity user = userService.findById(userId);
-		ImageEntity trackingImage  = imageService.getImageById(command.trackingImageId());
-
-		trackingImage.validateUsableForRoute();
-
-		return RouteRegisterResult.from(
-			routeService.saveRoute(user, command, trackingImage)
-		);
-	}
+	// public RouteRegisterResult execute(Long userId, RouteRegisterCommand command) {
+	// 	UserEntity user = userService.findById(userId);
+	// 	ImageEntity trackingImage  = imageService.getImageById(command.trackingImageId());
+	//
+	// 	trackingImage.validateUsableForRoute();
+	//
+	// 	return RouteRegisterResult.from(
+	// 		routeService.saveRoute(user, command, trackingImage)
+	// 	);
+	// }
 
 	public FinishWalkResult finishWalk(Long userId, SaveRouteCommand command) {
 
@@ -50,9 +50,7 @@ public class RouteRegisterFacade {
 		UserEntity user = userService.findById(userId);
 
 
-		RouteEntity route = routeService.saveRouteFromSession(user, session, command);
-
-		);
+		RouteEntity route = routeService.saveRouteFromSession(user,command, session);
 
 		return FinishWalkResult.from(route);
 	}
