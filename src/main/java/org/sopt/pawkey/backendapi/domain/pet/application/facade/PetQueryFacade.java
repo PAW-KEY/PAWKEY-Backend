@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.dbti.application.service.DbtiQueryService;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
+import org.sopt.pawkey.backendapi.domain.image.application.service.PresignedImageService;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.BreedListResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.api.dto.response.PetProfileResponseDto;
 import org.sopt.pawkey.backendapi.domain.pet.application.service.PetQueryService;
@@ -20,6 +21,7 @@ public class PetQueryFacade {
 
 	private final PetQueryService petQueryService;
 	private final DbtiQueryService dbtiQueryService;
+	private final PresignedImageService presignedImageService;
 
 	public BreedListResponseDto getBreedList() {
 		List<BreedListResponseDto.BreedDto> breeds = petQueryService.getAllBreeds();
@@ -35,7 +37,10 @@ public class PetQueryFacade {
 			DbtiEntity dbti = dbtiQueryService.getDbtiInfo(pet.getDbtiResult().getDbtiType());
 			dbtiName = dbti.getName();
 		}
+		String imageUrl = pet.getProfileImage() != null
+				? presignedImageService.createPresignedGetUrl(pet.getProfileImage().getImageUrl())
+				: null;
 
-		return PetProfileResponseDto.of(pet, formattedAge, dbtiName);
+		return PetProfileResponseDto.of(pet, imageUrl, formattedAge, dbtiName);
 	}
 }

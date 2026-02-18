@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.image.application.service;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -8,8 +9,11 @@ import org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
@@ -25,6 +29,24 @@ public class PresignedImageService {
 	@Value("${cloud.presign.expire-minutes}")
 	private long expireMinutes;
 
+	public String createPresignedGetUrl(String s3ImageUrl) {
+		String key = URI.create(s3ImageUrl).getPath().substring(1);
+
+		GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+				.bucket(bucket)
+				.key(key)
+				.build();
+
+		PresignedGetObjectRequest presignedRequest =
+				s3Presigner.presignGetObject(
+						GetObjectPresignRequest.builder()
+								.getObjectRequest(getObjectRequest)
+								.signatureDuration(Duration.ofMinutes(expireMinutes))
+								.build()
+				);
+
+		return presignedRequest.url().toString();
+	}
 
 	public IssuePresignedUrlResult createPresignedUrl(ImageDomain domain, String contentType){
 		String key = generateKey(domain,contentType); //key(식별자) 생성
