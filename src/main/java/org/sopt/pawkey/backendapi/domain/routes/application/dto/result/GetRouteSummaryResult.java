@@ -1,6 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.routes.application.dto.result;
 
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
+import org.sopt.pawkey.backendapi.global.util.RouteTimeFormatter;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public record GetRouteSummaryResult(Long routeId,
                         route.getDurationMinutes() + "분",
                         route.getStepCount() + "걸음"
                 )
-        )
+        );
     }
 
 }
