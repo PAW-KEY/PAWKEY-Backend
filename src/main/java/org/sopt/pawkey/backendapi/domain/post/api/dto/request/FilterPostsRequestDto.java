@@ -25,6 +25,10 @@ public record FilterPostsRequestDto(
 	) {
 		@JsonIgnore
 		public Long getTargetId() {
+			if (categoryId == null && durationId == null) {
+				throw new PostBusinessException(PostErrorCode.INVALID_FILTER_OPTION);
+			}
+
 			return categoryId != null ? categoryId : durationId;
 		}
 

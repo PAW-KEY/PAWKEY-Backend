@@ -51,6 +51,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
 	QImageEntity routeTrackingImage = new QImageEntity("routeTrackingImage");
 
+	private static final Long DURATION_CATEGORY_ID = 6L;
+
 	@Override
 	public List<GetPostCardResult> findByFilter(FilterPostsRequestDto dto, String sortBy, String cursor, int size,
 		Long userId) {
@@ -63,7 +65,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				Long targetId = filter.getTargetId();
 				List<Long> optionIds = filter.getOptionIdList();
 
-				if (targetId == 6) {
+				if (DURATION_CATEGORY_ID.equals(targetId)) {
 					builder.and(durationFilter(optionIds));
 				} else {
 					builder.and(categoryFilter(optionIds));
@@ -91,23 +93,27 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		if (cursor == null || cursor.isBlank())
 			return null;
 
-		if ("popular".equals(sortBy)) { // 인기순 커서 파싱 (좋아요수_ID)
-			String[] parts = cursor.split("_");
+		try {
+			if ("popular".equals(sortBy)) { // 인기순 커서 파싱 (좋아요수_ID)
+				String[] parts = cursor.split("_");
 
-			if (parts.length < 2) {
-				throw new PostBusinessException(PostErrorCode.INVALID_CURSOR_FORMAT);
+				if (parts.length < 2) {
+					throw new PostBusinessException(PostErrorCode.INVALID_CURSOR_FORMAT);
+				}
+
+				long cursorLikeCount = Long.parseLong(parts[0]);
+				long cursorPostId = Long.parseLong(parts[1]);
+
+				// 좋아요가 더 적거나, 좋아요가 같으면 ID가 더 작은 것 조회
+				return post.likeCount.lt(cursorLikeCount)
+					.or(post.likeCount.eq(cursorLikeCount).and(post.postId.lt(cursorPostId)));
 			}
 
-			long cursorLikeCount = Long.parseLong(parts[0]);
-			long cursorPostId = Long.parseLong(parts[1]);
-
-			// 좋아요가 더 적거나, 좋아요가 같으면 ID가 더 작은 것 조회
-			return post.likeCount.lt(cursorLikeCount)
-				.or(post.likeCount.eq(cursorLikeCount).and(post.postId.lt(cursorPostId)));
+			// 최신순 (Latest): ID 기준 내림차순
+			return post.postId.lt(Long.parseLong(cursor));
+		} catch (NumberFormatException e) {
+			throw new PostBusinessException(PostErrorCode.INVALID_CURSOR_FORMAT);
 		}
-
-		// 최신순 (Latest): ID 기준 내림차순
-		return post.postId.lt(Long.parseLong(cursor));
 	}
 
 	private BooleanBuilder durationFilter(List<Long> optionIds) {
