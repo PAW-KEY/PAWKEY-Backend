@@ -48,7 +48,7 @@ public class UserEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name;
 
 	@Enumerated(EnumType.STRING)

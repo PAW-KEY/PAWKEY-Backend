@@ -13,6 +13,7 @@ import org.sopt.pawkey.backendapi.domain.user.exception.UserBusinessException;
 import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.SocialAccountEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +35,20 @@ public class UserService {
 	@Transactional
 	public UserEntity completeOnboarding(Long userId, OnboardingInfoCommand command, RegionEntity region) {
 
+		if (userRepository.existsByName(command.name())) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+		}
+
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		user.updateProfile(command.name(), command.gender(), command.birth());
-		user.updateRegion(region);
+		try {
+			user.updateProfile(command.name(), command.gender(), command.birth());
+			user.updateRegion(region);
+			userRepository.saveAndFlush(user); // save() 대신 saveAndFlush()를 사용하여 즉시 DB 제약조건 검사
+		} catch (DataIntegrityViolationException e) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+		}
 
 		return user;
 	}
@@ -94,11 +104,22 @@ public class UserService {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		user.updateProfile(
-			command.name(),
-			command.gender(),
-			command.birth()
-		);
+		if (!command.name().equals(user.getName())) {
+			if (userRepository.existsByName(command.name())) {
+				throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+			}
+		}
+
+		try {
+			user.updateProfile(
+				command.name(),
+				command.gender(),
+				command.birth()
+			);
+			userRepository.saveAndFlush(user);
+		} catch (DataIntegrityViolationException e) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+		}
 	}
 }
 
