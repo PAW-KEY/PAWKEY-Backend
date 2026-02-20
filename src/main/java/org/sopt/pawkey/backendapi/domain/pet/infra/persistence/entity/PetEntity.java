@@ -86,12 +86,14 @@ public class PetEntity extends BaseEntity {
 		this.breed = breed;
 	}
 
-	public void updateProfile(String name, LocalDate birth, Gender gender, boolean isNeutered, BreedEntity breed) {
+	public void updateProfile(String name, LocalDate birth, Gender gender, boolean isNeutered, BreedEntity breed,
+		ImageEntity profileImage) {
 		this.name = name;
 		this.birth = birth;
 		this.gender = gender;
 		this.isNeutered = isNeutered;
 		this.breed = breed;
+		this.profileImage = profileImage;
 	}
 
 	public void setDbtiResult(DbtiResultEntity dbtiResult) {

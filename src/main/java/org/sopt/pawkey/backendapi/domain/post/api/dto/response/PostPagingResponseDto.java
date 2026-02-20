@@ -6,4 +6,5 @@ public record PostPagingResponseDto(
 	List<PostCardResponseDto> posts,
 	String nextCursor,
 	boolean hasNext
+
 ) {}

@@ -1,5 +1,9 @@
 package org.sopt.pawkey.backendapi.domain.pet.application.service;
 
+import org.sopt.pawkey.backendapi.domain.image.domain.repository.ImageRepository;
+import org.sopt.pawkey.backendapi.domain.image.exception.ImageBusinessException;
+import org.sopt.pawkey.backendapi.domain.image.exception.ImageErrorCode;
+import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.CreatePetCommand;
 import org.sopt.pawkey.backendapi.domain.pet.application.dto.request.UpdatePetCommand;
 import org.sopt.pawkey.backendapi.domain.pet.domain.repository.BreedRepository;
@@ -22,6 +26,7 @@ public class PetCommandService {
 
 	private final PetRepository petRepository;
 	private final BreedRepository breedRepository;
+	private final ImageRepository imageRepository;
 
 	public PetEntity savePet(CreatePetCommand command, UserEntity user) {
 
@@ -32,6 +37,12 @@ public class PetCommandService {
 		BreedEntity breed = breedRepository.findBreedById(command.breedId())
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
 
+		ImageEntity profileImage = null;
+		if (command.imageId() != null) {
+			profileImage = imageRepository.findById(command.imageId())
+				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+		}
+
 		PetEntity pet = PetEntity.builder()
 			.name(command.name())
 			.gender(command.gender())
@@ -39,6 +50,7 @@ public class PetCommandService {
 			.isNeutered(command.isNeutered())
 			.breed(breed)
 			.user(user)
+			.profileImage(profileImage)
 			.build();
 
 		return petRepository.save(pet);
@@ -49,12 +61,21 @@ public class PetCommandService {
 		BreedEntity breed = breedRepository.findBreedById(command.breedId())
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
 
+		ImageEntity profileImage = null;
+		if (command.imageId() != null) {
+			profileImage = imageRepository.findById(command.imageId())
+				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+		} else {
+			profileImage = pet.getProfileImage();
+		}
+
 		pet.updateProfile(
 			command.name(),
 			command.birth(),
 			command.gender(),
 			command.isNeutered(),
-			breed
+			breed,
+			profileImage
 		);
 	}
 }

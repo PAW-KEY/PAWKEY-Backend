@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.post.application.facade.query;
 
 import java.util.List;
 
+import org.sopt.pawkey.backendapi.domain.image.application.service.PresignedImageService;
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class PostQueryFacade {
 	private final PostQueryService postQueryService;
 	private final PostService postService;
+	private final PresignedImageService presignedImageService;
 
 	public PostPagingResponseDto getFilterPostList(FilterPostsRequestDto requestDto, String sortBy, String cursor,
 		int size, Long userId) {
@@ -53,12 +55,16 @@ public class PostQueryFacade {
 			.anyMatch(like -> like.getUser().getUserId().equals(userId));
 
 		String routeMapImageUrl =
-			post.getRoute().getTrackingImage() != null ? post.getRoute().getTrackingImage().getImageUrl() : null;
+				post.getRoute().getTrackingImage() != null
+						? presignedImageService.createPresignedGetUrl(
+						post.getRoute().getTrackingImage().getImageUrl()
+				)
+						: null;
 
 		List<String> walkingImages = post.getPostImageEntityList().stream()
-			.filter(img -> img.getImageType() == ImageType.WALK_POST)
-			.map(img -> img.getImage().getImageUrl())
-			.toList();
+				.filter(img -> img.getImageType() == ImageType.WALK_POST)
+				.map(img -> presignedImageService.createPresignedGetUrl(img.getImage().getImageUrl()))
+				.toList();
 
 		return postQueryService.getPostDetail(post, isLiked, routeMapImageUrl, walkingImages);
 	}

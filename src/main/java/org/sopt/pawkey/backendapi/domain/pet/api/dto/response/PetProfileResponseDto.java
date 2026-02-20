@@ -18,10 +18,11 @@ public record PetProfileResponseDto(
 	String dbtiName,
 	String dbtiDescription
 ) {
-	public static PetProfileResponseDto of(PetEntity pet, String formattedAge, String dbtiDescription) {
+	//imageUrl을 외부에서 주입받도록 시그니처 변경
+	public static PetProfileResponseDto of(PetEntity pet, String imageUrl,String formattedAge, String dbtiDescription) {
 		return new PetProfileResponseDto(
 			pet.getPetId(),
-			pet.getProfileImage() != null ? pet.getProfileImage().getImageUrl() : null,
+			imageUrl,
 			pet.getName(),
 			pet.getBirth(),
 			formattedAge,

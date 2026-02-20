@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.crypto.SecretKey;
 
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
 import org.sopt.pawkey.backendapi.domain.auth.api.dto.response.TokenResponseDTO;
 import org.sopt.pawkey.backendapi.domain.auth.exception.AuthBusinessException;
 import org.sopt.pawkey.backendapi.domain.auth.exception.AuthErrorCode;
@@ -14,10 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -144,7 +142,11 @@ public class TokenService {
 				.verifyWith(signingKey)
 				.build()
 				.parseSignedClaims(token);
-		} catch (Exception e) {
+		} catch (ExpiredJwtException e) {
+			throw new AuthBusinessException(AuthErrorCode.TOKEN_EXPIRED);
+		} catch (SignatureException e) {
+			throw new AuthBusinessException(AuthErrorCode.TOKEN_SIGNATURE_INVALID);
+		} catch (JwtException e) {
 			throw new AuthBusinessException(AuthErrorCode.ACCESS_TOKEN_INVALID);
 		}
 	}

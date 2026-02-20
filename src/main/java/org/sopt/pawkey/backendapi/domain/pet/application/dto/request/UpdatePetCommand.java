@@ -9,15 +9,17 @@ public record UpdatePetCommand(
 	Gender gender,
 	LocalDate birth,
 	boolean isNeutered,
-	Long breedId
+	Long breedId,
+	Long imageId
 ) {
 	public static UpdatePetCommand of(
 		String name,
 		Gender gender,
 		LocalDate birth,
 		boolean isNeutered,
-		Long breedId
+		Long breedId,
+		Long imageId
 	) {
-		return new UpdatePetCommand(name, gender, birth, isNeutered, breedId);
+		return new UpdatePetCommand(name, gender, birth, isNeutered, breedId, imageId);
 	}
 }

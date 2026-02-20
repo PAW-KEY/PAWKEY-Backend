@@ -16,9 +16,10 @@ public record PetRequestDto(
 	@NotNull(message = "생년월일은 필수값입니다.")
 	@JsonFormat(pattern = "yyyy-MM-dd") LocalDate birth,
 	@NotNull Boolean isNeutered,
-	@NotNull(message = "견종은 필수값입니다.") Long breedId
+	@NotNull(message = "견종은 필수값입니다.") Long breedId,
+	Long imageId
 ) {
 	public CreatePetCommand toCommand() {
-		return CreatePetCommand.of(name, gender, birth, isNeutered, breedId);
+		return CreatePetCommand.of(name, gender, birth, isNeutered, breedId, imageId);
 	}
 }

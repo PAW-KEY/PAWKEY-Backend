@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.category.domain.repository.CategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.category.infra.persistence.entity.CategoryOptionEntity;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor

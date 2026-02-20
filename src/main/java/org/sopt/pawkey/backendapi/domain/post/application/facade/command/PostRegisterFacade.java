@@ -59,7 +59,7 @@ public class PostRegisterFacade {
 
 		PostEntity post = postService.savePost(writer, command, route);
 
-		// Post Aggregate( PostImageEntity 생성 책임-> PostEntity 담당)
+		// post Aggregate( PostImageEntity 생성 책임-> PostEntity 담당)
 		post.addImages(images); //이미지 연결
 
 		processCategorySelection(post, command.selectedOptionsForCategories());

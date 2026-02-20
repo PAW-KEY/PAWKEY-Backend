@@ -50,3 +50,4 @@ public record FilterPostsRequestDto(
 		}
 	}
 }
+
