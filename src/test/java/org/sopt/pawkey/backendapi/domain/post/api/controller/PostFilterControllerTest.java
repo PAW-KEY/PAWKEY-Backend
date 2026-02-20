@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.api.controller;
 
+import static org.hamcrest.Matchers.*;
 import static org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -148,7 +150,8 @@ class PostFilterControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpectAll(
 				status().isOk(),
-				jsonPath("$.code").value("S000")
+				jsonPath("$.code").value("S000"),
+				jsonPath("$.data.posts.length()", greaterThan(0))
 			);
 	}
 
@@ -182,7 +185,9 @@ class PostFilterControllerTest {
 				.param("size", "10")
 				.content(jsonRequest)
 				.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+			.andExpectAll(status().isOk(),
+				jsonPath("$.data.posts.length()").exists()
+			);
 	}
 
 	@Test
@@ -237,5 +242,10 @@ class PostFilterControllerTest {
 				jsonPath("$.data.posts[0].postId").value(targetPost.getPostId()),
 				jsonPath("$.data.posts[0].isLiked").value(true)
 			);
+	}
+
+	@AfterEach
+	void tearDown() {
+		SecurityContextHolder.clearContext();
 	}
 }
