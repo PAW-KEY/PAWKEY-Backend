@@ -17,12 +17,15 @@ import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.sopt.pawkey.backendapi.domain.category.infra.persistence.repository.SpringDataCategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.SpringDataImageRepository;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostLikeRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostSelectedCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository.SpringDataPostRepository;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository.SpringDataPostSelectedCategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.SpringDataRegionRepository;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.SpringDataRouteRepository;
@@ -66,48 +69,75 @@ class PostFilterControllerTest {
 	private SpringDataImageRepository imageRepository;
 	@Autowired
 	private PostLikeRepository postLikeRepository;
+	@Autowired
+	private SpringDataCategoryOptionRepository categoryOptionRepository;
+	@Autowired
+	private SpringDataPostSelectedCategoryOptionRepository postSelectedCategoryOptionRepository;
 
 	private UserEntity testUser;
 
+	private RegionEntity region;
+	private ImageEntity routeImage;
+
 	@BeforeEach
 	void setUp() {
-		RegionEntity region = regionRepository.save(RegionFixture.createRegion());
+		region = regionRepository.save(RegionFixture.createRegion());
 		testUser = userRepository.save(UserFixture.createUser(region));
 
 		SecurityContextHolder.getContext().setAuthentication(
 			new UsernamePasswordAuthenticationToken(testUser.getUserId(), null, List.of())
 		);
 
+		routeImage = imageRepository.save(ImageEntity.builder()
+			.imageUrl("https://pawkey.com/test-route")
+			.width(1080).height(720).extension("png")
+			.domain(ROUTE)
+			.build());
+
+		PostEntity postA = createPost("A: 20분 & 많음 & 벤치", 1200);
+		saveMapping(postA, 3L);
+		saveMapping(postA, 12L);
+
+		PostEntity postB = createPost("B: 60분 & 많음 & 벤치", 3600);
+		saveMapping(postB, 3L);
+		saveMapping(postB, 12L);
+
+		PostEntity postC = createPost("C: 10분 & 적음 & 카페", 600);
+		saveMapping(postC, 1L);
+		saveMapping(postC, 15L);
+	}
+
+	private PostEntity createPost(String title, int durationSeconds) {
 		GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
-		for (int i = 1; i <= 11; i++) {
-			ImageEntity routeImage = imageRepository.save(ImageEntity.builder()
-				.imageUrl("https://pawkey.com/test" + i)
-				.width(1080).height(720).extension("png")
-				.domain(ROUTE)
-				.build());
+		RouteEntity route = routeRepository.save(RouteEntity.builder()
+			.distance(2000)
+			.duration(durationSeconds)
+			.region(region)
+			.trackingImage(routeImage)
+			.startedAt(LocalDateTime.now().minusSeconds(durationSeconds))
+			.endedAt(LocalDateTime.now())
+			.stepCount(3000)
+			.coordinates(geometryFactory.createLineString(new Coordinate[] {
+				new Coordinate(126.8, 37.5), new Coordinate(126.9, 37.6)
+			}))
+			.build());
 
-			RouteEntity uniqueRoute = routeRepository.save(RouteEntity.builder()
-				.distance(1500 + i)
-				.duration(1200)
-				.region(region)
-				.trackingImage(routeImage)
-				.startedAt(LocalDateTime.now().minusMinutes(20))
-				.endedAt(LocalDateTime.now())
-				.stepCount(2000)
-				.coordinates(geometryFactory.createLineString(new Coordinate[] {
-					new Coordinate(126.8576, 37.5193),
-					new Coordinate(126.8580, 37.5200)
-				}))
-				.build());
+		return postRepository.save(PostEntity.builder()
+			.user(testUser)
+			.route(route)
+			.title(title)
+			.isPublic(true)
+			.build());
+	}
 
-			postRepository.save(PostEntity.builder()
-				.user(testUser)
-				.route(uniqueRoute)
-				.title("테스트 산책 게시물 " + i)
-				.isPublic(true)
-				.build());
-		}
+	private void saveMapping(PostEntity post, Long optionId) {
+		postSelectedCategoryOptionRepository.save(
+			PostSelectedCategoryOptionEntity.builder()
+				.post(post)
+				.categoryOption(categoryOptionRepository.getReferenceById(optionId))
+				.build()
+		);
 	}
 
 	@Test
@@ -122,8 +152,8 @@ class PostFilterControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpectAll(
 				status().isOk(),
-				jsonPath("$.data.posts.length()").value(10),
-				jsonPath("$.data.hasNext").value(true)
+				jsonPath("$.data.posts.length()").value(3),
+				jsonPath("$.data.hasNext").value(false)
 			);
 	}
 
@@ -186,22 +216,19 @@ class PostFilterControllerTest {
 				.content(jsonRequest)
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpectAll(status().isOk(),
-				jsonPath("$.data.posts.length()").exists()
+				jsonPath("$.data.posts.length()", greaterThan(0))
 			);
 	}
 
 	@Test
-	@DisplayName("Case 3: 시간 필터 + 모든 카테고리 풀 세트 필터 적용")
+	@DisplayName("Case 3: 시간 필터 +  카테고리 세트 필터 적용")
 	void filterPosts_FullSetOptions_Success() throws Exception {
 		String jsonRequest = """
 			{
 			  "selectedOptions": [
-			    { "durationId": 6, "optionsIds": [22] },
-			    { "categoryId": 1, "optionsIds": [3] },
-			    { "categoryId": 2, "optionsIds": [4] },
-			    { "categoryId": 3, "optionsIds": [7, 9] },
-			    { "categoryId": 4, "optionsIds": [12] },
-			    { "categoryId": 5, "optionsIds": [17, 18] }
+			    { "durationId": 6, "optionsIds": [22] }, 
+			    { "categoryId": 1, "optionsIds": [3] },  
+			    { "categoryId": 4, "optionsIds": [12] }
 			  ]
 			}
 			""";
@@ -211,7 +238,11 @@ class PostFilterControllerTest {
 				.param("size", "10")
 				.content(jsonRequest)
 				.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+			.andExpectAll(
+				status().isOk(),
+				jsonPath("$.data.posts").isArray(),
+				jsonPath("$.data.posts.length()").value(1)
+			);
 	}
 
 	@Test
