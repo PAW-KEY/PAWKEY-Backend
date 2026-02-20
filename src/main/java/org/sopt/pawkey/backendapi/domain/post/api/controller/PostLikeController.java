@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(API_PREFIX + "/likes")
+@RequestMapping(API_PREFIX + "/posts")
 public class PostLikeController {
 
 	private final PostLikeFacade postLikeFacade;
@@ -29,10 +29,11 @@ public class PostLikeController {
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "좋아요 토글 성공 (저장 또는 취소)"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 게시글", content = @Content(mediaType = "application/json")),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
-	@PostMapping("/{postId}")
+	@PostMapping("/{postId}/likes")
 	public ResponseEntity<ApiResponse<PostLikeResponse>> toggleLike(
 		@PathVariable Long postId,
 		@Parameter(hidden = true) @UserId Long userId

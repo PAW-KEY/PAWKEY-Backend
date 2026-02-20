@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
  * <p>
  *  - QueryDSL을 사용하여 동적 쿼리를 타입 세이프하게 작성.
  *  - FilterPostsRequestDto에 담긴 조건을 기반으로 게시글을 필터링.
- *  - fetch join을 활용해 N+1 문제를 방지 밒 성능 최적화.
+ *  - fetch join을 활용해 N+1 문제를 방지 및 성능 최적화.
  *  - 카테고리 태그 / 산책 이미지 등 후처리 조회가 필요한 데이터는 별도 메서드에서 일괄 조회.
  *  - 최종적으로 API 응답 전용 DTO(GetPostResult) 형태로 변환해서 반환.
  */
@@ -140,6 +140,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 	}
 
 	private BooleanExpression categoryFilter(List<Long> optionIds) {
+		if (optionIds.isEmpty())
+			return null;
 		return JPAExpressions.selectOne()
 			.from(sel)
 			.where(
