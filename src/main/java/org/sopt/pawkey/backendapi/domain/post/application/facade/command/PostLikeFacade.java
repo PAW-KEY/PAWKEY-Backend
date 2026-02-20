@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostLikeResponse;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostLikeService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
@@ -19,17 +20,11 @@ public class PostLikeFacade {
 	private final PostLikeService postLikeService;
 
 	@Transactional
-	public void like(Long postId, Long userId) {
+	public PostLikeResponse toggleLike(Long postId, Long userId) {
 		UserEntity user = userService.findById(userId);
 		PostEntity post = postService.findById(postId);
-		postLikeService.like(user, post);
-	}
 
-	@Transactional
-	public void cancelLike(Long postId, Long userId) {
-		UserEntity user = userService.findById(userId);
-		PostEntity post = postService.findById(postId);
-		postLikeService.cancelLike(user, post);
+		return postLikeService.toggleLike(user, post);
 	}
 }
 
