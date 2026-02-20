@@ -32,7 +32,7 @@ public class HomeWeatherFacade {
 		return RegionWeatherResponseDTO.of(
 			weather.temperature(),
 			weather.rainyMm(),
-			region.getRegionName()
+			region.getFullRegionName()
 		);
 	}
 

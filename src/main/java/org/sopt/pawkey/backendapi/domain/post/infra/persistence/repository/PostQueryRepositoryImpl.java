@@ -116,17 +116,24 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 		}
 	}
 
+	private static final long DURATION_ALL = 21L;      // 시간 무관
+	private static final long DURATION_UNDER_30 = 22L; // 30분 미만 (1800초)
+	private static final long DURATION_30_TO_60 = 23L; // 30~60분 (1800~3600초)
+	private static final long DURATION_OVER_60 = 24L;  // 1시간 이상 (3600초~)
+
 	private BooleanBuilder durationFilter(List<Long> optionIds) {
-		if (optionIds.isEmpty() || optionIds.contains(21L))
+		if (optionIds.isEmpty() || optionIds.contains(DURATION_ALL))
 			return null;
 
 		BooleanBuilder durBuilder = new BooleanBuilder();
 		for (Long id : optionIds) {
-			if (id == 22) // 30분 미만
+			if (id == null)
+				continue;
+			if (id == DURATION_UNDER_30)
 				durBuilder.or(route.duration.lt(1800));
-			else if (id == 23) // 30분 이상 ~ 1시간 미만
+			else if (id == DURATION_30_TO_60)
 				durBuilder.or(route.duration.goe(1800).and(route.duration.lt(3600)));
-			else if (id == 24) // 1시간 이상
+			else if (id == DURATION_OVER_60)
 				durBuilder.or(route.duration.goe(3600));
 		}
 		return durBuilder;
@@ -160,7 +167,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
 		return posts.stream().map(p -> GetPostCardResult.builder()
 			.postId(p.getPostId())
-			.regionName(p.getRoute().getRegion().getRegionName())
+			.regionName(p.getRoute().getRegion().getFullRegionName())
 			.title(p.getTitle())
 			.createdAt(p.getCreatedAt())
 			.durationMinutes((int)(p.getRoute().getDuration() / 60)) // 분 단위
