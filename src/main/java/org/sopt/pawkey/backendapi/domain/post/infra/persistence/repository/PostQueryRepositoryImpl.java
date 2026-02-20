@@ -73,6 +73,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 			}
 		}
 
+		long limitSize = (size >= Integer.MAX_VALUE) ? (long)size : (long)size + 1;
+
 		// 메인 쿼리
 		List<PostEntity> posts = query.selectFrom(post)
 			.join(post.route, route).fetchJoin()
@@ -83,7 +85,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 				cursorCondition(sortBy, cursor)
 			)
 			.orderBy(getOrderSpecifiers(sortBy))
-			.limit(size + 1)
+			.limit(limitSize)
 			.fetch();
 
 		return convertToResult(posts, userId);
