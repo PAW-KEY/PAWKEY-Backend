@@ -90,8 +90,11 @@ public class WeatherService {
 				return WeatherMessageResult.defaultMessage();
 			}
 
-			WeatherMessage message = commentaryGenerator.generate(weather.temperature(), weather.temperature());
+			int roundedTemp = (int)Math.round(weather.temperature());
+			int roundedRainProb = (int)Math.round(weather.rainyProb());
 
+			WeatherMessage message = commentaryGenerator.generate(roundedTemp, roundedRainProb);
+			
 			return new WeatherMessageResult(message.mainMessage(), message.subMessage());
 
 		} catch (Exception e) {

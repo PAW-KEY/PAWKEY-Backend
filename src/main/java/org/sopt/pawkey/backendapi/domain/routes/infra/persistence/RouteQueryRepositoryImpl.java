@@ -21,13 +21,13 @@ public class RouteQueryRepositoryImpl implements RouteQueryRepository {
 
 	@Override
 	public HomeInfoResponseDto getMonthlyWalkSummary(Long userId) {
-		LocalDateTime startOfMonth =
-			LocalDate.now(ZoneId.of("Asia/Seoul")).withDayOfMonth(1).atStartOfDay();
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+		LocalDateTime startOfMonth = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0, 0);
 
 		return query.select(Projections.constructor(HomeInfoResponseDto.class,
-				route.distance.sum().doubleValue().divide(1000.0).coalesce(0.0),// 누적 거리
-				route.duration.sum().coalesce(0),   // 총 산책 시간 (초)
-				route.count().intValue()            // 산책 횟수
+				route.distance.sum().doubleValue().divide(1000.0).as("distance"),
+				route.duration.sum().as("totalTime"),
+				route.count().intValue().as("count")
 			))
 			.from(route)
 			.where(

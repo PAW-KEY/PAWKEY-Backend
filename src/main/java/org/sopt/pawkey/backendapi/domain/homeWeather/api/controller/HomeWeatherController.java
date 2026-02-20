@@ -4,9 +4,8 @@ import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
-import org.sopt.pawkey.backendapi.domain.homeWeather.application.facade.HomeFacade;
 import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.RegionWeatherResponseDTO;
-import org.sopt.pawkey.backendapi.domain.homeWeather.application.facade.WeatherFacade;
+import org.sopt.pawkey.backendapi.domain.homeWeather.application.facade.HomeWeatherFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(API_PREFIX + "/home")
-public class HomeController {
+public class HomeWeatherController {
 
-	private final WeatherFacade weatherFacade;
+	private final HomeWeatherFacade homeweatherFacade;
 
 	@Operation(summary = "날씨 정보 조회", description = "로그인한 유저의 지역을 기반으로 날씨 정보를 제공합니다.", tags = {"Home"})
 	@ApiResponses({
@@ -35,11 +34,9 @@ public class HomeController {
 	public ResponseEntity<ApiResponse<RegionWeatherResponseDTO>> getHomeWeather(
 		@Parameter(hidden = true) @UserId Long userId
 	) {
-		RegionWeatherResponseDTO response = weatherFacade.getWeatherByUserRegion(userId);
+		RegionWeatherResponseDTO response = homeweatherFacade.getWeatherByUserRegion(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
-
-	private final HomeFacade homeFacade;
 
 	@Operation(summary = "홈 산책 정보 조회", description = "유저의 이번 달 누적 산책 정보를 조회합니다.", tags = {"Home"})
 	@ApiResponses({
@@ -51,7 +48,7 @@ public class HomeController {
 	public ResponseEntity<ApiResponse<HomeInfoResponseDto>> getHomeInfo(
 		@Parameter(hidden = true) @UserId Long userId
 	) {
-		HomeInfoResponseDto response = homeFacade.getHomeInfo(userId);
+		HomeInfoResponseDto response = homeweatherFacade.getHomeInfo(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
 }

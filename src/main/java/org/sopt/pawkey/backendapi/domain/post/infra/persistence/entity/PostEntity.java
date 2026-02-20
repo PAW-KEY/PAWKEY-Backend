@@ -65,6 +65,10 @@ public class PostEntity extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostLikeEntity> postLikeEntityList = new ArrayList<>();
 
+	@Column(nullable = false)
+	@Builder.Default
+	private long likeCount = 0;
+
 	@BatchSize(size = 100)
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostSelectedCategoryOptionEntity> postSelectedCategoryOptionEntityList = new ArrayList<>();
@@ -78,7 +82,6 @@ public class PostEntity extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<PostCategoryOptionTop3Entity> postCategoryOptionTop3EntityList = new ArrayList<>();
 
-
 	public void addImages(List<ImageEntity> images) {
 		for (ImageEntity image : images) {
 			PostImageEntity postImage = PostImageEntity.builder()
@@ -88,6 +91,4 @@ public class PostEntity extends BaseEntity {
 			this.postImageEntityList.add(postImage);
 		}
 	}
-
-
 }

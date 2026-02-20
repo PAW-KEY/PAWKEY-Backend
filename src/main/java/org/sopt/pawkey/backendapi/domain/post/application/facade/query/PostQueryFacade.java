@@ -6,7 +6,7 @@ import org.sopt.pawkey.backendapi.domain.image.application.service.PresignedImag
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
-import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostListResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostPagingResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
@@ -25,14 +25,26 @@ public class PostQueryFacade {
 	private final PostService postService;
 	private final PresignedImageService presignedImageService;
 
-	public PostListResponseDto getFilterPostList(FilterPostsRequestDto requestDto, Long userId) {
-		List<GetPostCardResult> results = postQueryService.getFilteredPosts(requestDto, userId);
+	public PostPagingResponseDto getFilterPostList(FilterPostsRequestDto requestDto, String sortBy, String cursor,
+		int size, Long userId) {
+		List<GetPostCardResult> results = postQueryService.getFilteredPosts(requestDto, sortBy, cursor, size, userId);
 
-		List<PostCardResponseDto> postResponseDtoList = results.stream()
-			.map(PostCardResponseDto::from)
-			.toList();
+		boolean hasNext = results.size() > size;
+		List<GetPostCardResult> pagedResults = hasNext ? results.subList(0, size) : results;
 
-		return new PostListResponseDto(postResponseDtoList);
+		List<PostCardResponseDto> posts = pagedResults.stream().map(PostCardResponseDto::from).toList();
+
+		// 커서 생성
+		String nextCursor = null;
+		if (!posts.isEmpty() && hasNext) {
+			GetPostCardResult last = pagedResults.get(pagedResults.size() - 1); // 마지막 게시글 정보
+			nextCursor = "popular".equals(sortBy)
+				? last.likeCount() + "_" + last.postId() // 인기순
+				: String.valueOf(last.postId()); // 최신순
+		}
+
+		// 리스트, 다음 커서 위치, 다음 페이지 유무
+		return new PostPagingResponseDto(posts, nextCursor, hasNext);
 	}
 
 	public PostResponseDto getPostDetail(Long postId, Long userId) {

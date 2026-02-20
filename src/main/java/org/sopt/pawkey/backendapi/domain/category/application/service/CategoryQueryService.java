@@ -19,14 +19,7 @@ public class CategoryQueryService {
 	public List<CategoryResult> getAllCategories() {
 		List<CategoryEntity> categoryEntityList = categoryRepository.findAllCategoryWithOptions();
 		return categoryEntityList.stream()
-			.map(CategoryResult::fromEntity)
-			.toList();
-	}
-
-	public List<CategoryResult> getAllCategoriesSummary() {
-		List<CategoryEntity> categoryEntityList = categoryRepository.findAllCategoryWithOptions();
-		return categoryEntityList.stream()
-			.map(CategoryResult::fromEntityWithSummary)
+			.map(CategoryResult::fromCategory)
 			.toList();
 	}
 

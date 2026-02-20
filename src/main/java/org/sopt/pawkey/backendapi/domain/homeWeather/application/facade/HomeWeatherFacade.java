@@ -1,5 +1,7 @@
 package org.sopt.pawkey.backendapi.domain.homeWeather.application.facade;
 
+import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
+import org.sopt.pawkey.backendapi.domain.homeWeather.application.service.HomeService;
 import org.sopt.pawkey.backendapi.domain.region.exception.RegionBusinessException;
 import org.sopt.pawkey.backendapi.domain.region.exception.RegionErrorCode;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
@@ -14,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class WeatherFacade {
+public class HomeWeatherFacade {
 
 	private final WeatherService weatherService;
 	private final UserQueryService userQueryService;
@@ -30,7 +32,13 @@ public class WeatherFacade {
 		return RegionWeatherResponseDTO.of(
 			weather.temperature(),
 			weather.rainyMm(),
-			region.getRegionName()
+			region.getFullRegionName()
 		);
+	}
+
+	private final HomeService homeService;
+
+	public HomeInfoResponseDto getHomeInfo(Long userId) {
+		return homeService.getHomeInfo(userId);
 	}
 }
