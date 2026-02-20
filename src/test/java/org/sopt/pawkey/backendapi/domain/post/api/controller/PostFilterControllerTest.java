@@ -36,6 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -220,6 +221,9 @@ class PostFilterControllerTest {
 			.post(targetPost)
 			.user(testUser)
 			.build());
+
+		ReflectionTestUtils.setField(targetPost, "likeCount", 1L);
+		postRepository.saveAndFlush(targetPost);
 
 		FilterPostsRequestDto request = new FilterPostsRequestDto(List.of());
 
