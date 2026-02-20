@@ -16,8 +16,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
 	@Override
 	public List<CategoryEntity> findAllCategoryWithOptions() {
-		//return jpaRepository.findAllWithOptions();
-		throw new UnsupportedOperationException("local-walk 환경에서는 카테고리 기능 비활성화");
+		return jpaRepository.findAllWithOptions();
 	}
 
 }
