@@ -7,7 +7,6 @@ import static org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewRepository;
-import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.QReviewSelectedCategoryOptionEntity;
 import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewEntity;
 import org.springframework.stereotype.Repository;
 

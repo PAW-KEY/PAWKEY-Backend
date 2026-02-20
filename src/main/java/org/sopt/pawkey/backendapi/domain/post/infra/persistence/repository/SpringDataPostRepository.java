@@ -53,7 +53,7 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	void increaseLikeCount(@Param("postId") Long postId);
 
 	@Modifying
-	@Query("UPDATE PostEntity p SET p.likeCount = p.likeCount - 1 WHERE p.postId = :postId")
+	@Query("UPDATE PostEntity p SET p.likeCount = p.likeCount - 1 WHERE p.postId = :postId AND p.likeCount > 0")
 	void decreaseLikeCount(@Param("postId") Long postId);
 
 	Optional<PostEntity> findByRoute(RouteEntity route);
