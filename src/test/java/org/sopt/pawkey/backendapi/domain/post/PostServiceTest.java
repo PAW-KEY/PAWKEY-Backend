@@ -5,6 +5,7 @@ import org.mockito.quality.Strictness;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostUpdateCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
@@ -76,6 +77,47 @@ class PostServiceTest {
 
         // when & then
         assertThatThrownBy(() -> postService.savePost(writer, command, route))
+                .isInstanceOf(PostBusinessException.class);
+    }
+
+    @Test
+    void 게시물_수정_성공_본인_게시글() {
+        // given
+        UserEntity user = mock(UserEntity.class);
+        PostEntity post = mock(PostEntity.class);
+
+        given(post.getUser()).willReturn(user);
+
+        PostUpdateCommand command = PostUpdateCommand.builder()
+                .title("수정 제목")
+                .description("수정 본문")
+                .isPublic(false)
+                .build();
+
+        // when
+        postService.updatePost(post, user, command);
+
+        // then
+        verify(post).update("수정 제목", "수정 본문", false);
+    }
+
+    @Test
+    void 게시물_수정_실패_타인_게시글() {
+        // given
+        UserEntity user = mock(UserEntity.class);
+        UserEntity other = mock(UserEntity.class);
+        PostEntity post = mock(PostEntity.class);
+
+        given(post.getUser()).willReturn(other);
+
+        PostUpdateCommand command = PostUpdateCommand.builder()
+                .title("수정 제목")
+                .description("수정 본문")
+                .isPublic(true)
+                .build();
+
+        // when & then
+        assertThatThrownBy(() -> postService.updatePost(post, user, command))
                 .isInstanceOf(PostBusinessException.class);
     }
 }
