@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.BatchSize;
+import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
@@ -82,13 +83,25 @@ public class PostEntity extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<PostCategoryOptionTop3Entity> postCategoryOptionTop3EntityList = new ArrayList<>();
 
-	public void addImages(List<ImageEntity> images) {
+	public void addRouteImage(ImageEntity image) {
+		this.postImageEntityList.add(
+				PostImageEntity.builder()
+						.post(this)
+						.image(image)
+						.imageType(ImageType.ROUTE)
+						.build()
+		);
+	}
+	public void addWalkImages(List<ImageEntity> images) {
 		for (ImageEntity image : images) {
-			PostImageEntity postImage = PostImageEntity.builder()
-				.post(this)
-				.image(image)
-				.build();
-			this.postImageEntityList.add(postImage);
+			this.postImageEntityList.add(
+					PostImageEntity.builder()
+							.post(this)
+							.image(image)
+							.imageType(ImageType.WALK_POST)
+							.build()
+			);
 		}
+
 	}
 }

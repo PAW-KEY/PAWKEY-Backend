@@ -33,8 +33,12 @@ public class PostCreateRequestDto {
 	@NotNull(message = "루트 ID는 필수입니다.")
 	private final Long routeId;
 
-	@Size(max=3, message = "이미지는 최대 3장까지 등록할 수 있습니다.")
-	private final List<Long> imageIds;
+	@NotNull(message = "루트 이미지 ID는 필수입니다.")
+	private final Long routeImageId;
+
+	@Size(max = 4, message = "산책 이미지는 최대 4장까지 등록할 수 있습니다.")
+	private final List<Long> walkImageIds;
+
 
 	public boolean getIsPublic() {
 		return isPublic;
@@ -42,13 +46,14 @@ public class PostCreateRequestDto {
 
 	public PostRegisterCommand toCommand() {
 		return PostRegisterCommand.builder()
-			.title(this.title)
-			.description(this.description)
-			.isPublic(this.isPublic)
-			.selectedOptionsForCategories(this.selectedOptionsForCategories)
-			.routeId(this.routeId)
-			.imageIds(imageIds)
-			.build();
+				.title(this.title)
+				.description(this.description)
+				.isPublic(this.isPublic)
+				.selectedOptionsForCategories(this.selectedOptionsForCategories)
+				.routeId(this.routeId)
+				.routeImageId(this.routeImageId)
+				.walkImageIds(this.walkImageIds)
+				.build();
 	}
 }
 

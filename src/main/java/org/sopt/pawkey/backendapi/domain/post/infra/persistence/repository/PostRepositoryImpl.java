@@ -10,7 +10,6 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-
 @Repository
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepository {

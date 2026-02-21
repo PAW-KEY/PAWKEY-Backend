@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,17 +51,27 @@ public class PostRegisterFacade {
 		// 하나의 루트에는 하나의 게시물만 허용
 		throwIfRoutePostExist(route);
 
-		// 게시물 이미지(presined)
-		List<ImageEntity> images = command.imageIds().stream()
-			.map(imageService::getImageById)
-			.peek(ImageEntity::validateUsableForPost)
-			.toList();
-
-
 		PostEntity post = postService.savePost(writer, command, route);
 
-		// post Aggregate( PostImageEntity 생성 책임-> PostEntity 담당)
-		post.addImages(images); //이미지 연결
+		// 루트 이미지 조회 (이미 /images/register 를 통해 DB에 저장된 ImageEntity를 조회하는 구조)
+		ImageEntity routeImage = imageService.getImageById(command.routeImageId());
+		routeImage.validateUsableForRoute(); // 루트 이미지로 사용 가능한 타입인지 도메인 검증
+
+		//산책 이미지
+		List<ImageEntity> walkImages  = command.walkImageIds() == null
+				? List.of()
+				: command.walkImageIds().stream()
+				.map(imageService::getImageById)
+				.peek(ImageEntity::validateUsableForPost)
+				.toList();
+
+		//Post - Image 연관관계 설정
+		post.addRouteImage(routeImage);     // 내부에서 ImageType.ROUTE로 매핑
+		post.addWalkImages(walkImages);     // 내부에서 ImageType.WALK_POST로 매핑
+
+
+
+
 
 		processCategorySelection(post, command.selectedOptionsForCategories());
 

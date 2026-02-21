@@ -64,6 +64,9 @@ public class PostController {
 		return ResponseEntity.ok(ApiResponse.success(PostRegisterResponseDto.from(result)));
 	}
 
+
+
+
 	@Operation(summary = "게시물 상세 조회", description = "산책 게시물의 상세정보를 조회합니다.", tags = {"Posts"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공"),
