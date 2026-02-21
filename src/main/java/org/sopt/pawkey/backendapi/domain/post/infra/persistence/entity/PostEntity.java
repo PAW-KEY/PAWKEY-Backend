@@ -102,6 +102,14 @@ public class PostEntity extends BaseEntity {
 							.build()
 			);
 		}
+	}
+	public void update(String title, String description, boolean isPublic) {
+		this.title = title;
+		this.description = description;
+		this.isPublic = isPublic;
+	}
 
+	public void removeWalkImages() {
+		postImageEntityList.removeIf(img -> img.getImageType() == ImageType.WALK_POST);
 	}
 }

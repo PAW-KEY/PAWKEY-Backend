@@ -1,6 +1,5 @@
 package org.sopt.pawkey.backendapi.domain.post.application.facade.command;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,9 +67,6 @@ public class PostRegisterFacade {
 		//Post - Image 연관관계 설정
 		post.addRouteImage(routeImage);     // 내부에서 ImageType.ROUTE로 매핑
 		post.addWalkImages(walkImages);     // 내부에서 ImageType.WALK_POST로 매핑
-
-
-
 
 
 		processCategorySelection(post, command.selectedOptionsForCategories());

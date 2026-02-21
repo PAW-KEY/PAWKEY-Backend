@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.post.infra.persistence.repository;
 import java.util.List;
 
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostSelectedCategoryOptionRepository;
+import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostSelectedCategoryOptionEntity;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +17,10 @@ public class PostSelectedCategoryOptionRepositoryImpl implements PostSelectedCat
 	@Override
 	public void saveBatch(List<PostSelectedCategoryOptionEntity> postSelectedCategoryOptions) {
 		springDataPostSelectedCategoryOptionRepository.saveAll(postSelectedCategoryOptions);
+	}
+
+	@Override
+	public void deleteByPost(PostEntity post) {
+		springDataPostSelectedCategoryOptionRepository.deleteByPost(post);
 	}
 }
