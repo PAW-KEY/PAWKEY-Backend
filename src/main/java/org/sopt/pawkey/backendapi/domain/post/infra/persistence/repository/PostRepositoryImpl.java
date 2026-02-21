@@ -33,7 +33,7 @@ public class PostRepositoryImpl implements PostRepository {
 
 	@Override
 	public Optional<PostEntity> getPostWithAllDetails(Long postId) {
-		return jpaRepository.getPostWithLikesAndImages(postId);
+		return jpaRepository.getPostWithAllDetails(postId);
 	}
 
 	@Override

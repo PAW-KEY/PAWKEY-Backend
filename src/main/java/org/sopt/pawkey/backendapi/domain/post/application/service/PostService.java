@@ -63,5 +63,10 @@ public class PostService {
 		return postRepository.existsByRouteId(routeId);
 	}
 
+	public PostEntity findByIdWithAllDetails(Long postId) {
+		return postRepository.getPostWithAllDetails(postId)
+				.orElseThrow(() -> new PostBusinessException(PostErrorCode.POST_NOT_FOUND));
+	}
+
 }
 

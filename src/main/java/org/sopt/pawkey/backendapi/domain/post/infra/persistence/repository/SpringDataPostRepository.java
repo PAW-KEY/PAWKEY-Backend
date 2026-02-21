@@ -36,15 +36,21 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 		"WHERE p.user = :user")
 	List<PostEntity> findAllByUser(@Param("user") UserEntity user);
 
-	@Query("SELECT p FROM PostEntity p " +
-		"LEFT JOIN FETCH p.user u " +
-		"LEFT JOIN FETCH p.pet pt " +
-		"LEFT JOIN FETCH pt.profileImage pi " +
-		"LEFT JOIN FETCH p.route r " +
-		"LEFT JOIN FETCH r.trackingImage rt " +
-		"LEFT JOIN FETCH r.region rg " +
-		"WHERE p.postId = :postId")
-	Optional<PostEntity> getPostWithLikesAndImages(@Param("postId") Long postId);
+	@Query("""
+		SELECT DISTINCT p FROM PostEntity p
+		LEFT JOIN FETCH p.user u
+		LEFT JOIN FETCH p.pet pt
+		LEFT JOIN FETCH pt.profileImage pi
+		LEFT JOIN FETCH p.route r
+		LEFT JOIN FETCH r.trackingImage rt
+		LEFT JOIN FETCH r.region rg
+		LEFT JOIN FETCH p.postImageEntityList piList
+		LEFT JOIN FETCH piList.image img
+		LEFT JOIN FETCH p.postSelectedCategoryOptionEntityList psco
+		LEFT JOIN FETCH psco.categoryOption co
+		WHERE p.postId = :postId
+""")
+	Optional<PostEntity> getPostWithAllDetails(@Param("postId") Long postId);
 
 	boolean existsByRouteRouteId(Long routeId);
 

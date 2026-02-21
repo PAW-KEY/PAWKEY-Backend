@@ -6,9 +6,11 @@ import org.sopt.pawkey.backendapi.domain.image.application.service.PresignedImag
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.request.FilterPostsRequestDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostCardResponseDto;
+import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostDetailResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostPagingResponseDto;
-import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostCardResult;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.GetPostDetailResult;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.result.WalkImageResult;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
@@ -47,26 +49,35 @@ public class PostQueryFacade {
 		return new PostPagingResponseDto(posts, nextCursor, hasNext);
 	}
 
-	public PostResponseDto getPostDetail(Long postId, Long userId) {
+	public PostDetailResponseDto getPostDetail(Long postId, Long userId) {
 
-		PostEntity post = postService.findById(postId);
+		PostEntity post = postService.findByIdWithAllDetails(postId);
 
-		boolean isLiked = post.getPostLikeEntityList().stream()
-			.anyMatch(like -> like.getUser().getUserId().equals(userId));
+		boolean isMine = post.getUser().getUserId().equals(userId);
 
-		String routeMapImageUrl =
-				post.getRoute().getTrackingImage() != null
-						? presignedImageService.createPresignedGetUrl(
-						post.getRoute().getTrackingImage().getImageUrl()
-				)
-						: null;
+		// route image presigned
+		String routeImageUrl = post.getRoute().getTrackingImage() != null
+				? presignedImageService.createPresignedGetUrl(
+				post.getRoute().getTrackingImage().getImageUrl()
+		)
+				: null;
 
-		List<String> walkingImages = post.getPostImageEntityList().stream()
-				.filter(img -> img.getImageType() == ImageType.WALK_POST)
-				.map(img -> presignedImageService.createPresignedGetUrl(img.getImage().getImageUrl()))
-				.toList();
+		// walk images presigned
+		List<WalkImageResult> walkImages =
+				post.getPostImageEntityList().stream()
+						.filter(img -> img.getImageType() == ImageType.WALK_POST)
+						.map(img -> new WalkImageResult(
+								img.getImage().getImageId(),
+								presignedImageService.createPresignedGetUrl(
+										img.getImage().getImageUrl()
+								)
+						))
+						.toList();
 
-		return postQueryService.getPostDetail(post, isLiked, routeMapImageUrl, walkingImages);
+		GetPostDetailResult result =
+				postQueryService.getPostDetailResult(post, isMine, routeImageUrl, walkImages);
+
+		return PostDetailResponseDto.from(result);
 	}
 
 }
