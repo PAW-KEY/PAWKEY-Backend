@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.command.GetRouteSummaryCommand;
 import org.sopt.pawkey.backendapi.domain.routes.application.dto.result.GetRouteSummaryResult;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteSummaryFacade;
@@ -38,6 +39,8 @@ class GetRouteSummaryFacadeTest {
 
         UserEntity user = mock(UserEntity.class);
         RouteEntity route = RouteFixture.createRouteForSummary(user);
+        RegionEntity region = route.getRegion();
+        given(region.getFullRegionName()).willReturn("강남구 역삼동");
 
         given(userService.findById(userId)).willReturn(user);
         given(routeService.getRouteById(routeId)).willReturn(route);

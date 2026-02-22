@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.user.api.dto;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 
+
 public record AuthorDto(
 	Long authorId,
 	Long petId,
