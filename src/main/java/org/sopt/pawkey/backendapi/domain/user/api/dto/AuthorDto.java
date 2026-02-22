@@ -13,11 +13,9 @@ public record AuthorDto(
 	public static AuthorDto from(UserEntity user, PetEntity pet) {
 		return new AuthorDto(
 				user.getUserId(),
-				pet.getPetId(),
-				pet.getName(),
-				pet.getProfileImage() != null
-						? pet.getProfileImage().getImageUrl()
-						: null
+				pet != null ? pet.getPetId() : null,
+				pet != null ? pet.getName() : null,
+				(pet != null && pet.getProfileImage() != null) ? pet.getProfileImage().getImageUrl() : null
 		);
 	}
 }

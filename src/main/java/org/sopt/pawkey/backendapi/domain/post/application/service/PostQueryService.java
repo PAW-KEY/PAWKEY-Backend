@@ -32,14 +32,7 @@ public class PostQueryService {
 			List<WalkImageResult> walkImages
 	) {
 		// 작성자 정보
-		AuthorDto authorInfo = new AuthorDto(
-				post.getUser().getUserId(),
-				post.getPet().getPetId(),
-				post.getPet().getName(),
-				post.getPet().getProfileImage() != null
-						? post.getPet().getProfileImage().getImageUrl()
-						: null
-		);
+		AuthorDto authorInfo = AuthorDto.from(post.getUser(), post.getPet());
 
 		// 카테고리 태그 텍스트
 		List<String> categoryTagTexts =

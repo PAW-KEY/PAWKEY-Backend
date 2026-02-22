@@ -25,6 +25,7 @@ public class PostCreateRequestDto {
 	@Size(max = 1000, message = "게시물 본문은 1000자 이내여야 합니다.")
 	private final String description;
 
+	@NotNull(message = "게시물 공개 여부는 필수입니다.")
 	private final boolean isPublic;
 
 	@NotEmpty(message = "카테고리 선택은 비어 있을 수 없습니다.")
@@ -52,7 +53,7 @@ public class PostCreateRequestDto {
 				.selectedOptionsForCategories(this.selectedOptionsForCategories)
 				.routeId(this.routeId)
 				.routeImageId(this.routeImageId)
-				.walkImageIds(this.walkImageIds)
+				.walkImageIds(this.walkImageIds != null ? this.walkImageIds : List.of())
 				.build();
 	}
 }
