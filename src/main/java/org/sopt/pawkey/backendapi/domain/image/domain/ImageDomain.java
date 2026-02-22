@@ -4,6 +4,8 @@ import org.sopt.pawkey.backendapi.domain.image.exception.ImageBusinessException;
 import org.sopt.pawkey.backendapi.domain.image.exception.ImageErrorCode;
 import org.sopt.pawkey.backendapi.global.exception.ErrorCode;
 
+
+//물리적 저장 위치 + 업로드 목적을 위한 개념
 public enum ImageDomain { //S3 경로의 최상위 prefix로 사용({domain}/{uuid}.{ext})
 	WALK("walk"),
 	ROUTE("route"),

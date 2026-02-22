@@ -85,20 +85,20 @@ public class RouteFixture {
 
 	public static RouteEntity createRouteForSummary(UserEntity user) {
 		RegionEntity region = mock(RegionEntity.class);
-		given(region.getRegionName()).willReturn("강남구 역삼동");
+		when(region.getFullRegionName()).thenReturn("강남구 역삼동");
 
 		return RouteEntity.builder()
-			.routeId(10L)
-			.user(user)
-			.region(region)
-			.distance(2200)
-			.duration(1800)
-			.stepCount(12345)
-			.startedAt(LocalDateTime.of(2025, 10, 11, 11, 30))
-			.endedAt(LocalDateTime.of(2025, 10, 11, 12, 0))
-			.coordinates(mock(LineString.class))
-			.trackingImage(mock(ImageEntity.class))
-			.build();
+				.routeId(10L)
+				.user(user)
+				.region(region)
+				.distance(2200)
+				.duration(1800) // 30분
+				.stepCount(12345)
+				.startedAt(LocalDateTime.of(2025, 10, 11, 11, 30))
+				.endedAt(LocalDateTime.of(2025, 10, 11, 12, 0))
+				.coordinates(mock(LineString.class))
+				.trackingImage(mock(ImageEntity.class))
+				.build();
 	}
 
 	public static RouteEntity createRouteForGeometry(UserEntity user) {

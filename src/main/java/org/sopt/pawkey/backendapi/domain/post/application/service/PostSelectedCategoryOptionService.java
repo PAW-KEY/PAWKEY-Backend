@@ -27,4 +27,15 @@ public class PostSelectedCategoryOptionService {
 
 		postSelectedCategoryOptionRepository.saveBatch(postSelectedCategoryOptions);
 	}
+
+	public void replaceSelectedOptions(PostEntity post, List<CategoryOptionEntity> newSelectedOptions) {
+
+		// 기존 카테고리 선택 전부 삭제
+		postSelectedCategoryOptionRepository.deleteByPost(post);
+
+		// 새 카테고리 선택 저장
+		saveSelectedOption(post, newSelectedOptions);
+	}
+
+
 }

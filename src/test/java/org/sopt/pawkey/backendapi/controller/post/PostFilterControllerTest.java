@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.post.api.controller;
+package org.sopt.pawkey.backendapi.controller.post;
 
 import static org.hamcrest.Matchers.*;
 import static org.sopt.pawkey.backendapi.domain.image.domain.ImageDomain.*;

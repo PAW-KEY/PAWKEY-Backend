@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.post.application.service;
 
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
+import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostUpdateCommand;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
 import org.sopt.pawkey.backendapi.domain.post.exception.PostErrorCode;
@@ -46,10 +47,25 @@ public class PostService {
 		postRepository.save(post);
 		return post;
 	}
+	public void updatePost(PostEntity post, UserEntity user, PostUpdateCommand command) {
+		if (!post.getUser().equals(user)) {
+			throw new PostBusinessException(PostErrorCode.POST_UPDATE_FORBIDDEN);
+		}
 
+		post.update(
+				command.title(),
+				command.description(),
+				command.isPublic()
+		);
+	}
 
 	public boolean existsByRouteId(Long routeId) {
 		return postRepository.existsByRouteId(routeId);
+	}
+
+	public PostEntity findByIdWithAllDetails(Long postId) {
+		return postRepository.getPostWithAllDetails(postId)
+				.orElseThrow(() -> new PostBusinessException(PostErrorCode.POST_NOT_FOUND));
 	}
 
 }

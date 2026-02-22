@@ -10,7 +10,6 @@ import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntit
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-
 @Repository
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepository {
@@ -34,7 +33,7 @@ public class PostRepositoryImpl implements PostRepository {
 
 	@Override
 	public Optional<PostEntity> getPostWithAllDetails(Long postId) {
-		return jpaRepository.getPostWithLikesAndImages(postId);
+		return jpaRepository.getPostWithAllDetails(postId);
 	}
 
 	@Override
