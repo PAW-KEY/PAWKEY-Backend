@@ -38,14 +38,13 @@ public class RegionController {
 	private final GetRegionFacade getRegionFacade;
 
 	@GetMapping
-	@Operation(summary = "지역구 리스트 조회", description = "검색 키워드로 지역구 리스트를 조회하는 API입니다.", tags = {"Region"})
+	@Operation(summary = "지역구 리스트 조회", description = "지역구 리스트를 조회하는 API입니다.", tags = {"Region"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "지역구 리스트 조회")
 	})
 	public ResponseEntity<ApiResponse<GetRegionListResponseDto>> getRegionList() {
 
-		GetRegionListCommand command = new GetRegionListCommand("강남구");
-		GetRegionListResult result = getRegionListFacade.execute(command);
+		GetRegionListResult result = getRegionListFacade.execute();
 
 		return ResponseEntity.ok(
 			ApiResponse.success(GetRegionListResponseDto.from(result)));

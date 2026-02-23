@@ -22,9 +22,9 @@ public class RegionQueryService {
 	private final RegionQueryRepository regionQueryRepository;
 	private final UserRepository userRepository;
 
-	public List<RegionEntity> searchGusWithRegion(GetRegionListCommand command) {
 
-		return regionQueryRepository.findDistrictByRegionNameWithChildren(command.searchKeyword());
+	public List<RegionEntity> findAllGusWithDongs() {
+		return regionQueryRepository.findAllGusWithDongs();
 	}
 
 	public RegionEntity getCurrentRegion(Long userId) {

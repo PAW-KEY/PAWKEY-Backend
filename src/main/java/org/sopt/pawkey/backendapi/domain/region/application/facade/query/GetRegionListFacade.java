@@ -18,8 +18,8 @@ public class GetRegionListFacade {
 
 	private final RegionQueryService regionQueryService;
 
-	public GetRegionListResult execute(GetRegionListCommand command) {
-		List<RegionEntity> GusWithDongs = regionQueryService.searchGusWithRegion(command);
+	public GetRegionListResult execute() {
+		List<RegionEntity> GusWithDongs = regionQueryService.findAllGusWithDongs();
 
 		return GetRegionListResult.from(GusWithDongs);
 	}

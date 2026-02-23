@@ -19,21 +19,16 @@ public class RegionQueryRepositoryImpl implements RegionQueryRepository {
 	private final SpringDataRegionRepository springDataRegionRepository;
 	private final JPAQueryFactory queryFactory;
 
+
+
 	@Override
-	public List<RegionEntity> findDistrictByRegionNameWithChildren(String keyword) {
+	public List<RegionEntity> findAllGusWithDongs() {
 		QRegionEntity regionEntity = QRegionEntity.regionEntity;
 		QRegionEntity childRegion = new QRegionEntity("childRegion");
-
 		return queryFactory
-			.selectFrom(regionEntity)
-			.where(regionEntity.regionType.eq(RegionType.GU))
-			.where(regionEntity.regionName.eq(keyword))
-			.leftJoin(regionEntity.childrenRegionList, childRegion).fetchJoin()
-			.fetch();
-	}
-
-	@Override
-	public Optional<RegionEntity> findCurrentRegionById(Long regionId) {
-		return springDataRegionRepository.findById(regionId);
+				.selectFrom(regionEntity)
+				.where(regionEntity.regionType.eq(RegionType.GU))
+				.leftJoin(regionEntity.childrenRegionList, childRegion).fetchJoin()
+				.fetch();
 	}
 }
