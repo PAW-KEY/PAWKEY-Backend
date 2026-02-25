@@ -48,6 +48,7 @@ public class ImageController {
 	}
 
 	@PostMapping("/register")
+	@Operation(summary = "이미지 등록", description = "S3 업로드 완료 후, 이미지 URL과 메타데이터를 서버에 등록합니다", tags = {"Image"})
 	public ResponseEntity<ApiResponse<ImageRegisterResponseDto>> registerImage(
 		@RequestBody ImageRegisterRequestDto request
 	) {
