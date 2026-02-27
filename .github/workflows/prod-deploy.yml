@@ -20,7 +20,6 @@ jobs:
         shell: bash
         run: |
           mkdir -p ./src/main/resources
-          # 🔥 'EOF'를 사용해 내부의 ${VAR} 문법이 깨지지 않게 보존합니다.
           cat <<'EOF' > ./src/main/resources/application.yml
           ${{ secrets.CD_APPLICATION }}
           EOF
