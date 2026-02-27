@@ -1,6 +1,9 @@
 package org.sopt.pawkey.backendapi.domain.dbti.application.dto;
 
 import java.util.List;
+
+import org.sopt.pawkey.backendapi.domain.dbti.exception.DbtiBusinessException;
+import org.sopt.pawkey.backendapi.domain.dbti.exception.DbtiErrorCode;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiTypeEntity;
@@ -27,8 +30,15 @@ public record DbtiResultInfo(
 		DbtiEntity dbtiInfo,
 		List<DbtiTypeEntity> types
 	) {
-		List<AnalysisDetail> analysis = types.stream()
-			.map(type -> {
+		List<String> targetOrder = List.of("EI", "PS", "RF");
+
+		List<AnalysisDetail> analysis = targetOrder.stream()
+			.map(code -> {
+				DbtiTypeEntity type = types.stream()
+					.filter(t -> t.getCode().equals(code))
+					.findFirst()
+					.orElseThrow(() -> new DbtiBusinessException(DbtiErrorCode.DBTI_TYPE_NOT_FOUND));
+
 				var res = result.getAnalysisOf(type.getCode());
 				return new AnalysisDetail(
 					type.getCode(),

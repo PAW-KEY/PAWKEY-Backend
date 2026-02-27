@@ -70,7 +70,7 @@ public class DbtiResultEntity {
 		int rawScore = switch (axisCode) {
 			case "EI" -> this.eiScore;
 			case "PS" -> this.psScore;
-			case "RT" -> this.rfScore;
+			case "RF" -> this.rfScore;
 			default -> throw new DbtiBusinessException(DbtiErrorCode.DBTI_NOT_FOUND);
 		};
 
