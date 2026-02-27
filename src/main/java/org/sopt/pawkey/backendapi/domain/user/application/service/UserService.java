@@ -104,7 +104,7 @@ public class UserService {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
-		if (!command.name().equals(user.getName())) {
+		if (command.name() != null && !command.name().equals(user.getName())) {
 			if (userRepository.existsByName(command.name())) {
 				throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
 			}
@@ -112,9 +112,9 @@ public class UserService {
 
 		try {
 			user.updateProfile(
-				command.name(),
-				command.gender(),
-				command.birth()
+				command.name() != null ? command.name() : user.getName(),
+				command.gender() != null ? command.gender() : user.getGender(),
+				command.birth() != null ? command.birth() : user.getBirth()
 			);
 			userRepository.saveAndFlush(user);
 		} catch (DataIntegrityViolationException e) {

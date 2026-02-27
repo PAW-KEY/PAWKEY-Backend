@@ -8,7 +8,7 @@ public record UpdatePetCommand(
 	String name,
 	Gender gender,
 	LocalDate birth,
-	boolean isNeutered,
+	Boolean isNeutered,
 	Long breedId,
 	Long imageId
 ) {
@@ -16,7 +16,7 @@ public record UpdatePetCommand(
 		String name,
 		Gender gender,
 		LocalDate birth,
-		boolean isNeutered,
+		Boolean isNeutered,
 		Long breedId,
 		Long imageId
 	) {

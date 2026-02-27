@@ -58,22 +58,21 @@ public class PetCommandService {
 
 	@Transactional
 	public void updatePetInfo(PetEntity pet, UpdatePetCommand command) {
-		BreedEntity breed = breedRepository.findBreedById(command.breedId())
-			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
+		BreedEntity breed = (command.breedId() != null)
+			? breedRepository.findBreedById(command.breedId())
+			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND))
+			: pet.getBreed();
 
-		ImageEntity profileImage = null;
-		if (command.imageId() != null) {
-			profileImage = imageRepository.findById(command.imageId())
-				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
-		} else {
-			profileImage = pet.getProfileImage();
-		}
+		ImageEntity profileImage = (command.imageId() != null)
+			? imageRepository.findById(command.imageId())
+			.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND))
+			: pet.getProfileImage();
 
 		pet.updateProfile(
-			command.name(),
-			command.birth(),
-			command.gender(),
-			command.isNeutered(),
+			command.name() != null ? command.name() : pet.getName(),
+			command.birth() != null ? command.birth() : pet.getBirth(),
+			command.gender() != null ? command.gender() : pet.getGender(),
+			command.isNeutered() != null ? command.isNeutered() : pet.isNeutered(),
 			breed,
 			profileImage
 		);
