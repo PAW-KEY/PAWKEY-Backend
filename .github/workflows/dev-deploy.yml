@@ -52,7 +52,7 @@ jobs:
       - name: Deploy to NCP via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEV_NCP_PROD_IP }}
+          host: ${{ secrets.DEV_NCP_PUBLIC_IP }}
           username: root
           password: ${{ secrets.DEV_NCP_PASSWORD }}
           script: |
