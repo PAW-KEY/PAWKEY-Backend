@@ -1,0 +1,88 @@
+name: CI/CD - Prod (AWS)
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy (usually main/master)'
+        required: true
+        default: 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Generate Production YML Files
+        shell: bash
+        run: |
+          mkdir -p ./src/main/resources
+          # 운영 서버용 메인 설정 (AWS RDS 주소 포함)
+          cat <<'EOF' > ./src/main/resources/application.yml
+          ${{ secrets.CD_APPLICATION }}
+          EOF
+          # 공통 AWS 및 OAuth 설정
+          cat <<'EOF' > ./src/main/resources/application-aws.yml
+          ${{ secrets.CD_APPLICATION_AWS }}
+          EOF
+          cat <<'EOF' > ./src/main/resources/application-oauth.yml
+          ${{ secrets.CD_APPLICATION_OAUTH }}
+          EOF
+
+      - name: Build Project
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
+
+      - name: Docker Login & Push (Prod Tag)
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          # 👈 태그를 pawkey-prod로 명확히 분리
+          docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest" .
+          docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create SSH Key File
+        run: |
+          # 👈 새로 등록한 PROD 전용 PEM 키 시크릿 사용
+          echo "${{ secrets.PROD_EC2_SSH_KEY }}" > prod_key.pem
+          chmod 600 prod_key.pem
+
+      - name: Deploy to AWS EC2
+        run: |
+          # 👈 PROD 전용 탄력적 IP 사용
+          ssh -o StrictHostKeyChecking=no -i prod_key.pem ubuntu@${{ secrets.PROD_EC2_PUBLIC_IP }} << EOF
+            echo "📦 Pulling latest prod image..."
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest
+
+            echo "🗑 Cleaning up old containers..."
+            # 기존 dev 이름과 새로운 prod 이름을 모두 체크하여 삭제
+            sudo docker rm -f pawkey-dev-container || true
+            sudo docker rm -f pawkey-prod-container || true
+
+            echo "🚀 Running new production container..."
+            sudo docker run -d -p 8080:8080 \
+              --name pawkey-prod-container \
+              --network pawkey-net \
+              -e SPRING_PROFILES_ACTIVE=aws \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
+              ${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest
+
+            echo "🔄 Reloading Nginx..."
+            sudo nginx -t && sudo systemctl reload nginx
+            echo "✅ AWS Prod Deployment Complete!"
+          EOF
