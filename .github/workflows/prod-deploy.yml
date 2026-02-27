@@ -3,18 +3,27 @@ name: CI/CD - Prod (AWS)
 on:
   workflow_dispatch:
     inputs:
-      branch: { description: 'Branch', required: true, default: 'develop' }
+      branch:
+        description: 'Branch'
+        required: true
+        default: 'develop'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with: { ref: ${{ github.event.inputs.branch }} }
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
       - uses: actions/setup-java@v3
-        with: { distribution: 'temurin', java-version: '17' }
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - uses: gradle/actions/setup-gradle@v3
-        with: { gradle-version: '8.14.2' }
+        with:
+          gradle-version: '8.14.2'
 
       - name: Generate Production Configs
         shell: bash
@@ -42,14 +51,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Create SSH Key File
-        run: |
-          echo "${{ secrets.PROD_EC2_SSH_KEY }}" > prod_key.pem
-          chmod 600 prod_key.pem
-
-      - name: Deploy to AWS EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i prod_key.pem ubuntu@${{ secrets.PROD_EC2_PUBLIC_IP }} << EOF
+      - name: Deploy to AWS EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_EC2_PUBLIC_IP }}
+          username: ubuntu
+          key: ${{ secrets.PROD_EC2_SSH_KEY }}
+          script: |
             echo "📦 Pulling latest doki-prod image..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/doki-prod:latest
 
@@ -81,4 +89,3 @@ jobs:
 
             sudo nginx -t && sudo systemctl reload nginx
             echo "✅ AWS Prod Deployment Complete!"
-          EOF

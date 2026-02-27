@@ -3,24 +3,33 @@ name: CI/CD - Dev (NCP)
 on:
   workflow_dispatch:
     inputs:
-      branch: { description: 'Branch', required: true, default: 'develop' }
+      branch:
+        description: 'Branch'
+        required: true
+        default: 'develop'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with: { ref: ${{ github.event.inputs.branch }} }
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
       - uses: actions/setup-java@v3
-        with: { distribution: 'temurin', java-version: '17' }
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - uses: gradle/actions/setup-gradle@v3
-        with: { gradle-version: '8.14.2' }
+        with:
+          gradle-version: '8.14.2'
 
       - name: Generate Development Configs
         shell: bash
         run: |
           mkdir -p ./src/main/resources
-          # 🔥 'EOF'를 사용해 내부의 ${VAR} 문법이 깨지지 않게 보존합니다.
+          # 🔥 'EOF'를 사용해 내부 ${VAR} 문법 보존
           cat <<'EOF' > ./src/main/resources/application.yml
           ${{ secrets.CD_APPLICATION_DEV }}
           EOF
@@ -44,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to NCP via SSH
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEV_NCP_PUBLIC_IP }}
           username: root
