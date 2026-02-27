@@ -12,8 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.branch }}
 
@@ -29,25 +28,18 @@ jobs:
           gradle-version: '8.14.2'
 
       - name: Generate Development YML Files
-        shell: bash
         run: |
           mkdir -p ./src/main/resources
-          cat <<'EOF' > ./src/main/resources/application.yml
-          ${{ secrets.CD_APPLICATION_DEV }}
-          EOF
-          cat <<'EOF' > ./src/main/resources/application-aws.yml
-          ${{ secrets.CD_APPLICATION_AWS }}
-          EOF
-          cat <<'EOF' > ./src/main/resources/application-oauth.yml
-          ${{ secrets.CD_APPLICATION_OAUTH }}
-          EOF
+          echo "${{ secrets.CD_APPLICATION_DEV }}" > ./src/main/resources/application.yml
+          echo "${{ secrets.CD_APPLICATION_AWS }}" > ./src/main/resources/application-aws.yml
+          echo "${{ secrets.CD_APPLICATION_OAUTH }}" > ./src/main/resources/application-oauth.yml
 
       - name: Build Project
         run: |
           chmod +x ./gradlew
           ./gradlew clean build -x test
 
-      - name: Docker Login & Push (Dev Tag)
+      - name: Docker Login & Push
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/doki-dev:latest" .
@@ -57,18 +49,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to NCP via SSH Password
+      - name: Deploy to NCP via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEV_NCP_PUBLIC_IP }}
+          host: ${{ secrets.DEV_NCP_PROD_IP }}
           username: root
           password: ${{ secrets.DEV_NCP_PASSWORD }}
-          port: 22
           script: |
             echo "📦 Pulling latest doki-dev image..."
             docker pull ${{ secrets.DOCKER_USERNAME }}/doki-dev:latest
 
-            echo "🗑 Cleaning up old containers..."
+            echo "🗑 Cleaning up old container..."
             docker rm -f doki-dev-container || true
 
             echo "🚀 Running new development container..."
@@ -76,10 +67,22 @@ jobs:
               --network host \
               -e SPRING_PROFILES_ACTIVE=dev \
               -e DB_PASSWORD_DEV=${{ secrets.DB_PASSWORD_DEV }} \
+              -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
+              -e DOKI_GOOGLE_CLIENT_ID=${{ secrets.DOKI_GOOGLE_CLIENT_ID }} \
+              -e DOKI_APPLE_CLIENT_ID=${{ secrets.DOKI_APPLE_CLIENT_ID }} \
+              -e DOKI_APPLE_TEAM_ID=${{ secrets.DOKI_APPLE_TEAM_ID }} \
+              -e DOKI_APPLE_KEY_ID=${{ secrets.DOKI_APPLE_KEY_ID }} \
+              -e DOKI_APPLE_REDIRECT_URI=${{ secrets.DOKI_APPLE_REDIRECT_URI }} \
+              -e APPLE_REFRESH_TOKEN_SECRET=${{ secrets.APPLE_REFRESH_TOKEN_SECRET }} \
+              -e DOKI_APPLE_PRIVATE_KEY='${{ secrets.DOKI_APPLE_PRIVATE_KEY }}' \
+              -e DOKI_KAKAO_CLIENT_ID=${{ secrets.DOKI_KAKAO_CLIENT_ID }} \
+              -e DOKI_KAKAO_CLIENT_SECRET=${{ secrets.DOKI_KAKAO_CLIENT_SECRET }} \
+              -e DOKI_KAKAO_REDIRECT_URI=${{ secrets.DOKI_KAKAO_REDIRECT_URI }} \
+              -e WEATHER_URL=${{ secrets.WEATHER_URL }} \
+              -e WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }} \
               -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
               ${{ secrets.DOCKER_USERNAME }}/doki-dev:latest
 
-            echo "🔄 Reloading Nginx..."
             sudo nginx -t && sudo systemctl reload nginx
             echo "✅ NCP Dev Deployment Complete!"
