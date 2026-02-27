@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to deploy (usually main/master)'
+        description: 'Branch to deploy'
         required: true
         default: 'main'
 
@@ -23,15 +23,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.14.2'
+
       - name: Generate Production YML Files
         shell: bash
         run: |
           mkdir -p ./src/main/resources
-          # 운영 서버용 메인 설정 (AWS RDS 주소 포함)
           cat <<'EOF' > ./src/main/resources/application.yml
           ${{ secrets.CD_APPLICATION }}
           EOF
-          # 공통 AWS 및 OAuth 설정
           cat <<'EOF' > ./src/main/resources/application-aws.yml
           ${{ secrets.CD_APPLICATION_AWS }}
           EOF
@@ -47,9 +50,9 @@ jobs:
       - name: Docker Login & Push (Prod Tag)
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          # 👈 태그를 pawkey-prod로 명확히 분리
-          docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest" .
-          docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest"
+          # 👈 doki-prod로 변경
+          docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/doki-prod:latest" .
+          docker push "${{ secrets.DOCKER_USERNAME }}/doki-prod:latest"
 
   deploy:
     needs: build
@@ -57,30 +60,28 @@ jobs:
     steps:
       - name: Create SSH Key File
         run: |
-          # 👈 새로 등록한 PROD 전용 PEM 키 시크릿 사용
           echo "${{ secrets.PROD_EC2_SSH_KEY }}" > prod_key.pem
           chmod 600 prod_key.pem
 
-      - name: Deploy to AWS EC2
+      - name: Deploy to AWS EC2 via PEM Key
         run: |
-          # 👈 PROD 전용 탄력적 IP 사용
           ssh -o StrictHostKeyChecking=no -i prod_key.pem ubuntu@${{ secrets.PROD_EC2_PUBLIC_IP }} << EOF
-            echo "📦 Pulling latest prod image..."
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest
+            echo "📦 Pulling latest doki-prod image..."
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/doki-prod:latest
 
             echo "🗑 Cleaning up old containers..."
-            # 기존 dev 이름과 새로운 prod 이름을 모두 체크하여 삭제
+            # 기존 pawkey 계열 컨테이너도 함께 삭제 로직 유지
             sudo docker rm -f pawkey-dev-container || true
             sudo docker rm -f pawkey-prod-container || true
+            sudo docker rm -f doki-prod-container || true
 
             echo "🚀 Running new production container..."
             sudo docker run -d -p 8080:8080 \
-              --name pawkey-prod-container \
-              --network pawkey-net \
+              --name doki-prod-container \
+              --network doki-net \
               -e SPRING_PROFILES_ACTIVE=aws \
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e DOKI_JWT_SECRET_VALUE=${{ secrets.DOKI_JWT_SECRET_VALUE }} \
-              ${{ secrets.DOCKER_USERNAME }}/pawkey-prod:latest
+              ${{ secrets.DOCKER_USERNAME }}/doki-prod:latest
 
             echo "🔄 Reloading Nginx..."
             sudo nginx -t && sudo systemctl reload nginx

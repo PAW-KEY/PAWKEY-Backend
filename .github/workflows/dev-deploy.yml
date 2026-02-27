@@ -1,43 +1,85 @@
 name: CI/CD - Dev (NCP)
+
 on:
   workflow_dispatch:
     inputs:
-      branch: { description: 'Branch', required: true, default: 'develop' }
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'develop'
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout source
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.branch }}
-      - uses: actions/setup-java@v3
-        with: { distribution: 'temurin', java-version: '17' }
-      - name: Generate Configs
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.14.2'
+
+      - name: Generate Development YML Files
+        shell: bash
         run: |
           mkdir -p ./src/main/resources
-          echo "${{ secrets.CD_APPLICATION_DEV }}" > ./src/main/resources/application.yml
-          echo "${{ secrets.CD_APPLICATION_AWS }}" > ./src/main/resources/application-aws.yml
-          echo "${{ secrets.CD_APPLICATION_OAUTH }}" > ./src/main/resources/application-oauth.yml
-      - name: Build & Push
+          cat <<'EOF' > ./src/main/resources/application.yml
+          ${{ secrets.CD_APPLICATION_DEV }}
+          EOF
+          cat <<'EOF' > ./src/main/resources/application-aws.yml
+          ${{ secrets.CD_APPLICATION_AWS }}
+          EOF
+          cat <<'EOF' > ./src/main/resources/application-oauth.yml
+          ${{ secrets.CD_APPLICATION_OAUTH }}
+          EOF
+
+      - name: Build Project
         run: |
           chmod +x ./gradlew
           ./gradlew clean build -x test
+
+      - name: Docker Login & Push (Dev Tag)
+        run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker build -t "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest" .
-          docker push "${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest"
-      - name: Deploy
+          docker build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/doki-dev:latest" .
+          docker push "${{ secrets.DOCKER_USERNAME }}/doki-dev:latest"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to NCP via SSH Password
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEV_NCP_PROD_IP }}
+          host: ${{ secrets.DEV_NCP_PUBLIC_IP }}
           username: root
           password: ${{ secrets.DEV_NCP_PASSWORD }}
+          port: 22
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
-            docker rm -f pawkey-dev-container || true
-            docker run -d -p 8080:8080 --name pawkey-dev-container \
+            echo "📦 Pulling latest doki-dev image..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/doki-dev:latest
+
+            echo "🗑 Cleaning up old containers..."
+            docker rm -f doki-dev-container || true
+
+            echo "🚀 Running new development container..."
+            docker run -d --name doki-dev-container \
               --network host \
               -e SPRING_PROFILES_ACTIVE=dev \
               -e DB_PASSWORD_DEV=${{ secrets.DB_PASSWORD_DEV }} \
               -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-              ${{ secrets.DOCKER_USERNAME }}/pawkey-dev:latest
+              ${{ secrets.DOCKER_USERNAME }}/doki-dev:latest
+
+            echo "🔄 Reloading Nginx..."
+            sudo nginx -t && sudo systemctl reload nginx
+            echo "✅ NCP Dev Deployment Complete!"
