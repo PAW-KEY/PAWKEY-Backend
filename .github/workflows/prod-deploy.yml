@@ -3,7 +3,7 @@ name: CI/CD - Prod (AWS)
 on:
   workflow_dispatch:
     inputs:
-      branch: { description: 'Branch', required: true, default: 'main' }
+      branch: { description: 'Branch', required: true, default: 'develop' }
 
 jobs:
   build:
