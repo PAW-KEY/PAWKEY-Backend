@@ -61,31 +61,9 @@ jobs:
             echo "📦 Pulling latest doki-prod image..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/doki-prod:latest
 
-            echo "🗑 Cleaning up old containers..."
-            sudo docker rm -f pawkey-dev-container pawkey-prod-container doki-prod-container || true
+            echo "🚀 Running Blue-Green deployment..."
+            cd /home/ubuntu
+            chmod +x deploy.sh
+            ./deploy.sh
 
-            echo "🚀 Running new production container..."
-            sudo docker run -d -p 8080:8080 \
-              --name doki-prod-container \
-              --network doki-net \
-              -e SPRING_PROFILES_ACTIVE=aws \
-              -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
-              -e DOKI_JWT_SECRET_VALUE="${{ secrets.DOKI_JWT_SECRET_VALUE }}" \
-              -e DOKI_GOOGLE_CLIENT_ID="${{ secrets.DOKI_GOOGLE_CLIENT_ID }}" \
-              -e DOKI_APPLE_CLIENT_ID="${{ secrets.DOKI_APPLE_CLIENT_ID }}" \
-              -e DOKI_APPLE_TEAM_ID="${{ secrets.DOKI_APPLE_TEAM_ID }}" \
-              -e DOKI_APPLE_KEY_ID="${{ secrets.DOKI_APPLE_KEY_ID }}" \
-              -e DOKI_APPLE_REDIRECT_URI="${{ secrets.DOKI_APPLE_REDIRECT_URI }}" \
-              -e APPLE_REFRESH_TOKEN_SECRET="${{ secrets.APPLE_REFRESH_TOKEN_SECRET }}" \
-              -e DOKI_APPLE_PRIVATE_KEY='${{ secrets.DOKI_APPLE_PRIVATE_KEY }}' \
-              -e DOKI_KAKAO_CLIENT_ID="${{ secrets.DOKI_KAKAO_CLIENT_ID }}" \
-              -e DOKI_KAKAO_CLIENT_SECRET="${{ secrets.DOKI_KAKAO_CLIENT_SECRET }}" \
-              -e DOKI_KAKAO_REDIRECT_URI="${{ secrets.DOKI_KAKAO_REDIRECT_URI }}" \
-              -e WEATHER_URL="${{ secrets.WEATHER_URL }}" \
-              -e WEATHER_API_KEY="${{ secrets.WEATHER_API_KEY }}" \
-              -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
-              -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-              ${{ secrets.DOCKER_USERNAME }}/doki-prod:latest
-
-            sudo nginx -t && sudo systemctl reload nginx
-            echo "✅ AWS Prod Deployment Complete!"
+            echo "✅ AWS Prod Blue-Green Deployment Complete!"
