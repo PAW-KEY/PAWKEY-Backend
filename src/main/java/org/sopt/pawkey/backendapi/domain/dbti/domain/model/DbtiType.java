@@ -9,8 +9,8 @@ public enum DbtiType {
 	EPR, EPF, ESR, ESF, IPR, IPF, ISR, ISF;
 
 	public static DbtiType determine(int ei, int ps, int rf) {
-		String code = (ei >= 2 ? "E" : "I") +
-			(ps >= 2 ? "P" : "S") +
+		String code = (ei >= 2 ? "I" : "E") +
+			(ps >= 2 ? "S" : "P") +
 			(rf >= 2 ? "R" : "F");
 		return DbtiType.valueOf(code);
 	}

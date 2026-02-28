@@ -40,8 +40,8 @@ public class DbtiCommandService {
 			throw new DbtiBusinessException(DbtiErrorCode.INVALID_OPTION_IDS);
 		}
 
-		int eiScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("E")).count();
-		int psScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("P")).count();
+		int eiScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("I")).count();
+		int psScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("S")).count();
 		int rfScore = (int)selectedOptions.stream().filter(o -> o.getValue().equals("R")).count();
 
 		DbtiType dbtiType = DbtiType.determine(eiScore, psScore, rfScore);
