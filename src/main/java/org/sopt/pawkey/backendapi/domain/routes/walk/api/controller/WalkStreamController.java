@@ -42,11 +42,5 @@ public class WalkStreamController {
 		return ResponseEntity.ok().build();
 	}
 
-	// @PostMapping("/end")
-	// public ResponseEntity<Void> end(@Parameter(hidden=true) @UserId Long userId, @RequestParam String routeId){
-	// 	EndWalkCommand command = new EndWalkCommand(userId,routeId);
-	// 	walkStreamFacade.end(command);
-	// 	return ResponseEntity.ok().build();
-	// }
 
 }

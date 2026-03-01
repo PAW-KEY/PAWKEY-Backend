@@ -29,6 +29,7 @@ public class SecurityConfig {
 					"/swagger-ui/**",
 					"/swagger-ui.html",
 					"/api/v1/routes/stream/**",
+					"/api/v1/home/recommendation",
 					"/actuator/**"
 				).permitAll()
 				.anyRequest().authenticated()
