@@ -1,10 +1,10 @@
 package org.sopt.pawkey.backendapi.domain.routes.infra.persistence;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
+import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteQueryRepository;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.QRouteEntity;
 import org.springframework.stereotype.Repository;
 

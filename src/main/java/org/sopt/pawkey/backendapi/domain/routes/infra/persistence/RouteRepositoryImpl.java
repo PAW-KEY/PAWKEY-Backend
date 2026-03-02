@@ -3,6 +3,7 @@ package org.sopt.pawkey.backendapi.domain.routes.infra.persistence;
 import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
+import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteQueryRepository;
 import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteRepository;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.springframework.stereotype.Repository;
