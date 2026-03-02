@@ -23,4 +23,6 @@ public interface PostRepository {
 	void decreaseLikeCount(Long postId);
 
 	Optional<PostEntity> findByRoute(RouteEntity route);
+
+	List<PostEntity> findAllByRouteIds(List<Long> routeIds);
 }

@@ -1,4 +1,4 @@
-package org.sopt.pawkey.backendapi.domain.recommendation.infra.persistence.entity;
+package org.sopt.pawkey.backendapi.domain.routes.recommendation.infra.persistence.entity;
 
 
 import jakarta.persistence.*;
@@ -7,9 +7,17 @@ import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
 @Entity
-@Table(name = "route_reco_stats", indexes = {
-        @Index(name = "idx_reco_context", columnList = "regionId, dbtiType, score DESC")
-})
+@Table(
+        name = "route_reco_stats",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_reco_context",
+                columnNames = {"regionId", "dbtiType", "routeId"}
+        ),
+        indexes = {
+                @Index(name = "idx_reco_context",
+                        columnList = "regionId, dbtiType, score DESC")
+        }
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

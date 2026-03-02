@@ -55,4 +55,12 @@ public class PostRepositoryImpl implements PostRepository {
 	public Optional<PostEntity> findByRoute(RouteEntity route) {
 		return jpaRepository.findByRoute(route);
 	}
+
+	@Override
+	public List<PostEntity> findAllByRouteIds(List<Long> routeIds) {
+		if (routeIds == null || routeIds.isEmpty()) {
+			return List.of();
+		}
+		return jpaRepository.findByRouteRouteIdInAndIsPublicTrue(routeIds);
+	}
 }

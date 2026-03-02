@@ -59,4 +59,8 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	void decreaseLikeCount(@Param("postId") Long postId);
 
 	Optional<PostEntity> findByRoute(RouteEntity route);
+
+	List<PostEntity> findByRouteRouteIdIn(List<Long> routeIds);
+
+	List<PostEntity> findByRouteRouteIdInAndIsPublicTrue(List<Long> routeIds);
 }

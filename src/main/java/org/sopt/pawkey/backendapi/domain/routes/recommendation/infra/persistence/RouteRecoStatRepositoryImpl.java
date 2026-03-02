@@ -1,9 +1,9 @@
-package org.sopt.pawkey.backendapi.domain.recommendation.infra.persistence;
+package org.sopt.pawkey.backendapi.domain.routes.recommendation.infra.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
-import org.sopt.pawkey.backendapi.domain.recommendation.domain.repository.RouteRecoStatRepository;
-import org.sopt.pawkey.backendapi.domain.recommendation.infra.persistence.entity.RouteRecoStatEntity;
+import org.sopt.pawkey.backendapi.domain.routes.recommendation.domain.repository.RouteRecoStatRepository;
+import org.sopt.pawkey.backendapi.domain.routes.recommendation.infra.persistence.entity.RouteRecoStatEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
