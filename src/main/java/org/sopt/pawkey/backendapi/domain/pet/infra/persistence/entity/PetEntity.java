@@ -2,24 +2,13 @@ package org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.DbtiResultEntity;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.enums.Gender;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -63,7 +52,7 @@ public class PetEntity extends BaseEntity {
 	@JoinColumn(name = "breed_id")
 	private BreedEntity breed;
 
-	@OneToOne(mappedBy = "pet", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "pet", fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
 	private DbtiResultEntity dbtiResult;
 
 	@Builder
