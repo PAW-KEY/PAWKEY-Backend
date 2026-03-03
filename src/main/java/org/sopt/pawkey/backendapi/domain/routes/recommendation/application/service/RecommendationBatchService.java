@@ -33,10 +33,10 @@ public class RecommendationBatchService {
     private final QPetEntity pet = QPetEntity.petEntity;
     private final QDbtiResultEntity dbtiResult = QDbtiResultEntity.dbtiResultEntity;
 
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     @Transactional
     public void refreshRouteRecoStats() {
-        statRepository.deleteAllInBatch();
+        //statRepository.deleteAllInBatch();
 
         List<RouteRecoStatEntity> newStats = query
                 .select(Projections.constructor(
@@ -60,9 +60,14 @@ public class RecommendationBatchService {
                 )
                 .fetch();
 
-        if (!newStats.isEmpty()) {
-            statRepository.saveAll(newStats);
-            log.info("✅ {}건의 추천 통계 데이터 갱신 완료", newStats.size());
+        if (newStats.isEmpty()) {
+            log.warn("추천 통계 집계 결과 없음 => 기존 통계 유지");
+            return;
+
         }
+
+        statRepository.deleteAllInBatch();
+        statRepository.saveAll(newStats);
+        log.info("✅ {}건의 추천 통계 데이터 갱신 완료", newStats.size());
     }
 }

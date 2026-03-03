@@ -8,8 +8,6 @@ import java.util.List;
 public record RecommendationResponseDTO(
         List<RecommendationDisplay> recommendations
 ) {
-    @Builder
-    public RecommendationResponseDTO {}
 
     public static RecommendationResponseDTO from(List<RecommendationResult> results) {
         return RecommendationResponseDTO.builder()

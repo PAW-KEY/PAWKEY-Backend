@@ -55,7 +55,16 @@ public class RecommendationService {
 
         String cacheKey = KEY_PREFIX + parentRegionId + ":" + myDbti.name();
 
-        Set<Object> cachedRouteIds = redisTemplate.opsForZSet().reverseRange(cacheKey, 0, 3);
+        //Set<Object> cachedRouteIds = redisTemplate.opsForZSet().reverseRange(cacheKey, 0, 3);
+        Set<Object> cachedRouteIds = Set.of();
+        try {
+            Set<Object> redisIds = redisTemplate.opsForZSet().reverseRange(cacheKey, 0, 3);
+            if (redisIds != null) {
+                cachedRouteIds = redisIds;
+                }
+            } catch (Exception e) {
+            log.warn("Redis read 실패=> RDB 폴백으로 진행합니다. key={}", cacheKey, e);
+            }
         List<Long> routeIds;
 
         if (cachedRouteIds != null && !cachedRouteIds.isEmpty()) {
@@ -67,8 +76,15 @@ public class RecommendationService {
             List<RouteRecoStatEntity> stats = statRepository.findTop4(parentRegionId, myDbti);
             if (stats.isEmpty()) return List.of();
 
-            stats.forEach(s -> redisTemplate.opsForZSet().add(cacheKey, s.getRouteId().toString(), s.getScore().doubleValue()));
-            redisTemplate.expire(cacheKey, Duration.ofHours(1));
+            //stats.forEach(s -> redisTemplate.opsForZSet().add(cacheKey, s.getRouteId().toString(), s.getScore().doubleValue()));
+            //redisTemplate.expire(cacheKey, Duration.ofHours(1));
+            try {
+                stats.forEach(s -> redisTemplate.opsForZSet()
+                        .add(cacheKey, s.getRouteId().toString(), s.getScore().doubleValue()));
+                redisTemplate.expire(cacheKey, Duration.ofHours(1));
+                } catch (Exception e) {
+                log.warn("Redis write 실패=>  캐시 저장은 건너뜁니다. key={}", cacheKey, e);
+                }
             routeIds = stats.stream().map(RouteRecoStatEntity::getRouteId).toList();
         }
 
