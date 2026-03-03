@@ -23,7 +23,7 @@ public record ReviewCardResponseDto(
 			post.getPostId(),
 			post.getTitle(),
 			route.getRegion().getFullRegionName(),
-			review.getCreatedAt(),
+			post.getCreatedAt(),
 			post.getPostSelectedCategoryOptionEntityList().stream()
 				.map(sel -> sel.getCategoryOption().getOptionValue())
 				.toList()
