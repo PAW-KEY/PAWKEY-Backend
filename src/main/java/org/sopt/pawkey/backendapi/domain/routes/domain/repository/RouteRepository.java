@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.routes.domain.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.sopt.pawkey.backendapi.domain.homeWeather.api.dto.HomeInfoResponseDto;
@@ -11,4 +12,6 @@ public interface RouteRepository {
 	RouteEntity save(RouteEntity route);
 
 	HomeInfoResponseDto getMonthlyWalkSummary(Long userId);
+
+	List<RouteEntity> findAllById(List<Long> ids);
 }

@@ -16,6 +16,8 @@ import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRout
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteInfoForPostFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetRouteSummaryFacade;
 import org.sopt.pawkey.backendapi.domain.routes.application.facade.query.GetSharedRouteMapDataFacade;
+import org.sopt.pawkey.backendapi.domain.routes.recommendation.application.dto.result.RecommendationResult;
+import org.sopt.pawkey.backendapi.domain.routes.recommendation.application.facade.RecommendationFacade;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,16 +33,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(API_PREFIX + "/routes")
 @RequiredArgsConstructor
 public class RouteController {
 
 	private final RouteRegisterFacade routeRegisterFacade;
-	private final GetSharedRouteMapDataFacade getSharedRouteMapDataFacade;
-	private final GetRouteInfoForPostFacade getRouteInfoForPostFacade;
 	private final GetRouteGeometryFacade getRouteGeometryFacade;
 	private final GetRouteSummaryFacade getRouteSummaryFacade;
+	private final RecommendationFacade recommendationFacade;
 
 
 	@GetMapping("/{routeId}/geometry")
@@ -82,6 +85,21 @@ public class RouteController {
 
 		return ResponseEntity.ok(
 				ApiResponse.success(SaveRouteResponseDTO.from(result))
+		);
+	}
+
+
+	@GetMapping("/recommendation")
+	@Operation(summary = "맞춤 루트 추천 조회", description = "나와 비슷한 성향 유저의 인기 루트 4개를 추천합니다.", tags = {"Home"})
+	public ResponseEntity<ApiResponse<RecommendationResponseDTO>> getRecommendations(
+			@Parameter(hidden = true) @UserId Long userId
+	) {
+		List<RecommendationResult> results = recommendationFacade.getHomeRecommendations(userId);
+
+		RecommendationResponseDTO response = RecommendationResponseDTO.from(results);
+
+		return ResponseEntity.ok(
+				ApiResponse.success(response)
 		);
 	}
 
