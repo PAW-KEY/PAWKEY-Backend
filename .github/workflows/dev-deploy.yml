@@ -68,6 +68,8 @@ jobs:
             echo "🚀 Running new development container..."
             docker run -d --name doki-dev-container \
               --network host \
+              -m 512m \
+              -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx384m" \
               -e SPRING_PROFILES_ACTIVE=dev \
               -e DB_PASSWORD_DEV="${{ secrets.DB_PASSWORD_DEV }}" \
               -e DOKI_JWT_SECRET_VALUE="${{ secrets.DOKI_JWT_SECRET_VALUE }}" \
