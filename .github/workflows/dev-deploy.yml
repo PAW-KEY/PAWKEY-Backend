@@ -37,7 +37,7 @@ jobs:
           ${{ secrets.CD_APPLICATION_AWS }}
           EOF
           cat <<'EOF' > ./src/main/resources/application-oauth.yml
-          ${{ secrets.CD_APPLICATION_OAUTH }}
+          ${{ secrets.CD_APPLICATION_OAUTH_DEV }}
           EOF
 
       - name: Build & Push
@@ -75,12 +75,12 @@ jobs:
               -e DOKI_APPLE_CLIENT_ID="${{ secrets.DOKI_APPLE_CLIENT_ID }}" \
               -e DOKI_APPLE_TEAM_ID="${{ secrets.DOKI_APPLE_TEAM_ID }}" \
               -e DOKI_APPLE_KEY_ID="${{ secrets.DOKI_APPLE_KEY_ID }}" \
-              -e DOKI_APPLE_REDIRECT_URI="${{ secrets.DOKI_APPLE_REDIRECT_URI }}" \
+              -e DOKI_APPLE_REDIRECT_URI="${{ secrets.DOKI_DEV_APPLE_REDIRECT_URI }}" \
               -e APPLE_REFRESH_TOKEN_SECRET="${{ secrets.APPLE_REFRESH_TOKEN_SECRET }}" \
               -e DOKI_APPLE_PRIVATE_KEY='${{ secrets.DOKI_APPLE_PRIVATE_KEY }}' \
               -e DOKI_KAKAO_CLIENT_ID="${{ secrets.DOKI_KAKAO_CLIENT_ID }}" \
               -e DOKI_KAKAO_CLIENT_SECRET="${{ secrets.DOKI_KAKAO_CLIENT_SECRET }}" \
-              -e DOKI_KAKAO_REDIRECT_URI="${{ secrets.DOKI_KAKAO_REDIRECT_URI }}" \
+              -e DOKI_KAKAO_REDIRECT_URI="${{ secrets.DOKI_DEV_KAKAO_REDIRECT_URI }}" \
               -e WEATHER_URL="${{ secrets.WEATHER_URL }}" \
               -e WEATHER_API_KEY="${{ secrets.WEATHER_API_KEY }}" \
               -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
