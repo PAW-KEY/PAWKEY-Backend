@@ -20,6 +20,7 @@ import org.sopt.pawkey.backendapi.domain.user.exception.UserErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
@@ -118,5 +119,20 @@ public class RecommendationService {
                 })
                 .toList();
 
+    }
+    @Transactional(readOnly = true)
+    public void refreshRedisFromStats() {
+
+        List<RouteRecoStatEntity> stats = statRepository.findAll();
+
+        for (RouteRecoStatEntity stat : stats) {
+
+            String key = "HOME_RECO:" + stat.getRegionId() + ":" + stat.getDbtiType();
+
+            redisTemplate.opsForZSet()
+                    .add(key, stat.getRouteId(), stat.getScore());
+        }
+
+        log.info("Redis 랭킹 적재 완료: {}건", stats.size());
     }
 }

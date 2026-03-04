@@ -9,4 +9,6 @@ public interface RouteRecoStatRepository {
     List<RouteRecoStatEntity> findTop4(Long regionId, DbtiType dbtiType);
     void saveAll(List<RouteRecoStatEntity> stats);
     void deleteAllInBatch();
+    List<RouteRecoStatEntity> findAll();
+
 }

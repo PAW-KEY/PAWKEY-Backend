@@ -27,4 +27,9 @@ public class RouteRecoStatRepositoryImpl implements RouteRecoStatRepository {
     public void deleteAllInBatch() {
         jpaRepository.deleteAllInBatch();
     }
+
+    @Override
+    public List<RouteRecoStatEntity> findAll() {
+        return jpaRepository.findAll();
+    }
 }
