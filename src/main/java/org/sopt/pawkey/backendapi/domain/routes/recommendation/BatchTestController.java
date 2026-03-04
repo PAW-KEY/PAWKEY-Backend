@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.API_PREFIX;
 
 @RestController
-@RequestMapping(API_PREFIX + "/internal")
+@RequestMapping("/internal")
 @RequiredArgsConstructor
 public class BatchTestController {
     private final RecommendationBatchService batchService;
