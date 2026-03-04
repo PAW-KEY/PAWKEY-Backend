@@ -1,10 +1,12 @@
 package org.sopt.pawkey.backendapi.domain.routes.recommendation.application.service;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sopt.pawkey.backendapi.domain.dbti.domain.model.DbtiType;
 import org.sopt.pawkey.backendapi.domain.dbti.infra.persistence.entity.QDbtiResultEntity;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.QPetEntity;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.QPostEntity;
@@ -23,12 +25,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class RecommendationBatchService {
+
     private final JPAQueryFactory query;
     private final RouteRecoStatRepository statRepository;
 
     private final QRouteEntity route = QRouteEntity.routeEntity;
     private final QPostEntity post = QPostEntity.postEntity;
-    private final QPostLikeEntity postLike = QPostLikeEntity.postLikeEntity;
     private final QUserEntity user = QUserEntity.userEntity;
     private final QPetEntity pet = QPetEntity.petEntity;
     private final QDbtiResultEntity dbtiResult = QDbtiResultEntity.dbtiResultEntity;
@@ -36,17 +38,14 @@ public class RecommendationBatchService {
     @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     @Transactional
     public void refreshRouteRecoStats() {
-        //statRepository.deleteAllInBatch();
 
-        List<RouteRecoStatEntity> newStats = query
-                .select(Projections.constructor(
-                        RouteRecoStatEntity.class,
-                        Expressions.nullExpression(),
+        List<Tuple> tuples = query
+                .select(
                         route.region.parent.regionId.coalesce(route.region.regionId),
                         dbtiResult.dbtiType,
                         route.routeId,
                         post.likeCount.max().coalesce(0L)
-                ))
+                )
                 .from(post)
                 .join(post.route, route)
                 .join(post.user, user)
@@ -60,14 +59,24 @@ public class RecommendationBatchService {
                 )
                 .fetch();
 
-        if (newStats.isEmpty()) {
+        if (tuples.isEmpty()) {
             log.warn("추천 통계 집계 결과 없음 => 기존 통계 유지");
             return;
-
         }
+
+        List<RouteRecoStatEntity> newStats = tuples.stream()
+                .map(t -> RouteRecoStatEntity.builder()
+                        .regionId(t.get(0, Long.class))
+                        .dbtiType(t.get(1, DbtiType.class))
+                        .routeId(t.get(2, Long.class))
+                        .score(t.get(3, Long.class))   // score = likeCount.max()
+                        .build()
+                )
+                .toList();
 
         statRepository.deleteAllInBatch();
         statRepository.saveAll(newStats);
+
         log.info("✅ {}건의 추천 통계 데이터 갱신 완료", newStats.size());
     }
 }
