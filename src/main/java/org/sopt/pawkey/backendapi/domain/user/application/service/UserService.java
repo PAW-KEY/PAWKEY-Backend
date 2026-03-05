@@ -34,7 +34,11 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public void isNicknameDuplicated(Long userId, String nickname) {
-		findById(userId);
+		UserEntity user = findById(userId);
+
+		if (nickname.equals(user.getName())) {
+			return;
+		}
 		if (userRepository.existsByName(nickname)) {
 			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
 		}
