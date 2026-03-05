@@ -32,6 +32,18 @@ public class UserService {
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 	}
 
+	@Transactional(readOnly = true)
+	public void isNicknameDuplicated(Long userId, String nickname) {
+		UserEntity user = findById(userId);
+
+		if (nickname.equals(user.getName())) {
+			return;
+		}
+		if (userRepository.existsByName(nickname)) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+		}
+	}
+
 	@Transactional
 	public UserEntity completeOnboarding(Long userId, OnboardingInfoCommand command, RegionEntity region) {
 
