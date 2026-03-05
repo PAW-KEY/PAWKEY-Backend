@@ -20,6 +20,7 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateU
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLikedPostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
+import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,6 +66,23 @@ public class UserController {
 		UserOnboardingResponseDto response = userOnboardingFacade.onboard(userId, command);
 
 		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	private final UserService userService;
+
+	@Operation(summary = "닉네임 중복 검사", description = "파라미터로 받은 닉네임의 중복 여부를 확인합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "사용 가능한 닉네임 (S000)"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "중복된 닉네임 (U40901)", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	@GetMapping
+	public ResponseEntity<ApiResponse<Void>> checkNicknameDuplicate(
+		@Parameter(hidden = true) @UserId Long userId,
+		@RequestParam("nickname") String nickname
+	) {
+		userService.isNicknameDuplicated(userId, nickname);
+		return ResponseEntity.ok(ApiResponse.success());
 	}
 
 	@Operation(summary = "내가 좋아요한 게시물 조회", description = "사용자가 좋아요를 누른 게시물 목록을 반환합니다.", tags = {"Users"})
