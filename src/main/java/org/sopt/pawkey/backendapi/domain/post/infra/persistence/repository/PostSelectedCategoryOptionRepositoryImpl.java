@@ -23,4 +23,9 @@ public class PostSelectedCategoryOptionRepositoryImpl implements PostSelectedCat
 	public void deleteByPost(PostEntity post) {
 		springDataPostSelectedCategoryOptionRepository.deleteByPost(post);
 	}
+
+	@Override
+	public void deleteByUserId(Long userId) {
+		springDataPostSelectedCategoryOptionRepository.deleteByUserId(userId);
+	}
 }
