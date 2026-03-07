@@ -8,4 +8,6 @@ public interface DbtiResultRepository {
 	Optional<DbtiResultEntity> findByPetId(Long petId);
 
 	DbtiResultEntity save(DbtiResultEntity result);
+
+	void deleteByUserId(Long userId);
 }

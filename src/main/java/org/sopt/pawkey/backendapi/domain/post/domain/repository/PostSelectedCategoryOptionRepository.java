@@ -8,5 +8,6 @@ import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostSelec
 public interface PostSelectedCategoryOptionRepository {
 	void saveBatch(List<PostSelectedCategoryOptionEntity> postSelectedCategoryOptions);
 	void deleteByPost(PostEntity post);
+	void deleteByUserId(Long userId);
 
 }

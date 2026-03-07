@@ -19,6 +19,12 @@ public class DbtiResultRepositoryImpl implements DbtiResultRepository {
 	}
 
 	@Override
+	public void deleteByUserId(Long userId) {
+		springDataDbtiResultRepository.deleteByUserId(userId);
+
+	}
+
+	@Override
 	public Optional<DbtiResultEntity> findByPetId(Long petId) {
 		return springDataDbtiResultRepository.findByPet_PetId(petId);
 	}
