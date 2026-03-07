@@ -63,4 +63,10 @@ public class PostRepositoryImpl implements PostRepository {
 		}
 		return jpaRepository.findByRouteRouteIdInAndIsPublicTrue(routeIds);
 	}
+
+	@Override
+	public void deleteByUserId(Long userId) {
+		jpaRepository.deleteByUser_UserId(userId);
+	}
+
 }

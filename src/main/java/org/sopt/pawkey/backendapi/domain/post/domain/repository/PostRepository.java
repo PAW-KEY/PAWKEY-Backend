@@ -25,4 +25,6 @@ public interface PostRepository {
 	Optional<PostEntity> findByRoute(RouteEntity route);
 
 	List<PostEntity> findAllByRouteIds(List<Long> routeIds);
+
+	void deleteByUserId(Long userId);
 }

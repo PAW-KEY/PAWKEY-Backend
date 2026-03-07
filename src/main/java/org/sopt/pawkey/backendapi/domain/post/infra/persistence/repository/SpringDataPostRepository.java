@@ -63,4 +63,7 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	List<PostEntity> findByRouteRouteIdIn(List<Long> routeIds);
 
 	List<PostEntity> findByRouteRouteIdInAndIsPublicTrue(List<Long> routeIds);
+
+	@Modifying
+	void deleteByUser_UserId(Long userId);
 }
