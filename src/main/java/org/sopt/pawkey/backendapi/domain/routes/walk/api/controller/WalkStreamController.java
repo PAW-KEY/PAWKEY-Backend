@@ -12,6 +12,7 @@ import org.sopt.pawkey.backendapi.domain.routes.walk.api.dto.request.WalkPointRe
 import org.sopt.pawkey.backendapi.domain.routes.walk.api.dto.request.WalkStartRequestDTO;
 import org.sopt.pawkey.backendapi.domain.routes.walk.api.dto.response.WalkStartResponseDTO;
 import org.sopt.pawkey.backendapi.domain.routes.walk.application.service.WalkStreamService;
+import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,17 +31,20 @@ public class WalkStreamController {
 
 	@PostMapping("/start")
 	@Operation(summary = "산책 시작" , description = "산책 세션 시작 API", tags = {"Walk"})
-	public ResponseEntity<WalkStartResponseDTO> start(@Parameter(hidden = true) @UserId Long userId, @RequestBody WalkStartRequestDTO req) {
+	public ResponseEntity<ApiResponse<WalkStartResponseDTO>> start(@Parameter(hidden = true) @UserId Long userId, @RequestBody WalkStartRequestDTO req) {
 		StartWalkResult result = walkStreamFacade.start(req.toCommand(userId));
-		return ResponseEntity.ok(WalkStartResponseDTO.from(result));
+		return ResponseEntity.ok(
+				ApiResponse.success(WalkStartResponseDTO.from(result))
+		);
 	}
 
 	@PostMapping("/point")
 	@Operation(summary = "산책 스트리밍", description = "산책 중 좌표 스트리밍 API", tags = {"Walk"})
-	public ResponseEntity<Void> point(@Parameter(hidden=true) @UserId Long userId, @RequestBody WalkPointRequestDTO req){
+	public ResponseEntity<ApiResponse<Void>> point(@Parameter(hidden=true) @UserId Long userId, @RequestBody WalkPointRequestDTO req){
 		walkStreamFacade.appendPoint(req.toCommand(userId));
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(
+				ApiResponse.success(null)
+		);
 	}
-
-
 }
+

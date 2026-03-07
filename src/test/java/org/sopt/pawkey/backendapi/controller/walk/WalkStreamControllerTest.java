@@ -16,6 +16,7 @@ import org.sopt.pawkey.backendapi.domain.routes.walk.api.dto.request.WalkStartRe
 import org.sopt.pawkey.backendapi.domain.routes.walk.api.dto.response.WalkStartResponseDTO;
 import org.sopt.pawkey.backendapi.domain.routes.walk.application.dto.result.StartWalkResult;
 import org.sopt.pawkey.backendapi.domain.routes.walk.application.facade.WalkStreamFacade;
+import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
@@ -42,7 +43,7 @@ class WalkStreamControllerTest {
 		StartWalkResult result = new StartWalkResult("route-1", System.currentTimeMillis());
 		given(walkStreamFacade.start(any())).willReturn(result);
 
-		ResponseEntity<WalkStartResponseDTO> response =
+		ResponseEntity<ApiResponse<WalkStartResponseDTO>> response =
 			walkStreamController.start(userId, req);
 
 		assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -55,7 +56,7 @@ class WalkStreamControllerTest {
 		WalkPointRequestDTO req =
 			new WalkPointRequestDTO("route-1", 37.0, 127.0, System.currentTimeMillis());
 
-		ResponseEntity<Void> response =
+		ResponseEntity<ApiResponse<Void>> response =
 			walkStreamController.point(userId, req);
 
 		assertThat(response.getStatusCode().value()).isEqualTo(200);
