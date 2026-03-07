@@ -14,4 +14,6 @@ public interface RouteRepository {
 	HomeInfoResponseDto getMonthlyWalkSummary(Long userId);
 
 	List<RouteEntity> findAllById(List<Long> ids);
+
+	void deleteByUserId(Long userId);
 }
