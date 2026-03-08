@@ -2,6 +2,7 @@ package org.sopt.pawkey.backendapi.domain.region.api.controller;
 
 import static org.sopt.pawkey.backendapi.global.constants.AppConstants.*;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.sopt.pawkey.backendapi.domain.auth.annotation.UserId;
 import org.sopt.pawkey.backendapi.domain.region.api.dto.GetRegionCoordinatesResponseDto;
 import org.sopt.pawkey.backendapi.domain.region.api.dto.GetRegionListResponseDto;
@@ -57,7 +58,7 @@ public class RegionController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "현재 지역 리스트 조회")
 	})
 	public ResponseEntity<ApiResponse<GetRegionResponseDto>> getCurrentRegion(
-		@UserId Long userId
+			@Parameter(hidden = true) @UserId Long userId
 	) {
 		GetRegionResult result = getRegionFacade.execute(userId);
 
@@ -71,14 +72,17 @@ public class RegionController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "지역 범위 좌표 조회"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "조회 실패 (U40401 또는 R40401 에러코드 확인)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessException.class)))})
 	public ResponseEntity<ApiResponse<GetRegionCoordinatesResponseDto>> getRegionCoordinates(
-		@UserId Long userId,
+		@Parameter(hidden = true) @UserId Long userId,
 		@PathVariable("regionId") Long regionId
 	) {
 
-		GetRegionCoordinatesResult result = getRegionCoordinatesFacade.execute(userId,
-			GetRegionCoordinatesCommand.of(regionId));
+		GetRegionCoordinatesResult result = getRegionCoordinatesFacade.execute(GetRegionCoordinatesCommand.of(regionId));
 
 		return ResponseEntity.ok(
 			ApiResponse.success(GetRegionCoordinatesResponseDto.from(result)));
 	}
+
+
+
+
 }
