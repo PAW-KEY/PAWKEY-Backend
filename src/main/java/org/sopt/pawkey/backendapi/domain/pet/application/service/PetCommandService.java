@@ -67,7 +67,9 @@ public class PetCommandService {
 
 		Long finalImageId = (command.imageId() != null)
 			? command.imageId()
-			: ImageType.PET_PROFILE.getDefaultId();
+			: (pet.getProfileImage() != null
+			? pet.getProfileImage().getImageId()
+			: ImageType.PET_PROFILE.getDefaultId());
 
 		ImageEntity profileImage = imageRepository.findById(finalImageId)
 			.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
