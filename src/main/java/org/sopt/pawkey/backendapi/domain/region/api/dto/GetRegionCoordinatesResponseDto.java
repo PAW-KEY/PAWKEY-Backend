@@ -8,15 +8,15 @@ import lombok.Builder;
 
 @Builder
 public record GetRegionCoordinatesResponseDto(
-	String regionName,
-	String preRegionName,
-	Map<String, Object> geometryDto
+		Long regionId,
+		String regionName,
+		Map<String, Object> geometry
 ) {
 	public static GetRegionCoordinatesResponseDto from(GetRegionCoordinatesResult result) {
-		return GetRegionCoordinatesResponseDto.builder()
-			.preRegionName(result.preRegionName())
-			.regionName(result.regionName())
-			.geometryDto(result.geometryDto())
-			.build();
+		return new GetRegionCoordinatesResponseDto(
+				result.regionId(),
+				result.regionName(),
+				result.geometry()
+		);
 	}
 }

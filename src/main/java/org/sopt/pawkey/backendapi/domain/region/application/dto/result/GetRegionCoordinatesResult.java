@@ -8,17 +8,17 @@ import lombok.Builder;
 
 @Builder
 public record GetRegionCoordinatesResult(
+	Long regionId,
 	String regionName,
-	String preRegionName,
-	Map<String, Object> geometryDto
+	Map<String, Object> geometry
 ) {
-	public static GetRegionCoordinatesResult from(String preRegionName, RegionEntity region) {
+	public static GetRegionCoordinatesResult from(RegionEntity region) {
 
 		return GetRegionCoordinatesResult.builder()
-			.preRegionName(preRegionName)
-			.regionName(region.getFullRegionName())
-			.geometryDto(region.getGeoJson())
-			.build();
+				.regionId(region.getRegionId())
+				.regionName(region.getFullRegionName())
+				.geometry(region.getGeoJson())
+				.build();
 	}
 
 }

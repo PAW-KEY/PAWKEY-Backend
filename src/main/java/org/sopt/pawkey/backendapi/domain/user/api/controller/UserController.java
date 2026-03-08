@@ -173,6 +173,7 @@ public class UserController {
 		ListResponseWrapper<ReviewCardResponseDto> response = userWrittenPostQueryFacade.getMyReviews(userId);
 		return ResponseEntity.ok(ApiResponse.success(response));
 	}
+
 }
 
 

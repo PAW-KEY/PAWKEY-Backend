@@ -17,14 +17,12 @@ import lombok.RequiredArgsConstructor;
 public class GetRegionCoordinatesFacade {
 
 	private final RegionService regionService;
-	private final UserService userService;
 
-	public GetRegionCoordinatesResult execute(Long userId,
-		GetRegionCoordinatesCommand getRegionCoordinatesCommand) {
 
-		UserEntity user = userService.findById(userId);
-		RegionEntity region = regionService.getRegionByIdOrThrow(getRegionCoordinatesCommand.regionId());
+	public GetRegionCoordinatesResult execute(GetRegionCoordinatesCommand getRegionCoordinatesCommand) {
 
-		return GetRegionCoordinatesResult.from(user.getRegion().getFullRegionName(), region);
+		RegionEntity region = regionService.getDongTypeRegionByIdOrThrow(getRegionCoordinatesCommand.regionId());
+
+		return GetRegionCoordinatesResult.from(region);
 	}
 }
