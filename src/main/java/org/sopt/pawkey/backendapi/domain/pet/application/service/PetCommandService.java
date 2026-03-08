@@ -1,5 +1,6 @@
 package org.sopt.pawkey.backendapi.domain.pet.application.service;
 
+import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.domain.repository.ImageRepository;
 import org.sopt.pawkey.backendapi.domain.image.exception.ImageBusinessException;
 import org.sopt.pawkey.backendapi.domain.image.exception.ImageErrorCode;
@@ -37,11 +38,12 @@ public class PetCommandService {
 		BreedEntity breed = breedRepository.findBreedById(command.breedId())
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
 
-		ImageEntity profileImage = null;
-		if (command.imageId() != null) {
-			profileImage = imageRepository.findById(command.imageId())
-				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
-		}
+		Long finalImageId = (command.imageId() != null)
+			? command.imageId()
+			: ImageType.PET_PROFILE.getDefaultId();
+
+		ImageEntity profileImage = imageRepository.findById(finalImageId)
+			.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
 
 		PetEntity pet = PetEntity.builder()
 			.name(command.name())
@@ -63,10 +65,12 @@ public class PetCommandService {
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND))
 			: pet.getBreed();
 
-		ImageEntity profileImage = (command.imageId() != null)
-			? imageRepository.findById(command.imageId())
-			.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND))
-			: pet.getProfileImage();
+		Long finalImageId = (command.imageId() != null)
+			? command.imageId()
+			: ImageType.PET_PROFILE.getDefaultId();
+
+		ImageEntity profileImage = imageRepository.findById(finalImageId)
+			.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
 
 		pet.updateProfile(
 			command.name() != null ? command.name() : pet.getName(),
