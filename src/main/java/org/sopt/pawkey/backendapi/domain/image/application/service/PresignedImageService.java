@@ -23,7 +23,7 @@ public class PresignedImageService {
 
 	private final S3Presigner s3Presigner;
 
-	@Value("${cloud.presign.prod-bucket}")
+	@Value("${cloud.presign.bucket}")
 	private String bucket;
 
 	@Value("${cloud.presign.expire-minutes}")
