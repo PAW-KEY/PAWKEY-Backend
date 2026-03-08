@@ -12,7 +12,7 @@ public record GetRouteSummaryResult(Long routeId,
     public static GetRouteSummaryResult from(RouteEntity route){
         return new GetRouteSummaryResult(
                 route.getRouteId(),
-                route.getRegion().getRegionName(),
+                route.getRegion().getFullRegionName(),
                 RouteTimeFormatter.format(route.getStartedAt()),
                 List.of(
                         route.getDistance() / 1000.0 + "km",
