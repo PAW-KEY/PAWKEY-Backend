@@ -34,7 +34,7 @@ public class UserDeletionService {
 
 
 		//연관 테이블 삭제
-		postRepository.deleteByUserId(userId);
+		postRepository.deleteByRouteUserId(userId);
 		routeRepository.deleteByUserId(userId); //post와 route는 cascade설정시, 대량 Lazy Loading이 발생할 수 있어서, service단에서 처리(나머지 pet,review,postlike연관관계는 userEntity에서 casecade로 처리합니다)
 
 
