@@ -64,12 +64,17 @@ public class PetCommandService {
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND))
 			: pet.getBreed();
 
-		ImageEntity profileImage = null;
+		ImageEntity profileImage = pet.getProfileImage();
+
 		if (command.imageId() != null) {
-			profileImage = imageRepository.findById(command.imageId())
-				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+			if (command.imageId() == 0) {
+				profileImage = null;
+			} else {
+				profileImage = imageRepository.findById(command.imageId())
+					.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+			}
 		}
-		
+
 		pet.updateProfile(
 			command.name() != null ? command.name() : pet.getName(),
 			command.birth() != null ? command.birth() : pet.getBirth(),

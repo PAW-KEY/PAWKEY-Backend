@@ -9,7 +9,6 @@ import org.sopt.pawkey.backendapi.global.enums.Gender;
 public record PetProfileResponseDto(
 	Long petId,
 	String imageUrl,
-	Long imageId,
 	String name,
 	LocalDate birth,
 	String age,
@@ -24,7 +23,6 @@ public record PetProfileResponseDto(
 		return new PetProfileResponseDto(
 			pet.getPetId(),
 			imageUrl,
-			pet.getProfileImage() != null ? pet.getProfileImage().getImageId() : null,
 			pet.getName(),
 			pet.getBirth(),
 			formattedAge,
