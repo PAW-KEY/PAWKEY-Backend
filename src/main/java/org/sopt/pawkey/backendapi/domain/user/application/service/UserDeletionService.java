@@ -37,7 +37,7 @@ public class UserDeletionService {
 		//연관 테이블의 child테이블 우선 삭제
 		dbtiResultRepository.deleteByUserId(userId);
 		postSelectedCategoryOptionRepository.deleteByUserId(userId);
-
+		entityManager.flush();
 
 		//연관 테이블 삭제
 		postRepository.deleteByUserId(userId);
