@@ -76,7 +76,7 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	@Query("DELETE FROM PostEntity p WHERE p.pet.user.userId = :userId")
 	void deleteByPetUserId(@Param("userId") Long userId);
 
-	@Modifying (clearAutomatically = true)
+	@Modifying (clearAutomatically = true, flushAutomatically = true)
 	@Query("""
         delete from PostEntity p
         where p.user.userId = :userId
