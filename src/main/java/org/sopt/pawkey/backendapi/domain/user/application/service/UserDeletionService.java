@@ -40,9 +40,7 @@ public class UserDeletionService {
 
 
 		//연관 테이블 삭제
-		//postRepository.deleteByRouteUserId(userId);
-		List<PostEntity> posts = postRepository.findByRoute_User_UserId(userId);
-		postRepository.deleteAll(posts);
+		postRepository.deleteByUserId(userId);
 
 		entityManager.flush();
 
