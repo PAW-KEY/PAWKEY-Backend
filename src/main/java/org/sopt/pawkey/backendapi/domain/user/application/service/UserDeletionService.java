@@ -34,25 +34,24 @@ public class UserDeletionService {
 	@Transactional
 	public void deleteUser(Long userId) {
 
-		//연관 테이블의 child테이블 우선 삭제
-		dbtiResultRepository.deleteByUserId(userId);
+		// 1 option
 		postSelectedCategoryOptionRepository.deleteByUserId(userId);
 		entityManager.flush();
 
-		//연관 테이블 삭제
+		// 2 posts
 		postRepository.deleteByUserId(userId);
-		postRepository.deleteByRoute_User_UserId(userId);
-		postRepository.deleteByPetUserId(userId);
-
 		entityManager.flush();
 
-		// routes 삭제
-		routeRepository.deleteByUserId(userId); //post와 route는 cascade설정시, 대량 Lazy Loading이 발생할 수 있어서, service단에서 처리(나머지 pet,review,postlike연관관계는 userEntity에서 casecade로 처리합니다)
+		// 3 routes
+		routeRepository.deleteByUserId(userId);
 		entityManager.flush();
 
+		// 4 기타
+		dbtiResultRepository.deleteByUserId(userId);
 		appleRefreshTokenRepository.deleteById(userId);
 		socialAccountRepository.deleteByUser_UserId(userId);
 
+		// 5 user
 		userRepository.deleteById(userId);
 	}
 }

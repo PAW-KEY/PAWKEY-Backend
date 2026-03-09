@@ -64,8 +64,7 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 
 	List<PostEntity> findByRouteRouteIdInAndIsPublicTrue(List<Long> routeIds);
 
-	@Modifying(clearAutomatically = true)
-	void deleteByUser_UserId(Long userId);
+
 
 
 	List<PostEntity> findByRoute_User_UserId(Long userId);
@@ -76,5 +75,12 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	@Modifying
 	@Query("DELETE FROM PostEntity p WHERE p.pet.user.userId = :userId")
 	void deleteByPetUserId(@Param("userId") Long userId);
+
+	@Modifying (clearAutomatically = true)
+	@Query("""
+        delete from PostEntity p
+        where p.user.userId = :userId
+    """)
+	void deleteByUserId(@Param("userId") Long userId);
 
 }

@@ -66,28 +66,7 @@ public class PostRepositoryImpl implements PostRepository {
 
 	@Override
 	public void deleteByUserId(Long userId) {
-		jpaRepository.deleteByUser_UserId(userId);
-	}
-
-	@Override
-	public List<PostEntity> findByRoute_User_UserId(Long userId) {
-		return jpaRepository.findByRoute_User_UserId(userId);
-	}
-
-	@Override
-	public void deleteByRoute_User_UserId(Long userId) {
-		jpaRepository.deleteByRoute_User_UserId(userId);
-	}
-
-
-	@Override
-	public void deleteAll(List<PostEntity> posts) {
-		jpaRepository.deleteAll(posts);
-	}
-
-	@Override
-	public void deleteByPetUserId(Long userId){
-		jpaRepository.deleteByPetUserId(userId);
+		jpaRepository.deleteByUserId(userId);
 	}
 
 }
