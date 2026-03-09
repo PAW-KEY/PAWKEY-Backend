@@ -38,12 +38,11 @@ public class PetCommandService {
 		BreedEntity breed = breedRepository.findBreedById(command.breedId())
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND));
 
-		Long finalImageId = (command.imageId() != null)
-			? command.imageId()
-			: ImageType.PET_PROFILE.getDefaultId();
-
-		ImageEntity profileImage = imageRepository.findById(finalImageId)
-			.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+		ImageEntity profileImage = null;
+		if (command.imageId() != null) {
+			profileImage = imageRepository.findById(command.imageId())
+				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+		}
 
 		PetEntity pet = PetEntity.builder()
 			.name(command.name())
@@ -65,15 +64,12 @@ public class PetCommandService {
 			.orElseThrow(() -> new PetBusinessException(PetErrorCode.BREED_NOT_FOUND))
 			: pet.getBreed();
 
-		Long finalImageId = (command.imageId() != null)
-			? command.imageId()
-			: (pet.getProfileImage() != null
-			? pet.getProfileImage().getImageId()
-			: ImageType.PET_PROFILE.getDefaultId());
-
-		ImageEntity profileImage = imageRepository.findById(finalImageId)
-			.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
-
+		ImageEntity profileImage = null;
+		if (command.imageId() != null) {
+			profileImage = imageRepository.findById(command.imageId())
+				.orElseThrow(() -> new ImageBusinessException(ImageErrorCode.IMAGE_NOT_FOUND));
+		}
+		
 		pet.updateProfile(
 			command.name() != null ? command.name() : pet.getName(),
 			command.birth() != null ? command.birth() : pet.getBirth(),
