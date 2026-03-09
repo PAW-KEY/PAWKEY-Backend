@@ -85,4 +85,9 @@ public class PostRepositoryImpl implements PostRepository {
 		jpaRepository.deleteAll(posts);
 	}
 
+	@Override
+	public void deleteByPetUserId(Long userId){
+		jpaRepository.deleteByPetUserId(userId);
+	}
+
 }

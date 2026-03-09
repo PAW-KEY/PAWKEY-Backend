@@ -42,6 +42,7 @@ public class UserDeletionService {
 		//연관 테이블 삭제
 		postRepository.deleteByUserId(userId);
 		postRepository.deleteByRoute_User_UserId(userId);
+		postRepository.deleteByPetUserId(userId);
 
 		entityManager.flush();
 
