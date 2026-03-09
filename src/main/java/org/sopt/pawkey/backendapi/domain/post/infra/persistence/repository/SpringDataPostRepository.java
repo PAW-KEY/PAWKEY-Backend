@@ -68,6 +68,6 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	void deleteByUser_UserId(Long userId);
 
 
-	List<PostEntity> findByRouteUserUserId(Long userId);
+	List<PostEntity> findByRoute_User_UserId(Long userId);
 
 }

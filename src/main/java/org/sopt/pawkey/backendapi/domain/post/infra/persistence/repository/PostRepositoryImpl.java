@@ -70,8 +70,8 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public List<PostEntity> findByRouteUserUserId(Long userId) {
-		return jpaRepository.findByRouteUserUserId(userId);
+	public List<PostEntity> findByRoute_User_UserId(Long userId) {
+		return jpaRepository.findByRoute_User_UserId(userId);
 	}
 
 

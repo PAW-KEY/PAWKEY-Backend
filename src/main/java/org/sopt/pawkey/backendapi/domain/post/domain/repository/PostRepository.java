@@ -28,7 +28,7 @@ public interface PostRepository {
 
 	void deleteByUserId(Long userId);
 
-	List<PostEntity> findByRouteUserUserId(Long userId);
+	List<PostEntity> findByRoute_User_UserId(Long userId);
 
 	void deleteAll(List<PostEntity> posts);
 }
