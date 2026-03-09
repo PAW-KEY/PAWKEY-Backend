@@ -45,5 +45,10 @@ public class RouteRepositoryImpl implements RouteRepository {
 		jpaRepository.deleteByUser_UserId(userId);
 	}
 
+	@Override
+	public List<RouteEntity> findByUserUserId(Long userId) {
+		return jpaRepository.findByUserUserId(userId);
+	}
+
 
 }

@@ -17,6 +17,10 @@ spring:
   sql:
     init:
       mode: always
+  cloud:
+    aws:
+      s3:
+        bucket: test-bucket
 
   data:
     redis:

@@ -28,4 +28,7 @@ public interface SpringDataRouteRepository extends JpaRepository<RouteEntity, Lo
 
 	@Modifying(clearAutomatically = true)
 	void deleteByUser_UserId(Long userId);
+
+
+	List<RouteEntity> findByUserUserId(Long userId);
 }
