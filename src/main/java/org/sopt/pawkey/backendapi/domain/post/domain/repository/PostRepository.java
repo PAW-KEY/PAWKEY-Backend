@@ -28,4 +28,6 @@ public interface PostRepository {
 
 	void deleteByUserId(Long userId);
 
+	void deleteByRouteUserId(Long userId);
+
 }

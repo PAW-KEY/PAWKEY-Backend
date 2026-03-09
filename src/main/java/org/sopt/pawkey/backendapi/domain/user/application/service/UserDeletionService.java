@@ -36,9 +36,11 @@ public class UserDeletionService {
 
 		// 1 option
 		postSelectedCategoryOptionRepository.deleteByUserId(userId);
+
 		entityManager.flush();
 
 		// 2 posts
+		postRepository.deleteByRouteUserId(userId);
 		postRepository.deleteByUserId(userId);
 		entityManager.flush();
 

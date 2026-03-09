@@ -27,7 +27,11 @@ public interface SpringDataRouteRepository extends JpaRepository<RouteEntity, Lo
 	List<RouteEntity> findAllByIdIn(@Param("ids") List<Long> ids);
 
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
-	void deleteByUser_UserId(Long userId);
+	@Query("""
+    delete from RouteEntity r
+    where r.user.userId = :userId
+""")
+	void deleteByUserId(@Param("userId") Long userId);
 
 
 	List<RouteEntity> findByUserUserId(Long userId);

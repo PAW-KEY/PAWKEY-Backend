@@ -42,7 +42,7 @@ public class RouteRepositoryImpl implements RouteRepository {
 
 	@Override
 	public void deleteByUserId(Long userId) {
-		jpaRepository.deleteByUser_UserId(userId);
+		jpaRepository.deleteByUserId(userId);
 	}
 
 	@Override
