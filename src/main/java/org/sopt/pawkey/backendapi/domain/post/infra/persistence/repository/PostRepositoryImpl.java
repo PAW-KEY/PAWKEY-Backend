@@ -73,4 +73,13 @@ public class PostRepositoryImpl implements PostRepository {
 		jpaRepository.deleteByRouteUserId(userId);
 	}
 
+	@Override
+	public void deletePostImagesByRouteUserId(Long userId) {
+		jpaRepository.deletePostImagesByRouteUserId(userId);
+	}
+
+	@Override
+	public void deletePostImagesByUserId(Long userId) {
+		jpaRepository.deletePostImagesByUserId(userId);
+	}
 }

@@ -66,6 +66,7 @@ public class PostRegisterFacade {
 
 		//Post - Image 연관관계 설정
 		post.addRouteImage(routeImage);     // 내부에서 ImageType.ROUTE로 매핑
+		route.assignTrackingImage(routeImage);
 		post.addWalkImages(walkImages);     // 내부에서 ImageType.WALK_POST로 매핑
 
 
