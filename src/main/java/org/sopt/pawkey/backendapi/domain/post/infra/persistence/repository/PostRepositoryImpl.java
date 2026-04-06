@@ -82,4 +82,9 @@ public class PostRepositoryImpl implements PostRepository {
 	public void deletePostImagesByUserId(Long userId) {
 		jpaRepository.deletePostImagesByUserId(userId);
 	}
+
+	@Override
+	public void deletePostLikesByUserId(Long userId) {
+		jpaRepository.deletePostLikesByUserId(userId);
+	}
 }

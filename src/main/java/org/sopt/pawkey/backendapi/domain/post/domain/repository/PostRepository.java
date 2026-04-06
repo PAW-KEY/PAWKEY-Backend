@@ -32,5 +32,6 @@ public interface PostRepository {
 
 	void deletePostImagesByRouteUserId(Long userId);
 	void deletePostImagesByUserId(Long userId);
+	void deletePostLikesByUserId(Long userId);
 
 }

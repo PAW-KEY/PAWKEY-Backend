@@ -95,4 +95,10 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	@Query("DELETE FROM PostImageEntity pi WHERE pi.post.user.userId = :userId")
 	void deletePostImagesByUserId(@Param("userId") Long userId);
 
+	@Modifying
+	@Query("DELETE FROM PostLikeEntity pl WHERE pl.post.route.user.userId = :userId OR pl.user.userId = :userId")
+	void deletePostLikesByUserId(@Param("userId") Long userId);
+
+
+
 }
