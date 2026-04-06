@@ -36,24 +36,28 @@ public class UserDeletionService {
 
 		// 1 option
 		postSelectedCategoryOptionRepository.deleteByUserId(userId);
-
 		entityManager.flush();
 
-		// 2 posts
+		// 2. post_image 먼저 (FK 자식)
+		postRepository.deletePostImagesByRouteUserId(userId);
+		postRepository.deletePostImagesByUserId(userId);
+		entityManager.flush();
+
+		// 3. posts
 		postRepository.deleteByRouteUserId(userId);
 		postRepository.deleteByUserId(userId);
 		entityManager.flush();
 
-		// 3 routes
+		// 4. routes
 		routeRepository.deleteByUserId(userId);
 		entityManager.flush();
 
-		// 4 기타
+		// 5. 기타
 		dbtiResultRepository.deleteByUserId(userId);
 		appleRefreshTokenRepository.deleteById(userId);
 		socialAccountRepository.deleteByUser_UserId(userId);
 
-		// 5 user
+		// 6. user
 		userRepository.deleteById(userId);
 	}
 }

@@ -30,4 +30,7 @@ public interface PostRepository {
 
 	void deleteByRouteUserId(Long userId);
 
+	void deletePostImagesByRouteUserId(Long userId);
+	void deletePostImagesByUserId(Long userId);
+
 }
