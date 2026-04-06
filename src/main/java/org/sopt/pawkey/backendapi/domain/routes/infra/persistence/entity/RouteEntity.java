@@ -95,4 +95,8 @@ public class RouteEntity extends BaseEntity {
 	public int getDurationMinutes() {
 		return (int)(this.duration / 60);
 	}
+
+	public void assignTrackingImage(ImageEntity image) {
+		this.trackingImage = image;
+	}
 }
