@@ -39,7 +39,6 @@ public class RouteRegisterFacade {
 		// 2. Route 도메인 저장
 		UserEntity user = userService.findById(userId);
 
-
 		RouteEntity route = routeService.saveRouteFromSession(user,command, session);
 
 		return FinishWalkResult.from(route);
