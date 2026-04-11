@@ -20,8 +20,6 @@ public class GetRouteGeometryFacade {
         UserEntity user = userService.findById(userId);
         RouteEntity route = routeService.getRouteById(commandDto.routeId());
 
-        route.validateOwnership(user);
-
         return GetRouteGeometryResult.from(route);
     }
 }
