@@ -120,4 +120,18 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.updatePost(post, user, command))
                 .isInstanceOf(PostBusinessException.class);
     }
+    @Test
+    void 게시물_삭제_성공() {
+        // given
+        Long postId = 10L;
+
+        // when
+        postService.delete(postId);
+
+        // then
+        verify(postRepository).deleteById(postId);
+    }
+
+
+
 }
