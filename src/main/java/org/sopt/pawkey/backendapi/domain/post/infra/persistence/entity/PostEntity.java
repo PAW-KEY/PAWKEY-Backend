@@ -7,6 +7,8 @@ import org.hibernate.annotations.BatchSize;
 import org.sopt.pawkey.backendapi.domain.image.domain.model.ImageType;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.pet.infra.persistence.entity.PetEntity;
+import org.sopt.pawkey.backendapi.domain.post.exception.PostBusinessException;
+import org.sopt.pawkey.backendapi.domain.post.exception.PostErrorCode;
 import org.sopt.pawkey.backendapi.domain.routes.infra.persistence.entity.RouteEntity;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.sopt.pawkey.backendapi.global.infra.persistence.entity.BaseEntity;
@@ -111,5 +113,12 @@ public class PostEntity extends BaseEntity {
 
 	public void removeWalkImages() {
 		postImageEntityList.removeIf(img -> img.getImageType() == ImageType.WALK_POST);
+	}
+
+	public void validateOwnership(UserEntity user){
+		if(!this.user.equals(user)){
+			throw  new PostBusinessException(PostErrorCode.POST_DELETE_FORBIDDEN);
+		}
+
 	}
 }
