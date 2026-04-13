@@ -26,7 +26,12 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	})
 	Optional<PostEntity> getByPostId(Long postId);
 
-	@EntityGraph(attributePaths = {"postImageEntityList","postImageEntityList.image","route.trackingImage"})
+	@Query("SELECT DISTINCT p FROM PostEntity p " +
+		"LEFT JOIN FETCH p.postImageEntityList pil " +
+		"LEFT JOIN FETCH pil.image " +
+		"LEFT JOIN FETCH p.route r " +
+		"LEFT JOIN FETCH r.trackingImage " +
+		"WHERE p.postId = :postId")
 	Optional<PostEntity> findWithImagesForDelete(Long postId);
 
 
