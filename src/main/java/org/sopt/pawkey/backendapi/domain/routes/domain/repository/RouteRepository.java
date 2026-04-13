@@ -18,4 +18,6 @@ public interface RouteRepository {
 	void deleteByUserId(Long userId);
 
 	List<RouteEntity> findByUserUserId(Long userId);
+
+	void deleteById(Long routeId);
 }

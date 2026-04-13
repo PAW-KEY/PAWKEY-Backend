@@ -25,6 +25,15 @@ public class PostService {
 			.orElseThrow(() -> new PostBusinessException(PostErrorCode.POST_NOT_FOUND));
 	}
 
+	public PostEntity findWithImagesForDelete(Long postId) {
+		return postRepository.findWithImagesForDelete(postId)
+			.orElseThrow(() -> new PostBusinessException(PostErrorCode.POST_NOT_FOUND));
+	}
+
+	public void delete(Long postId) {
+		postRepository.deleteById(postId);
+	}
+
 	public PostEntity savePost(UserEntity writer,
 		PostRegisterCommand command,
 		RouteEntity route) {

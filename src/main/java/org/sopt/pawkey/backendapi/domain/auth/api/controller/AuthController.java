@@ -14,6 +14,7 @@ import org.sopt.pawkey.backendapi.domain.auth.application.service.login.verifier
 import org.sopt.pawkey.backendapi.domain.auth.application.service.token.TokenService;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserLoginFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.UserWithdrawFacade;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,13 +52,11 @@ public class AuthController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/google/login")
-	public SocialLoginResponseDTO googleLogin(@RequestBody @Valid LoginRequestDTO request) {
+	public ResponseEntity<SocialLoginResponseDTO> googleLogin(@RequestBody @Valid LoginRequestDTO request) {
 		// Facade로 ID Token과 Device ID를 전달하여 모든 인증 및 토큰 발급 로직을 처리
-		return userLoginFacade.googleLogin(request.idToken(), request.deviceId());
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(userLoginFacade.googleLogin(request.idToken(), request.deviceId()));
 	}
-
-
-
 
 	// 3. 카카오 로그인 API
 	@Operation(summary = "Kakao 소셜 로그인", description = "Access Token을 받아 사용자 인증 및 Access/Refresh Token을 최초 발급합니다.", tags = {
@@ -69,9 +68,9 @@ public class AuthController {
 		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/kakao/login")
-	public SocialLoginResponseDTO kakaoLogin(@RequestBody @Valid LoginRequestDTO request) {
-		// 카카오는 idToken 대신 Access Token을 받으므로 request.idToken() -> accessToken 개념임
-		return userLoginFacade.kakaoLogin(request.idToken(), request.deviceId());
+	public ResponseEntity<SocialLoginResponseDTO> kakaoLogin(@RequestBody @Valid LoginRequestDTO request) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(userLoginFacade.kakaoLogin(request.idToken(), request.deviceId()));
 	}
 
 	@GetMapping("/kakao/callback") //서버 테스트용 임시 컨트롤러
@@ -93,13 +92,13 @@ public class AuthController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/apple/login")
-	public SocialLoginResponseDTO appleLogin(@RequestBody @Valid AppleLoginRequestDTO request) {
-		return userLoginFacade.appleLoginWithCode(
+	public ResponseEntity<SocialLoginResponseDTO> appleLogin(@RequestBody @Valid AppleLoginRequestDTO request) {
+		SocialLoginResponseDTO result = userLoginFacade.appleLoginWithCode(
 			request.authorizationCode(),
 			request.deviceId()
 		);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
-
 
 	@Operation(summary = "토큰 재발급", description = "Refresh Token과 Device ID를 사용하여 새로운 Access/Refresh Token 쌍을 발급합니다. (토큰 로테이션)", tags = {
 		"Auth"})
@@ -112,7 +111,7 @@ public class AuthController {
 	@PostMapping("/refresh")
 	public ResponseEntity<TokenResponseDTO> refreshToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
 		TokenResponseDTO response = tokenService.rotate(request.refreshToken(), request.deviceId());
-		return ResponseEntity.ok(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@Operation(summary = "로그아웃", description = "Access Token에서 사용자 ID를 추출하고, Refresh Token을 Redis에서 삭제하여 현재 기기의 세션을 무효화합니다. 성공 시 204 No Content를 반환합니다.", tags = {
@@ -124,7 +123,7 @@ public class AuthController {
 		@ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
 	})
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(@Parameter(hidden = true) @UserId Long userId,@RequestBody @Valid LogoutRequestDTO request){
+	public ResponseEntity<Void> logout(@Parameter(hidden = true) @UserId Long userId, @RequestBody @Valid LogoutRequestDTO request) {
 		tokenService.revokeSession(userId, request.deviceId());
 		return ResponseEntity.noContent().build();
 	}

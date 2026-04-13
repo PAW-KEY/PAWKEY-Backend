@@ -12,6 +12,9 @@ public interface PostRepository {
 
 	void save(PostEntity post);
 
+	Optional<PostEntity> findWithImagesForDelete(Long postId);
+	void deleteById(Long postId);
+
 	List<PostEntity> findAllByUser(UserEntity user);
 
 	Optional<PostEntity> getPostWithAllDetails(Long postId);

@@ -50,5 +50,9 @@ public class RouteRepositoryImpl implements RouteRepository {
 		return jpaRepository.findByUserUserId(userId);
 	}
 
+	@Override
+	public void deleteById(Long routeId) {
+		jpaRepository.deleteById(routeId);
+	}
 
 }

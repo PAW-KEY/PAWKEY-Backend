@@ -12,6 +12,7 @@ import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostRegisterRespo
 import org.sopt.pawkey.backendapi.domain.post.api.dto.response.PostResponseDto;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.command.PostRegisterCommand;
 import org.sopt.pawkey.backendapi.domain.post.application.dto.result.PostRegisterResult;
+import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostDeleteFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostRegisterFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.command.PostUpdateFacade;
 import org.sopt.pawkey.backendapi.domain.post.application.facade.query.PostQueryFacade;
@@ -42,10 +43,11 @@ public class PostController {
 
 	private final PostRegisterFacade postRegisterFacade;
 	private final PostUpdateFacade postUpdateFacade;
+	private final PostDeleteFacade postDeleteFacade;
 
 	private final PostQueryFacade postQueryFacade;
 
-
+	@Operation(summary = "산책 게시물 등록", description = "산책 완료 후 작성한 산책 게시물을 등록합니다.", tags = {"Posts"})
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "게시물 조회 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "게시물 ID가 요청에 포함되어 있지 않습니다.", content = @Content(mediaType = "application/json")),
@@ -53,31 +55,38 @@ public class PostController {
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))})
 
 	@PostMapping
-	@Operation(summary = "산책 게시물 등록", description = "산책 완료 후 작성한 산책 게시물을 등록합니다.", tags = {"Posts"})
 	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> createPost(
 		@Parameter(hidden = true) @UserId Long userId,
 		@RequestBody @Valid PostCreateRequestDto requestDto
 	) {
 		PostRegisterResult result = postRegisterFacade.execute(userId, requestDto.toCommand());
-
-		return ResponseEntity.ok(ApiResponse.success(PostRegisterResponseDto.from(result)));
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PostRegisterResponseDto.from(result)));
 	}
 
-	@PatchMapping("/{postId}")
+
 	@Operation(summary = "산책 게시물 수정", description = "기존 산책 게시물을 수정합니다.", tags = {"Posts"})
+	@PatchMapping("/{postId}")
 	public ResponseEntity<ApiResponse<PostRegisterResponseDto>> updatePost(
-			@Parameter(hidden = true) @UserId Long userId,
-			@PathVariable Long postId,
-			@RequestBody @Valid PostUpdateRequestDto requestDto
+		@Parameter(hidden = true) @UserId Long userId,
+		@PathVariable Long postId,
+		@RequestBody @Valid PostUpdateRequestDto requestDto
 	) {
-		PostRegisterResult result =
-				postUpdateFacade.execute(userId, postId, requestDto.toCommand());
-
-		return ResponseEntity.ok(ApiResponse.success(PostRegisterResponseDto.from(result)));
+		PostRegisterResult result = postUpdateFacade.execute(userId, postId, requestDto.toCommand());
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PostRegisterResponseDto.from(result)));
 	}
 
-	@GetMapping("/{postId}")
+	@Operation(summary = "산책 게시물 삭제", description = "기존 산책 게시물을 삭제합니다.", tags = {"Posts"})
+	@DeleteMapping("/{postId}")
+	public ResponseEntity<ApiResponse<Void>> deletePost(
+		@Parameter(hidden = true) @UserId Long userId,
+		@PathVariable Long postId
+	) {
+		postDeleteFacade.execute(userId, postId);
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null));
+	}
+
 	@Operation(summary = "게시물 상세 조회", description = "산책 게시물의 상세정보를 조회합니다.", tags = {"Posts"})
+	@GetMapping("/{postId}")
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공"),
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),

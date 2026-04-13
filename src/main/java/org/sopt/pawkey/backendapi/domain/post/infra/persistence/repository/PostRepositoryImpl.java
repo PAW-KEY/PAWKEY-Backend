@@ -27,6 +27,16 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
+	public Optional<PostEntity> findWithImagesForDelete(Long postId) {
+		return jpaRepository.findWithImagesForDelete(postId);
+	}
+
+	@Override
+	public void deleteById(Long postId) {
+		jpaRepository.deleteById(postId);
+	}
+
+	@Override
 	public List<PostEntity> findAllByUser(UserEntity user) {
 		return jpaRepository.findAllByUser(user);
 	}

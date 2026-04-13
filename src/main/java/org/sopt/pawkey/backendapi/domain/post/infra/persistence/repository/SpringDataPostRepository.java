@@ -26,6 +26,11 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	})
 	Optional<PostEntity> getByPostId(Long postId);
 
+	@EntityGraph(attributePaths = {"postImageEntityList","postImageEntityList.image","route.trackingImage"})
+	Optional<PostEntity> findWithImagesForDelete(Long postId);
+
+
+
 	@Query("SELECT DISTINCT p FROM PostEntity p " +
 		"LEFT JOIN FETCH p.user u " +
 		"LEFT JOIN FETCH p.pet pt " +
@@ -98,6 +103,9 @@ public interface SpringDataPostRepository extends JpaRepository<PostEntity, Long
 	@Modifying
 	@Query("DELETE FROM PostLikeEntity pl WHERE pl.post.route.user.userId = :userId OR pl.user.userId = :userId")
 	void deletePostLikesByUserId(@Param("userId") Long userId);
+
+
+
 
 
 
