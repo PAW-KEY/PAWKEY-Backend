@@ -27,7 +27,7 @@ public class ReviewService {
 	private final CategoryOptionRepository categoryOptionRepository;
 	private final ReviewSelectedCategoryOptionRepository reviewSelectedCategoryOptionRepository;
 
-	public ReviewEntity saveReview(ReviewRegisterCommand command, UserEntity user, RouteEntity route) {
+	public ReviewEntity saveReview(ReviewRegisterCommand command, UserEntity user, RouteEntity route,List<CategoryOptionEntity> selectedOptions) {
 		ReviewEntity review = ReviewEntity.builder()
 			.user(user)
 			.route(route)
@@ -35,22 +35,14 @@ public class ReviewService {
 
 		reviewRepository.save(review); //리뷰 저장
 
-		List<ReviewSelectedCategoryOptionEntity> selectedReviewOptionsForCategory = command.selectedReviewSetList()
-			.stream()
-			.flatMap(selectedReviewSet -> selectedReviewSet.selectedReviewOptionIds().stream()
-				.map(optionId -> {
-					CategoryOptionEntity option = categoryOptionRepository.findById(optionId)
-						.orElseThrow(() -> new CategoryBusinessException(CategoryErrorCode.CATEGORY_ERROR_CODE));
-
-					return ReviewSelectedCategoryOptionEntity.builder()
+		List<ReviewSelectedCategoryOptionEntity> selectedReviewOptions = selectedOptions.stream()
+				.map(option -> ReviewSelectedCategoryOptionEntity.builder()
 						.review(review)
 						.categoryOption(option)
-						.build();
-				})
-			)
-			.toList();
+						.build())
+				.toList();
 
-		reviewSelectedCategoryOptionRepository.saveAll(selectedReviewOptionsForCategory); //선택된 리뷰 저장
+		reviewSelectedCategoryOptionRepository.saveAll(selectedReviewOptions);
 		return review;
 
 	}
