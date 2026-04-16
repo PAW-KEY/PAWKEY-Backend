@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.LineString;
 import org.sopt.pawkey.backendapi.domain.image.infra.persistence.entity.ImageEntity;
 import org.sopt.pawkey.backendapi.domain.region.infra.persistence.entity.RegionEntity;
 import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewCategoryOptionTop3Entity;
+import org.sopt.pawkey.backendapi.domain.review.infra.persistence.entity.ReviewEntity;
 import org.sopt.pawkey.backendapi.domain.routes.exception.RouteBusinessException;
 import org.sopt.pawkey.backendapi.domain.routes.exception.RouteErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
@@ -64,6 +65,9 @@ public class RouteEntity extends BaseEntity {
 
 	@Column(name = "step_count", nullable = false)
 	private Integer stepCount;
+
+	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<ReviewEntity> reviews = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "region_id", nullable = false)
