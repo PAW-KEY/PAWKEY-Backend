@@ -14,6 +14,7 @@ import org.sopt.pawkey.backendapi.domain.auth.exception.AuthBusinessException;
 import org.sopt.pawkey.backendapi.domain.auth.exception.AuthErrorCode;
 import org.sopt.pawkey.backendapi.domain.user.api.dto.result.UserCreationResult;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
+import org.sopt.pawkey.backendapi.domain.user.infra.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,11 @@ public class UserLoginFacade {
 
 		UserCreationResult creationResult = userService.findOrCreateUserBySocialId(Provider.GOOGLE, platformUserId, primaryEmail);
 		TokenResponseDTO tokens = tokenService.issueTokens(creationResult.userId(), deviceId);
-		return SocialLoginResponseDTO.of(tokens, creationResult.isNewUser());
+
+		UserEntity user = userService.findById(creationResult.userId());
+		Long petId = user.getPet() != null ? user.getPet().getPetId() : null;
+
+		return SocialLoginResponseDTO.of(tokens, creationResult.isNewUser(), creationResult.userId(), petId);
 	}
 
 	public SocialLoginResponseDTO kakaoLogin(String accessToken, String deviceId) {
@@ -52,7 +57,10 @@ public class UserLoginFacade {
 		);
 
 		TokenResponseDTO tokens = tokenService.issueTokens(creationResult.userId(), deviceId);
-		return SocialLoginResponseDTO.of(tokens, creationResult.isNewUser());
+		UserEntity user = userService.findById(creationResult.userId());
+		Long petId = user.getPet() != null ? user.getPet().getPetId() : null;
+
+		return SocialLoginResponseDTO.of(tokens, creationResult.isNewUser(), creationResult.userId(), petId);
 
 	}
 
@@ -85,11 +93,13 @@ public class UserLoginFacade {
 			appleRefreshTokenService.saveOrUpdate(result.userId(), refreshToken);
 		}
 
-		//JWT 발급
-		return SocialLoginResponseDTO.of(
-			tokenService.issueTokens(result.userId(), deviceId),
-			result.isNewUser()
-		);
+
+
+		TokenResponseDTO tokens = tokenService.issueTokens(result.userId(), deviceId);
+		UserEntity user = userService.findById(result.userId());
+		Long petId = user.getPet() != null ? user.getPet().getPetId() : null;
+
+		return SocialLoginResponseDTO.of(tokens, result.isNewUser(), result.userId(), petId);
 	}
 
 }
