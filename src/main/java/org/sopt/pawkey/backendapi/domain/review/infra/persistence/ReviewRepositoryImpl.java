@@ -36,4 +36,9 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 			.orderBy(reviewEntity.reviewId.desc())
 			.fetch();
 	}
+
+	@Override
+	public void deleteByUserId(Long userId) {
+		jpaRepository.deleteByUserId(userId);
+	}
 }

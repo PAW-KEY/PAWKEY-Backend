@@ -6,6 +6,8 @@ import org.sopt.pawkey.backendapi.domain.dbti.domain.repository.DbtiResultReposi
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostRepository;
 import org.sopt.pawkey.backendapi.domain.post.domain.repository.PostSelectedCategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewRepository;
+import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewSelectedCategoryOptionRepository;
 import org.sopt.pawkey.backendapi.domain.routes.domain.repository.RouteRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.SocialAccountRepository;
 import org.sopt.pawkey.backendapi.domain.user.domain.repository.UserRepository;
@@ -25,6 +27,9 @@ public class UserDeletionService {
 
 	private final DbtiResultRepository dbtiResultRepository;
 	private final PostSelectedCategoryOptionRepository postSelectedCategoryOptionRepository;
+
+	private final ReviewSelectedCategoryOptionRepository reviewSelectedCategoryOptionRepository;
+	private final ReviewRepository reviewRepository;
 
 	private final PostRepository postRepository;
 	private final RouteRepository routeRepository;
@@ -51,6 +56,13 @@ public class UserDeletionService {
 		postRepository.deleteByRouteUserId(userId);
 		postRepository.deleteByUserId(userId);
 		entityManager.flush();
+
+		reviewSelectedCategoryOptionRepository.deleteByUserId(userId);
+		entityManager.flush();
+
+		reviewRepository.deleteByUserId(userId);
+		entityManager.flush();
+
 
 		// 5. routes
 		routeRepository.deleteByUserId(userId);
