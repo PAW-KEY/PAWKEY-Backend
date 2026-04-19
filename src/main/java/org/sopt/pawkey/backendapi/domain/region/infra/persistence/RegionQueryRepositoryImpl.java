@@ -27,7 +27,9 @@ public class RegionQueryRepositoryImpl implements RegionQueryRepository {
 		return queryFactory
 			.selectFrom(regionEntity)
 			.where(regionEntity.regionType.eq(RegionType.GU))
-			.where(regionEntity.regionName.eq(keyword))
+				.where(keyword != null && !keyword.isBlank()
+						? regionEntity.regionName.contains(keyword)
+						: null)
 			.leftJoin(regionEntity.childrenRegionList, childRegion).fetchJoin()
 			.fetch();
 	}

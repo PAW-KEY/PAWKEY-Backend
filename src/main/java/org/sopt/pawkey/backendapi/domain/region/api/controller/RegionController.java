@@ -18,10 +18,7 @@ import org.sopt.pawkey.backendapi.domain.region.application.facade.query.GetRegi
 import org.sopt.pawkey.backendapi.global.exception.BusinessException;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,9 +40,9 @@ public class RegionController {
 	@ApiResponses({
 		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "지역구 리스트 조회")
 	})
-	public ResponseEntity<ApiResponse<GetRegionListResponseDto>> getRegionList() {
+	public ResponseEntity<ApiResponse<GetRegionListResponseDto>> getRegionList(@RequestParam(required = false) String keyword){
 
-		GetRegionListCommand command = new GetRegionListCommand("강남구");
+		GetRegionListCommand command = new GetRegionListCommand(keyword);
 		GetRegionListResult result = getRegionListFacade.execute(command);
 
 		return ResponseEntity.ok(
