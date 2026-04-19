@@ -29,4 +29,8 @@ public class ReviewSelectedCategoryOptionRepositoryImpl implements ReviewSelecte
 		jpaRepository.deleteByUserId(userId);
 	}
 
+
+	@Override
+	public void deleteByRouteUserId(Long userId){jpaRepository.deleteByRouteUserId(userId);}
+
 }

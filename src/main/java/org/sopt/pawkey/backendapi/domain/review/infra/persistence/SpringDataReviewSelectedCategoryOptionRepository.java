@@ -24,4 +24,8 @@ public interface SpringDataReviewSelectedCategoryOptionRepository
 	@Modifying
 	@Query("DELETE FROM ReviewSelectedCategoryOptionEntity r WHERE r.review.user.userId = :userId")
 	void deleteByUserId(@Param("userId") Long userId);
+
+	@Modifying
+	@Query("DELETE FROM ReviewSelectedCategoryOptionEntity r WHERE r.review.route.user.userId = :userId")
+	void deleteByRouteUserId(@Param("userId") Long userId);
 }

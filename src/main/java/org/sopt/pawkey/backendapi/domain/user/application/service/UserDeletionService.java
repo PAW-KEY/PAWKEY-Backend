@@ -58,9 +58,11 @@ public class UserDeletionService {
 		entityManager.flush();
 
 		reviewSelectedCategoryOptionRepository.deleteByUserId(userId);
+		reviewSelectedCategoryOptionRepository.deleteByRouteUserId(userId);
 		entityManager.flush();
 
 		reviewRepository.deleteByUserId(userId);
+		reviewRepository.deleteByRouteUserId(userId);
 		entityManager.flush();
 
 

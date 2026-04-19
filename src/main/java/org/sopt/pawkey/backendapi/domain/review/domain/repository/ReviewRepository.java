@@ -11,4 +11,6 @@ public interface ReviewRepository {
 	List<ReviewEntity> findAllByUserId(Long userId);
 
 	void deleteByUserId(Long userId);
+
+	void deleteByRouteUserId(Long userId);
 }

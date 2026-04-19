@@ -11,4 +11,6 @@ public interface ReviewSelectedCategoryOptionRepository {
 	List<Object[]> countCategoryOptionSelectionsByRoute(Long routeId);
 
 	void deleteByUserId(Long userId);
+
+	void deleteByRouteUserId(Long userId);
 }
