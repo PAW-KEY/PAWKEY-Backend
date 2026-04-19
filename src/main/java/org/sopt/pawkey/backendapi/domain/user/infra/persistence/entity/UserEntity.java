@@ -63,6 +63,7 @@ public class UserEntity extends BaseEntity {
 	private RegionEntity region;
 
 	@BatchSize(size = 100)
+	@Builder.Default
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PetEntity> petEntityList = new ArrayList<>();
 
