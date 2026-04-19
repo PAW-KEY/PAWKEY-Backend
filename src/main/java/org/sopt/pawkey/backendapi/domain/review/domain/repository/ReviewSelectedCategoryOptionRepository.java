@@ -9,4 +9,6 @@ public interface ReviewSelectedCategoryOptionRepository {
 	void saveAll(List<ReviewSelectedCategoryOptionEntity> selectedCategoryOptionEntityList);
 
 	List<Object[]> countCategoryOptionSelectionsByRoute(Long routeId);
+
+	void deleteByUserId(Long userId);
 }

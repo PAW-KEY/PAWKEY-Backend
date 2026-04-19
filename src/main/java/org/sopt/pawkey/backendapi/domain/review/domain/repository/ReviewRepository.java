@@ -9,4 +9,6 @@ public interface ReviewRepository {
 	void save(ReviewEntity review);
 
 	List<ReviewEntity> findAllByUserId(Long userId);
+
+	void deleteByUserId(Long userId);
 }
