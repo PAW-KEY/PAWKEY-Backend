@@ -12,6 +12,7 @@ public record PostDetailResponseDto(
         String description,
         boolean isPublic,
         boolean isMine,
+        boolean hasReviewed,
 
         AuthorDto authorInfo,
 
@@ -29,6 +30,7 @@ public record PostDetailResponseDto(
                 result.description(),
                 result.isPublic(),
                 result.isMine(),
+                result.hasReviewed(),
                 result.authorInfo(),
                 RouteDisplayDto.from(result.routeDisplay()),
                 result.categoryTagTexts(),

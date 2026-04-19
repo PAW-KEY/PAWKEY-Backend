@@ -15,4 +15,6 @@ public interface SpringDataReviewRepository extends JpaRepository<ReviewEntity, 
     @Modifying
     @Query("DELETE FROM ReviewEntity r WHERE r.route.user.userId = :userId")
     void deleteByRouteUserId(@Param("userId") Long userId);
+
+    boolean existsByUserUserIdAndRouteRouteId(Long userId, Long routeId);
 }

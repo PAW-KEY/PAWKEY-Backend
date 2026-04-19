@@ -44,4 +44,9 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
 	@Override
 	public void deleteByRouteUserId(Long userId){jpaRepository.deleteByRouteUserId(userId);}
+
+	@Override
+	public boolean existsByUserIdAndRouteId(Long userId, Long routeId) {
+		return jpaRepository.existsByUserUserIdAndRouteRouteId(userId, routeId);
+	}
 }

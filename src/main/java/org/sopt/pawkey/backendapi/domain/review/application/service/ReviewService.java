@@ -46,5 +46,8 @@ public class ReviewService {
 		return review;
 
 	}
+	public boolean existsByUserIdAndRouteId(Long userId, Long routeId) {
+		return reviewRepository.existsByUserIdAndRouteId(userId, routeId);
+	}
 }
 

@@ -29,7 +29,8 @@ public class PostQueryService {
 			PostEntity post,
 			boolean isMine,
 			String routeImageUrl,
-			List<WalkImageResult> walkImages
+			List<WalkImageResult> walkImages,
+			boolean hasReviewed
 	) {
 		// 작성자 정보
 		AuthorDto authorInfo = AuthorDto.from(post.getUser(), post.getPet());
@@ -50,6 +51,7 @@ public class PostQueryService {
 				post.getDescription(),
 				post.isPublic(),
 				isMine,
+				hasReviewed,
 				authorInfo,
 				routeDisplay,
 				categoryTagTexts,

@@ -13,4 +13,6 @@ public interface ReviewRepository {
 	void deleteByUserId(Long userId);
 
 	void deleteByRouteUserId(Long userId);
+
+	boolean existsByUserIdAndRouteId(Long userId, Long routeId);
 }
