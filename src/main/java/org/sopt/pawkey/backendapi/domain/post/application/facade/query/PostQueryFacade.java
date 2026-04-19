@@ -14,6 +14,8 @@ import org.sopt.pawkey.backendapi.domain.post.application.dto.result.WalkImageRe
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostQueryService;
 import org.sopt.pawkey.backendapi.domain.post.application.service.PostService;
 import org.sopt.pawkey.backendapi.domain.post.infra.persistence.entity.PostEntity;
+import org.sopt.pawkey.backendapi.domain.review.application.service.ReviewService;
+import org.sopt.pawkey.backendapi.domain.review.domain.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class PostQueryFacade {
 	private final PostQueryService postQueryService;
 	private final PostService postService;
 	private final PresignedImageService presignedImageService;
+	private final ReviewService reviewService;
 
 	public PostPagingResponseDto getFilterPostList(FilterPostsRequestDto requestDto, String sortBy, String cursor,
 		int size, Long userId) {
@@ -54,6 +57,9 @@ public class PostQueryFacade {
 		PostEntity post = postService.findByIdWithAllDetails(postId);
 
 		boolean isMine = post.getUser().getUserId().equals(userId);
+		boolean hasReviewed = reviewService.existsByUserIdAndRouteId(
+				userId, post.getRoute().getRouteId()
+		);
 
 		// route image presigned
 		String routeImageUrl = post.getRoute().getTrackingImage() != null
@@ -75,7 +81,7 @@ public class PostQueryFacade {
 						.toList();
 
 		GetPostDetailResult result =
-				postQueryService.getPostDetailResult(post, isMine, routeImageUrl, walkImages);
+				postQueryService.getPostDetailResult(post, isMine, routeImageUrl, walkImages,hasReviewed);
 
 		return PostDetailResponseDto.from(result);
 	}

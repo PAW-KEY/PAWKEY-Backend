@@ -13,6 +13,7 @@ public record GetPostDetailResult(
         String description,
         boolean isPublic,
         boolean isMine,
+        boolean hasReviewed,
 
         AuthorDto authorInfo,
         RouteDisplayResult routeDisplay,
