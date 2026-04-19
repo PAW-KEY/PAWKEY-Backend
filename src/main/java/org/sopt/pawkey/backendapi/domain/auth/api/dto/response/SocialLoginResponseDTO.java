@@ -6,13 +6,17 @@ import lombok.Builder;
 public record SocialLoginResponseDTO(
 	String accessToken,
 	String refreshToken,
-	boolean isNewUser
+	boolean isNewUser,
+	Long userId,
+	Long petId
 ) {
-	public static SocialLoginResponseDTO of(TokenResponseDTO tokenResponse, boolean isNewUser){
+	public static SocialLoginResponseDTO of(TokenResponseDTO tokenResponse, boolean isNewUser,  Long userId, Long petId){
 		return SocialLoginResponseDTO.builder()
 			.accessToken(tokenResponse.accessToken())
 			.refreshToken(tokenResponse.refreshToken())
 			.isNewUser(isNewUser)
+			.userId(userId)
+			.petId(petId)
 			.build();
 	}
 }
