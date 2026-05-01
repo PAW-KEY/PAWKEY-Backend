@@ -47,9 +47,7 @@ public class UserService {
 	@Transactional
 	public UserEntity completeOnboarding(Long userId, OnboardingInfoCommand command, RegionEntity region) {
 
-		if (userRepository.existsByName(command.name())) {
-			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
-		}
+		validateNicknameDuplicate(command.name());
 
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
@@ -67,6 +65,12 @@ public class UserService {
 
 	public void updateUserRegion(UserEntity user, RegionEntity region) {
 		user.updateRegion(region);
+	}
+
+	private void validateNicknameDuplicate(String name) {
+		if (userRepository.existsByName(name)) {
+			throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
+		}
 	}
 
 	@Transactional
@@ -117,9 +121,7 @@ public class UserService {
 			.orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
 
 		if (command.name() != null && !command.name().equals(user.getName())) {
-			if (userRepository.existsByName(command.name())) {
-				throw new UserBusinessException(UserErrorCode.USER_DUPLICATE_NICKNAME);
-			}
+			validateNicknameDuplicate(command.name());
 		}
 
 		try {
