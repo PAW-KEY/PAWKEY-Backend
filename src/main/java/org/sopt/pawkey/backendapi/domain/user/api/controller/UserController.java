@@ -20,7 +20,9 @@ import org.sopt.pawkey.backendapi.domain.user.application.facade.command.UpdateU
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserLikedPostQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserQueryFacade;
 import org.sopt.pawkey.backendapi.domain.user.application.facade.query.UserWrittenPostQueryFacade;
+import org.sopt.pawkey.backendapi.domain.user.api.dto.request.WithdrawReasonRequestDto;
 import org.sopt.pawkey.backendapi.domain.user.application.service.UserService;
+import org.sopt.pawkey.backendapi.domain.user.application.service.WithdrawReasonService;
 import org.sopt.pawkey.backendapi.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,6 +71,7 @@ public class UserController {
 	}
 
 	private final UserService userService;
+	private final WithdrawReasonService withdrawReasonService;
 
 	@Operation(summary = "닉네임 중복 검사", description = "파라미터로 받은 닉네임의 중복 여부를 확인합니다.", tags = {"Users"})
 	@ApiResponses({
@@ -158,6 +161,21 @@ public class UserController {
 
 		return ResponseEntity.ok(
 			ApiResponse.success());
+	}
+
+	@Operation(summary = "탈퇴 사유 제출", description = "회원탈퇴 전 탈퇴 사유를 제출합니다.", tags = {"Users"})
+	@ApiResponses({
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "탈퇴 사유 제출 성공"),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "reasonCode 누락", content = @Content(mediaType = "application/json")),
+		@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content(mediaType = "application/json"))
+	})
+	@PostMapping("/withdraw-reason")
+	public ResponseEntity<ApiResponse<Void>> submitWithdrawReason(
+		@Parameter(hidden = true) @UserId Long userId,
+		@RequestBody @Valid WithdrawReasonRequestDto requestDto
+	) {
+		withdrawReasonService.saveWithdrawReason(userId, requestDto);
+		return ResponseEntity.ok(ApiResponse.success());
 	}
 
 	@GetMapping("/me/reviews")
