@@ -6,8 +6,10 @@ import org.sopt.pawkey.backendapi.domain.user.application.dto.request.UpdateUser
 import org.sopt.pawkey.backendapi.global.enums.Gender;
 
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 
 public record UpdateUserInfoRequestDto(
+	@Size(min = 1, message = "닉네임은 1자 이상이어야 합니다.")
 	String name,
 
 	@PastOrPresent(message = "생년월일은 현재 또는 과거 날짜여야 합니다")
