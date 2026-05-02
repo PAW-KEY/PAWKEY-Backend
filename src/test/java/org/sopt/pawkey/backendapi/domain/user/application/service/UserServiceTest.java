@@ -96,6 +96,42 @@ class UserServiceTest {
 		verify(userRepository).saveAndFlush(user);
 	}
 
+	@Test
+	void 닉네임_중복검사_본인닉네임은_통과() {
+		// given
+		UserEntity user = userWithName("내닉네임");
+		given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
+
+		// when
+		userService.isNicknameDuplicated(USER_ID, "내닉네임");
+
+		// then
+		verify(userRepository, never()).existsByName(any());
+	}
+
+	@Test
+	void 닉네임_중복검사_이미_사용중이면_예외() {
+		// given
+		UserEntity user = userWithName("내닉네임");
+		given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
+		given(userRepository.existsByName("타인닉네임")).willReturn(true);
+
+		// when & then
+		assertThatThrownBy(() -> userService.isNicknameDuplicated(USER_ID, "타인닉네임"))
+			.isInstanceOf(UserBusinessException.class);
+	}
+
+	@Test
+	void 닉네임_중복검사_사용가능하면_통과() {
+		// given
+		UserEntity user = userWithName("내닉네임");
+		given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
+		given(userRepository.existsByName("새닉네임")).willReturn(false);
+
+		// when & then (예외 없이 정상 반환)
+		userService.isNicknameDuplicated(USER_ID, "새닉네임");
+	}
+
 	private UserEntity userWithName(String name) {
 		UserEntity user = mock(UserEntity.class);
 		given(user.getName()).willReturn(name);
