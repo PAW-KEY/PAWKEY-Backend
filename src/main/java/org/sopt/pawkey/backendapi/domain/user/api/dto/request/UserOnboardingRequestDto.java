@@ -11,9 +11,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record UserOnboardingRequestDto(
-	@NotNull(message = "이름은 필수값입니다.") String name,
+	@NotNull(message = "이름은 필수값입니다.")
+	@Size(min = 1, message = "닉네임은 1자 이상이어야 합니다.")
+	String name,
 
 	@NotNull(message = "생년월일은 필수값입니다.")
 	@JsonFormat(pattern = "yyyy-MM-dd") LocalDate birth,
